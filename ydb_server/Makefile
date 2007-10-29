@@ -1,34 +1,22 @@
 CC = g++
 AR = ar
-CFLAGS = -Wall
+CFLAGS = -Wall -I../ydb
 
-SRCS = ydb_lock.cpp ydb_op.cpp ydb_trans.cpp ydb_sched.cpp ydb_map.cpp ydb.cpp
-OBJS = ydb_lock.o ydb_op.o ydb_trans.o ydb_sched.o ydb_map.o ydb.o
+SRCS = ydb_server.cpp
+OBJS = ydb_server.o
 LIBS = -lythread
 
-all: ydb_test ydb_lock_test ydb_sched_test ydb_map_test
+all: ydb_server
 
-$(OBJS): $(SRCS)
-	$(CC) $(CFLAGS) -g -c $*.cpp
+.cpp.o:
+	$(CC) $(CFLAGS) -c $<
 
 #libydb.a: $(OBJS)
 #	$(AR) rvu $@ $(OBJS)
 #	ranlib $@
 
-ydb_lock_test: ydb_lock_test.cpp $(OBJS)
-	$(CC) $(CFLAGS) -g -o $@ ydb_lock_test.cpp $(OBJS) $(LIBS)
-
-ydb_sched_test: ydb_sched_test.cpp $(OBJS)
-	$(CC) $(CFLAGS) -g -o $@ ydb_sched_test.cpp $(OBJS) $(LIBS)
-
-ydb_map_test: ydb_map_test.cpp $(OBJS)
-	$(CC) $(CFLAGS) -g -o $@ ydb_map_test.cpp $(OBJS) $(LIBS)
-
-ydb_test: ydb_test.cpp $(OBJS)
-	$(CC) $(CFLAGS) -g -o $@ ydb_test.cpp $(OBJS) $(LIBS)
-
-ydb_server: ydb_server.cpp $(OBJS)
-	$(CC) $(CFLAGS) -g -o $@ ydb_server.cpp $(OBJS) $(LIBS)
+ydb_server: $(OBJS)
+	$(CC) $(CFLAGS) -g -o $@ $(OBJS) $(LIBS)
 
 test:	all
 	./ydb_map_test
