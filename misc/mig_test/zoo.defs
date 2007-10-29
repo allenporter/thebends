@@ -1,0 +1,9 @@
+#include <mach/std_types.defs>
+
+subsystem zoo 1000;
+
+routine add_two_numbers(
+  server_port : mach_port_t;
+  in a : int32_t;
+  in b : int32_t;
+  out c : int32_t);
