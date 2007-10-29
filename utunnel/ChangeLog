@@ -1,0 +1,14 @@
+2004-08-29 - 0.4
+	utunnel now has two seperate binaries: uclient and userver. the client
+	server model now allows multiple clients to use utunnel at once so
+	that the client endpoints of the tunnel do not have to be known at
+	runtime.
+
+2004-08-22 - 0.3
+	N/A
+
+2004-08-20 - 0.2
+	N/A
+
+2004-08-18 - 0.1
+	Initial release.
