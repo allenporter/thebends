@@ -1,0 +1,7 @@
+require 'test/unit'
+require 'tc_bdecode'
+require 'tc_bencode'
+require 'tc_get_request'
+require 'tc_get_response'
+require 'tc_handshake'
+require 'tc_metainfo'
