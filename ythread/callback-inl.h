@@ -1,5 +1,5 @@
-#ifndef _YTHREAD_CALLBACK_H_
-#define _YTHREAD_CALLBACK_H_
+#ifndef _YTHREAD_CALLBACK_INL_H_
+#define _YTHREAD_CALLBACK_INL_H_
 #include "callback.h"
 
 namespace ythread {
@@ -113,4 +113,4 @@ Callback2<ARG1, ARG2>* NewCallback(CLASS* object,
 
 }  // namespace ythread
 
-#endif  // _YTHREAD_CALLBACK_H_
+#endif  // _YTHREAD_CALLBACK_INL_H_
