@@ -1,0 +1,82 @@
+README
+Allen Porter <allen@thebends.org>
+
+Files here where compiled using the iphone-binutils toolchain.  They have been
+tested mininally, and may contain bugs or may harm your computer.  Use at your
+own risk.
+
+Copy all of the binaries to /usr/bin/ and make them executable (chmod +x).  This
+step is left as an exercise to the reader.  I already had dropbear installed
+so that made this much easier.  I set up my new sshd to listen on a different
+port, so I could run both versions and verify the new one worked before
+disabling dropbear.
+
+Make a directory where sshd will look for its configuration:
+$ mkdir /etc/ssh/
+
+Generate some new keys for yourself.  You could probably do this on your own
+machine and copy over the keys, but I didn't try that.
+$ /usr/bin/ssh-keygen -t rsa1 -f /etc/ssh/ssh_host_key -N ""
+$ /usr/bin/ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ""
+$ /usr/bin/ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N ""
+
+Put the follwing in /etc/ssh/sshd_config.  Interesting stuff: 1) Use a
+different port (Port command) if you're paranoid like me.  Its commented out
+in the example below 2) I disabled DNS since I don't have reverse DNS in my
+local LAN and it slows everything down while doing DNS lookups.  3) Use
+privilege separation if you're really paranoid.
+--------------------------------------
+#Port 11022
+Protocol 2
+HostKey /etc/ssh/ssh_host_key
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+Subsystem sftp /usr/bin/sftp-server
+UseDNS no
+UsePrivilegeSeparation no
+--------------------------------------
+
+If you want to use pubkey stuff, remember to make sure that /var/root/ is not
+writable, since sshd will refuse to use your keys.
+
+Remember to change the password for the "root" and "mobile" account.
+
+I ran it manually with debugging enabled to make sure there were no problems:
+$ /usr/bin/sshd -D -d -f /etc/ssh/sshd_config
+
+Once you have verified that it works, why not make it run on startup.  Create
+your own plist file in /System/Library/LaunchDaemons:
+--------------------------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>Label</key>
+        <string>org.thebends.openssh</string>
+        <key>OnDemand</key>
+        <false/>
+        <key>ProgramArguments</key>
+        <array>
+                <string>/usr/bin/sshd</string>
+                <string>-f</string>
+                <string>/etc/ssh/sshd_config</string>
+        </array>
+</dict>
+</plist>
+--------------------------------------
+
+I use this sshd to copy new applications that i'm developing to the iPhone.  It gets annowing to type your password over and over so using keys is recommended
+(there are plenty of examples out there on how to set this up).
+
+My iPhone also gets the same IP on my LAN every time, so I put this in the
+~/.ssh/config file on my laptop where I do development:
+--------------------------------------
+Host 192.168.1.6
+User root
+Port 11022
+--------------------------------------
+This will make it so when you ssh 192.168.1.6 it will automatically use the
+right port and username.  Less typing is good.  You may also want to put a
+similar config on your iPhone to make you type less in MobileTerminal when
+using it as an ssh client.
+

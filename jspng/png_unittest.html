@@ -1,0 +1,155 @@
+<html>
+<head>
+<title></title>
+<script src="../jsunit/jsunit.js"></script>
+<script src="../base64/base64.js"></script>
+<script src="logging.js"></script>
+<script src="uint.js"></script>
+<script src="crc.js"></script>
+<script src="zlib.js"></script>
+<script src="png.js"></script>
+<script>
+
+function testUint() {
+  var u = new uint32(123);
+  var data = [ ];
+  data = u.appendToArray(data);
+  assertEquals([0, 0, 0, 123], data);
+}
+
+function testIHDR() {
+  var data = [ 0x00, 0x00, 0x00, 0x0d,  // chunk length
+               0x49, 0x48, 0x44, 0x52,  // chunk type: IHDR
+               0x00, 0x00, 0x00, 0x0a,  // width
+               0x00, 0x00, 0x00, 0x0a,  // height
+               0x08, // depth
+               0x03, // color type
+               0x00, 0x00, 0x00, // compression, filter, interlace
+               0xba, 0xec, 0x3f, 0x8f // CRC
+             ];
+  var actual = [ ];
+  IHDR(actual, 10, 10, 8, 3);
+  assertEquals(data, actual);
+}
+
+function testIEND() {
+  var data = [ 0x00, 0x00, 0x00, 0x00,  // chunk length
+               0x49, 0x45, 0x4e, 0x44,  // chunk type: IEND
+               0xae, 0x42, 0x60, 0x82   // CRC
+             ];
+  var actual = [ ];
+  IEND(actual);
+  assertEquals(data, actual);
+}
+
+function testIDAT1block() {
+  var data = [ 0x00, 0x00, 0x00, 0x11,  // chunk length
+               0x49, 0x44, 0x41, 0x54,  // chunk type: IDAT
+               0x08, 0x1d, 0x01, 0x06, 0x00,
+               0xf9, 0xff, 0x00, 0x4c, 0xff,
+               0x02, 0x4a, 0x1d, 0x06, 0x35,
+               0x01, 0xb5,
+               0xe0, 0xf5, 0xa9, 0xfb ];
+  var pixels  = [ 0, 76, 255, 2, 74, 29 ];  // 2x2
+  var actual = new IDAT(pixels, 256);
+  assertEquals(data, actual);
+}
+
+function testIDAT2blocks() {
+  var data = [ 0x00, 0x00, 0x01, 0x1b,  // chunk length
+               0x49, 0x44, 0x41, 0x54,  // chunk type: IDAT
+               0x18, 0x19, 0x01, 0x10, 0x01, 0xef, 0xfe
+             ];
+  var pixels = [ ];
+  var i;
+  for (i = 0; i < 16; i++) {
+    pixels.push((i == 0) ? 1 : 2);
+    var j;
+    for (j = 0; j < 16; j++) {
+      pixels.push((j == 0 && i == 0) ? 255 : 0);
+    }
+  }
+  for (i = 0; i < pixels.length; i++) {
+    data.push(pixels[i]);
+  }
+  // deflate checksum
+  data.push(32); data.push(16); data.push(1); data.push(31);
+  // idata checksum
+  data.push(49); data.push(138); data.push(23); data.push(179);
+  var actual = new IDAT(pixels, 512);
+  assertEquals(data, actual);
+}
+
+function test2x2PNG() {
+  // this function is currently broken because the png library has a fixed
+  // default block size based just so the testBigPNG can display something.
+  // TODO(allen): Fix the way block sizes are determined
+  var png = new Png();
+  png.width = 2;
+  png.height = 2;
+  png.pixels = [ 0, 76, 255, 2, 74, 29 ];
+  var actual = png.getBytes();
+
+  var expected = [
+     137,  80,  78,  71,  13,  10,  26,  10,   0,   0,   0,  13,
+      73,  72,  68,  82,   0,   0,   0,   2,   0,   0,   0,   2,
+       8,   0,   0,   0,   0,  87, 221,  82, 248,   0,   0,   0,
+      17,  73,  68,  65,  84,   8,  29,   1,   6,   0, 249, 255,
+       0,  76, 255,   2,  74,  29,   6,  53,   1, 181, 224, 245,
+     169, 251,   0,   0,   0,   0,  73,  69,  78,  68, 174,  66,  96, 130 ];                        
+  assertEquals(actual, expected);
+}
+
+function pix(w, h) {
+  var pixels = new Array(w * h + h);
+  var start = 0;
+  for (i = 0; i < h; ++i) {
+    scanline(pixels, start, w);
+    start += w + 1;
+  }
+  return pixels;
+}
+
+function scanline(pixels, start, width) {
+  var j = 0;
+  pixels[start++] = 0 ;
+  for (j = 0; j < width; ++j) {
+    pixels[start++] = Math.round((j / width) * 255);
+  }
+}
+
+function testBigPNG() {
+  // This tests doesn't assert anything, it just creates an image in the page
+  var w = 200;
+  var h = 200;
+  var i, j;
+
+  var png = new Png();
+  png.width = w;
+  png.height = h;
+  png.pixels = pix(w, h);
+
+  var actual = png.getString();
+  var src = "data:image/png;base64," + btoa(actual);
+  var foo = document.getElementById("foo");
+  foo.innerHTML = "<img src='" + src + "' width=200 height=200>";
+}
+
+function runtests() {
+  logging.init();
+  testcase = new TestCase();
+  testcase.addTest(testUint);
+  testcase.addTest(testIHDR);
+  testcase.addTest(testIDAT1block);
+  testcase.addTest(testIDAT2blocks);
+  testcase.addTest(testIEND);
+  testcase.addTest(test2x2PNG);
+  testcase.addTest(testBigPNG);
+  testcase.runTests();
+}
+</script>
+</head>
+<body onload="runtests();">
+<div id=foo></div>
+</body>
+</html>

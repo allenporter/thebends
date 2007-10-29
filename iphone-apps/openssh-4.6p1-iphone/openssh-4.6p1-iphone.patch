@@ -1,0 +1,211 @@
+diff -Naur openssh-4.6p1/dns.c openssh-4.6p1-iphone/dns.c
+--- openssh-4.6p1/dns.c	2007-01-04 21:30:16.000000000 -0800
++++ openssh-4.6p1-iphone/dns.c	2007-09-02 11:54:07.000000000 -0700
+@@ -37,7 +37,7 @@
+ 
+ #include "xmalloc.h"
+ #include "key.h"
+-#include "dns.h"
++#include "dns.moved.h"
+ #include "log.h"
+ 
+ static const char *errset_text[] = {
+diff -Naur openssh-4.6p1/dns.h openssh-4.6p1-iphone/dns.h
+--- openssh-4.6p1/dns.h	2006-08-04 19:39:40.000000000 -0700
++++ openssh-4.6p1-iphone/dns.h	1969-12-31 16:00:00.000000000 -0800
+@@ -1,52 +0,0 @@
+-/* $OpenBSD: dns.h,v 1.10 2006/08/03 03:34:42 deraadt Exp $ */
+-
+-/*
+- * Copyright (c) 2003 Wesley Griffin. All rights reserved.
+- * Copyright (c) 2003 Jakob Schlyter. All rights reserved.
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions
+- * are met:
+- * 1. Redistributions of source code must retain the above copyright
+- *    notice, this list of conditions and the following disclaimer.
+- * 2. Redistributions in binary form must reproduce the above copyright
+- *    notice, this list of conditions and the following disclaimer in the
+- *    documentation and/or other materials provided with the distribution.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+- * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-
+-#ifndef DNS_H
+-#define DNS_H
+-
+-enum sshfp_types {
+-	SSHFP_KEY_RESERVED,
+-	SSHFP_KEY_RSA,
+-	SSHFP_KEY_DSA
+-};
+-
+-enum sshfp_hashes {
+-	SSHFP_HASH_RESERVED,
+-	SSHFP_HASH_SHA1
+-};
+-
+-#define DNS_RDATACLASS_IN	1
+-#define DNS_RDATATYPE_SSHFP	44
+-
+-#define DNS_VERIFY_FOUND	0x00000001
+-#define DNS_VERIFY_MATCH	0x00000002
+-#define DNS_VERIFY_SECURE	0x00000004
+-
+-int	verify_host_key_dns(const char *, struct sockaddr *, const Key *, int *);
+-int	export_dns_rr(const char *, const Key *, FILE *, int);
+-
+-#endif /* DNS_H */
+diff -Naur openssh-4.6p1/dns.moved.h openssh-4.6p1-iphone/dns.moved.h
+--- openssh-4.6p1/dns.moved.h	1969-12-31 16:00:00.000000000 -0800
++++ openssh-4.6p1-iphone/dns.moved.h	2006-08-04 19:39:40.000000000 -0700
+@@ -0,0 +1,52 @@
++/* $OpenBSD: dns.h,v 1.10 2006/08/03 03:34:42 deraadt Exp $ */
++
++/*
++ * Copyright (c) 2003 Wesley Griffin. All rights reserved.
++ * Copyright (c) 2003 Jakob Schlyter. All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
++ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#ifndef DNS_H
++#define DNS_H
++
++enum sshfp_types {
++	SSHFP_KEY_RESERVED,
++	SSHFP_KEY_RSA,
++	SSHFP_KEY_DSA
++};
++
++enum sshfp_hashes {
++	SSHFP_HASH_RESERVED,
++	SSHFP_HASH_SHA1
++};
++
++#define DNS_RDATACLASS_IN	1
++#define DNS_RDATATYPE_SSHFP	44
++
++#define DNS_VERIFY_FOUND	0x00000001
++#define DNS_VERIFY_MATCH	0x00000002
++#define DNS_VERIFY_SECURE	0x00000004
++
++int	verify_host_key_dns(const char *, struct sockaddr *, const Key *, int *);
++int	export_dns_rr(const char *, const Key *, FILE *, int);
++
++#endif /* DNS_H */
+diff -Naur openssh-4.6p1/hostfile.c openssh-4.6p1-iphone/hostfile.c
+--- openssh-4.6p1/hostfile.c	2006-08-31 22:38:36.000000000 -0700
++++ openssh-4.6p1-iphone/hostfile.c	2007-09-02 11:42:15.000000000 -0700
+@@ -45,7 +45,6 @@
+ #include <openssl/hmac.h>
+ #include <openssl/sha.h>
+ 
+-#include <resolv.h>
+ #include <stdarg.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+diff -Naur openssh-4.6p1/openbsd-compat/getrrsetbyname.c openssh-4.6p1-iphone/openbsd-compat/getrrsetbyname.c
+--- openssh-4.6p1/openbsd-compat/getrrsetbyname.c	2007-02-19 03:56:56.000000000 -0800
++++ openssh-4.6p1-iphone/openbsd-compat/getrrsetbyname.c	2007-09-02 11:22:17.000000000 -0700
+@@ -49,12 +49,17 @@
+ 
+ #ifndef HAVE_GETRRSETBYNAME
+ 
++#define MAXDNAME 1025
++
+ #include <stdlib.h>
+ #include <string.h>
+ 
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ 
++#include <dns_util.h>
++#include <resolv.h>
++ 
+ #include "getrrsetbyname.h"
+ 
+ #if defined(HAVE_DECL_H_ERRNO) && !HAVE_DECL_H_ERRNO
+@@ -167,7 +172,7 @@
+ };
+ 
+ struct dns_response {
+-	HEADER			header;
++	dns_header_t		header;
+ 	struct dns_query	*query;
+ 	struct dns_rr		*answer;
+ 	struct dns_rr		*authority;
+diff -Naur openssh-4.6p1/openbsd-compat/getrrsetbyname.h openssh-4.6p1-iphone/openbsd-compat/getrrsetbyname.h
+--- openssh-4.6p1/openbsd-compat/getrrsetbyname.h	2004-01-26 21:40:35.000000000 -0800
++++ openssh-4.6p1-iphone/openbsd-compat/getrrsetbyname.h	2007-09-02 11:42:35.000000000 -0700
+@@ -56,7 +56,6 @@
+ #include <netinet/in.h>
+ #include <arpa/nameser.h>
+ #include <netdb.h>
+-#include <resolv.h>
+ 
+ #ifndef HFIXEDSZ
+ #define HFIXEDSZ 12
+diff -Naur openssh-4.6p1/ssh-keygen.c openssh-4.6p1-iphone/ssh-keygen.c
+--- openssh-4.6p1/ssh-keygen.c	2007-02-19 03:10:25.000000000 -0800
++++ openssh-4.6p1-iphone/ssh-keygen.c	2007-09-02 11:48:27.000000000 -0700
+@@ -46,7 +46,7 @@
+ #include "misc.h"
+ #include "match.h"
+ #include "hostfile.h"
+-#include "dns.h"
++#include "dns.moved.h"
+ 
+ #ifdef SMARTCARD
+ #include "scard.h"
+diff -Naur openssh-4.6p1/sshconnect.c openssh-4.6p1-iphone/sshconnect.c
+--- openssh-4.6p1/sshconnect.c	2006-10-23 10:02:24.000000000 -0700
++++ openssh-4.6p1-iphone/sshconnect.c	2007-09-02 11:54:13.000000000 -0700
+@@ -55,7 +55,7 @@
+ #include "readconf.h"
+ #include "atomicio.h"
+ #include "misc.h"
+-#include "dns.h"
++#include "dns.moved.h"
+ #include "version.h"
+ 
+ char *client_version_string = NULL;
+diff -Naur openssh-4.6p1/uuencode.c openssh-4.6p1-iphone/uuencode.c
+--- openssh-4.6p1/uuencode.c	2006-08-04 19:39:41.000000000 -0700
++++ openssh-4.6p1-iphone/uuencode.c	2007-09-02 11:42:41.000000000 -0700
+@@ -27,7 +27,6 @@
+ 
+ #include <sys/types.h>
+ #include <netinet/in.h>
+-#include <resolv.h>
+ #include <stdio.h>
+ 
+ #include "xmalloc.h"

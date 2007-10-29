@@ -1,0 +1,5 @@
+- bonjour packet parser, so we can rewrite packets with different host/ports
+- generic tunnel for arbitrary packets
+- chownnat library implementation (samy?)
+- GUI
+- remote server discovery (generic web based api?)

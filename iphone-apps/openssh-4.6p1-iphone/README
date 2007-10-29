@@ -1,0 +1,24 @@
+Instructions for building OpenSSH for an iPhone
+Allen Porter <allen@thebends.org>
+
+This package contains a patch for building ssh on the iphone.  Please let me
+know if you run into any problems.  These instructions assume the host machine
+is an intel mac.
+
+You must already have a working iphone toolchain. For the latest instructions:
+    http://iphone.fiveforty.net/wiki/index.php/Toolchain_Project
+
+You can find openssh-4.6p1 at http://www.openssh.com/portable.html
+
+The CC, CFLAGS, and LDCFLAGS are all based on the current toolchain which is
+known to change over time.
+
+$ cd openbsd-4.6p1
+$ patch -p1 < ../openssh-4.6p1-iphone.patch
+$ CC=/usr/local/arm-apple-darwin/bin/gcc CFLAGS="-fsigned-char -DBIND_8_COMPAT" LDFLAGS=-Wl,-syslibroot,$HEAVENLY ./configure --host=arm
+$ make
+
+What now? See some usage instructions:
+http://www.thebends.org/~allen/code/iphone-apps/binary/openssh-4.6p1/README
+Binary distribution:
+http://www.thebends.org/~allen/code/iphone-apps/binary/openssh-4.6p1-iphone-binary.tar.gz

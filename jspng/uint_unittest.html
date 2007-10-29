@@ -1,0 +1,74 @@
+<html>
+<head>
+<title></title>
+<script src="../jsunit/jsunit.js"></script>
+<script src="uint.js"></script>
+<script>
+function testUint8() {
+  var u = new uint8(1);
+  var data = [ 0 ];
+  data = u.appendToArray(data);
+  assertEquals([ 0, 1 ], data);
+  assertEquals(1, u.getBit(0));
+  assertEquals(0, u.getBit(1));
+  assertEquals(0, u.getBit(2));
+  assertEquals(0, u.getBit(3));
+  assertEquals(0, u.getBit(4));
+  assertEquals(0, u.getBit(5));
+  assertEquals(0, u.getBit(6));
+  assertEquals(0, u.getBit(7));
+
+  u = new uint8(2);
+  data = [];
+  data = u.appendToArray(data);
+  assertEquals([ 2 ], data);
+  assertEquals(0, u.getBit(0));
+  assertEquals(1, u.getBit(1));
+  assertEquals(0, u.getBit(2));
+  assertEquals(0, u.getBit(3));
+  assertEquals(0, u.getBit(4));
+  assertEquals(0, u.getBit(5));
+  assertEquals(0, u.getBit(6));
+  assertEquals(0, u.getBit(7));
+
+  u = new uint8(33);
+  data = [ 20 ];
+  data = u.appendToArray(data);
+  assertEquals([ 20, 33 ], data);
+  assertEquals(1, u.getBit(0));
+  assertEquals(0, u.getBit(1));
+  assertEquals(0, u.getBit(2));
+  assertEquals(0, u.getBit(3));
+  assertEquals(0, u.getBit(4));
+  assertEquals(1, u.getBit(5));
+  assertEquals(0, u.getBit(6));
+  assertEquals(0, u.getBit(7));
+}
+
+function testUint16() {
+  var u = new uint16(1);
+  var data = [ 70 ];
+  data = u.appendToArray(data);
+  assertEquals([ 70, 0, 1 ], data);
+  assertEquals(0, u.getByte(1));
+  assertEquals(1, u.getByte(0));
+
+  u = new uint16(0x209);
+  data = [ ];
+  data = u.appendToArray(data);
+  assertEquals([ 2, 9 ], data);
+  assertEquals(2, u.getByte(1));
+  assertEquals(9, u.getByte(0));
+}
+
+function runtests() {
+  var testcase = new TestCase();
+  testcase.addTest(testUint8);
+  testcase.addTest(testUint16);
+  testcase.runTests();
+}
+</script>
+</head>
+<body onload="runtests();">
+</body>
+</html>
