@@ -12,7 +12,7 @@
 #define _YDB_MAP_H_
 
 //#include <map>
-#include "ymutex.h"
+#include "ythread/mutex.h"
 #include "ydb_base.h"
 #include "ydb_tree.h"
 
@@ -39,7 +39,7 @@ class Ydb_Map {
   // Ydb_Map cannot be instantiated directly. See open() static method.
   Ydb_Map();
 
-  YMutex mutex_;
+  ythread::Mutex mutex_;
   Ydb_Tree db_;
 //  ymap db_;
   string db_file_;

@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <unistd.h>
-#include <ymutex.h>
-#include <ycondvar.h>
+#include <ythread/mutex.h>
+#include <ythread/condvar.h>
 #include "ydb_lock.h"
 #include "ydb_trans.h"
 #include "ydb_op.h"
@@ -13,8 +13,8 @@
 Ydb_Scheduler::Ydb_Scheduler(Ydb_Map* map)
   : map_(map), lock_table_(new Ydb_LockTable()),
     deadlock_tree_(new Ydb_DeadlockTree()),
-    mutex_(new YMutex()),
-    condvar_(new YCondVar(mutex_)) { }
+    mutex_(new ythread::Mutex()),
+    condvar_(new ythread::CondVar(mutex_)) { }
 
 Ydb_Scheduler::~Ydb_Scheduler() {
   delete lock_table_;

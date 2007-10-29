@@ -5,7 +5,7 @@
 #define _YDB_LOCK_H_
 
 #include <map>
-#include "ymutex.h"
+#include "ythread/mutex.h"
 #include "ydb_base.h"
 #include "ydb_op.h"
 #include "ydb_trans.h"
@@ -33,7 +33,7 @@ class Ydb_LockTable {
  private:
   typedef map<string, Ydb_LockInfo*> LockMap;
 
-  YMutex mutex_;      // protects lock_map_
+  ythread::Mutex mutex_;  // protects lock_map_
   LockMap lock_map_;
 };
 

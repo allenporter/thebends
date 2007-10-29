@@ -1,8 +1,8 @@
+#include <assert.h>
 #include <unistd.h>
-#include "assert.h"
-#include "ycondvar.h"
-#include "ymutex.h"
-#include "ythread.h"
+#include <ythread/condvar.h>
+#include <ythread/mutex.h>
+#include <ythread/thread.h>
 #include "ydb_base.h"
 #include "ydb_map.h"
 #include "ydb_sched.h"
@@ -13,9 +13,10 @@
 
 static int thread_count_ = 0;
 
-class TestThread : public YThread {
+class TestThread : public ythread::Thread {
  public:
-  TestThread(Ydb_Scheduler* sched, YMutex* mutex, YCondVar* condvar)
+  TestThread(Ydb_Scheduler* sched, ythread::Mutex* mutex,
+             ythread::CondVar* condvar)
     :  thread_num_(++thread_count_), sched_(sched), mutex_(mutex),
        condvar_(condvar), is_blocked_(false) { }
 
@@ -47,14 +48,15 @@ class TestThread : public YThread {
 
   int thread_num_;
   Ydb_Scheduler* sched_;
-  YMutex* mutex_;
-  YCondVar* condvar_;
+  ythread::Mutex* mutex_;
+  ythread::CondVar* condvar_;
   bool is_blocked_;
 };
 
 class TestThread1 : public TestThread {
  public:
-  TestThread1(Ydb_Scheduler* sched, YMutex* mutex, YCondVar* condvar)
+  TestThread1(Ydb_Scheduler* sched, ythread::Mutex* mutex,
+              ythread::CondVar* condvar)
     : TestThread(sched, mutex, condvar) { }
 
  protected:
@@ -75,7 +77,8 @@ class TestThread1 : public TestThread {
 
 class TestThread2 : public TestThread {
  public:
-  TestThread2(Ydb_Scheduler* sched, YMutex* mutex, YCondVar* condvar)
+  TestThread2(Ydb_Scheduler* sched, ythread::Mutex* mutex,
+              ythread::CondVar* condvar)
     : TestThread(sched, mutex, condvar) { }
 
  protected:
@@ -111,10 +114,10 @@ static void CheckResults(Ydb_Scheduler* sched, Ydb_Map* map) {
 }
 
 int main(int argc, char *argv[]) {
-  YMutex mutex1;
-  YCondVar condvar1(&mutex1);
-  YMutex mutex2;
-  YCondVar condvar2(&mutex2);
+  ythread::Mutex mutex1;
+  ythread::CondVar condvar1(&mutex1);
+  ythread::Mutex mutex2;
+  ythread::CondVar condvar2(&mutex2);
 
   Ydb_Map *map = Ydb_Map::Open("/dev/null");
   assert(map != NULL);

@@ -11,12 +11,14 @@
 #include "ydb_base.h"
 #include "ydb_trans.h"
 
-class YMutex;
-class YCondVar;
 class Ydb_DeadlockTree;
 class Ydb_LockTable;
 class Ydb_Map;
 class Ydb_Op;
+namespace ythread {
+class Mutex;
+class CondVar;
+}
 
 class Ydb_Scheduler {
  public:
@@ -47,8 +49,8 @@ class Ydb_Scheduler {
   Ydb_DeadlockTree* deadlock_tree_;
 
   // mutex_ and condvar_ protect lock_table_ and tree_
-  YMutex* mutex_;
-  YCondVar* condvar_;
+  ythread::Mutex* mutex_;
+  ythread::CondVar* condvar_;
 };
 
 class Ydb_DeadlockTree {

@@ -19,7 +19,7 @@ Ydb_Map* Ydb_Map::Open(const string& filename) {
 }
 
 bool Ydb_Map::Get(const string& key, string* value) {
-  YMutexLock l(&mutex_);
+  ythread::MutexLock l(&mutex_);
   return db_.Get(key, value);
 /*
   ymap::iterator iter = db_.find(key);  
@@ -32,13 +32,13 @@ bool Ydb_Map::Get(const string& key, string* value) {
 }
 
 void Ydb_Map::Put(const string& key, const string& value) {
-  YMutexLock l(&mutex_);
+  ythread::MutexLock l(&mutex_);
   db_.Put(key, value);
 //  db_[key] = value;
 }
 
 bool Ydb_Map::Del(const string& key) {
-  YMutexLock l(&mutex_);
+  ythread::MutexLock l(&mutex_);
   return db_.Del(key);
 /*
   ymap::iterator iter = db_.find(key);  

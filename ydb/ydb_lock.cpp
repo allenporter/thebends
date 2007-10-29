@@ -1,10 +1,9 @@
 // ydb_lock.cpp
 // Author: Allen Porter <allen@thebends.org>
 
+#include "ydb_lock.h"
 #include <map>
 #include <vector>
-#include "ymutex.h"
-#include "ydb_lock.h"
 
 Ydb_LockTable::Ydb_LockTable() { } 
 
@@ -25,7 +24,7 @@ bool Ydb_LockTable::Lock(Ydb_Trans* trans, Ydb_Op* op) {
 }
 
 bool Ydb_LockTable::ReadLock(Ydb_Trans* trans, string item) {
-  YMutexLock l(&mutex_);
+  ythread::MutexLock l(&mutex_);
   LockMap::iterator iter = lock_map_.find(item);
   if (iter == lock_map_.end()) {
     // lockinfo is deleted when the lock is released
@@ -58,7 +57,7 @@ bool Ydb_LockTable::ReadLock(Ydb_Trans* trans, string item) {
 // the item or if the transaction that holds a read lock is requesting an
 // upgrade to a write lock.
 bool Ydb_LockTable::WriteLock(Ydb_Trans* trans, string item) {
-  YMutexLock l(&mutex_);
+  ythread::MutexLock l(&mutex_);
   LockMap::iterator iter = lock_map_.find(item);
   if (iter == lock_map_.end()) {
     // lockinfo is deleted when the lock is released
@@ -80,7 +79,7 @@ bool Ydb_LockTable::WriteLock(Ydb_Trans* trans, string item) {
 }
 
 const TransList* Ydb_LockTable::GetLockHolders(string item) {
-  YMutexLock l(&mutex_);
+  ythread::MutexLock l(&mutex_);
   LockMap::iterator iter = lock_map_.find(item);
   if (iter == lock_map_.end()) {
     return NULL;
@@ -90,7 +89,7 @@ const TransList* Ydb_LockTable::GetLockHolders(string item) {
 }
 
 bool Ydb_LockTable::Unlock(Ydb_Trans* trans, string item) {
-  YMutexLock l(&mutex_);
+  ythread::MutexLock l(&mutex_);
   LockMap::iterator iter = lock_map_.find(item);
   if (iter == lock_map_.end()) {
     return false;

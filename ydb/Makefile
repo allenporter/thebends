@@ -1,6 +1,6 @@
 CC = g++
 AR = ar
-CFLAGS = -Wall
+CFLAGS = -Wall -L/usr/local/include
 
 SRCS = ydb_lock.cpp ydb_op.cpp ydb_trans.cpp ydb_sched.cpp ydb_map.cpp ydb.cpp \
        ydb_tree.cpp
