@@ -1,7 +1,7 @@
 # Command line tool that repeatedly contacts a tracker to get as many peers
 # for a .torrent file as possible.
 # NOTE: Use with caution, since this ignores the interval specified by the
-# tracker server.  Maybe the won't like this?
+# tracker server.  Maybe they won't like this?
 require 'net/http'
 require 'metainfo'
 require 'get_request'
