@@ -1,4 +1,4 @@
-// test.c
+// public-ip.c
 // Author: Allen Porter <allen@thebends.org>
 #include <assert.h>
 #include <arpa/inet.h>
@@ -12,6 +12,7 @@
 #include <sys/select.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include "route.h"
 
 #define UPMP_PORT 5351
 
@@ -23,24 +24,17 @@ struct discover_response {
   struct in_addr ip;
 };
 
-static void usage(char* argv[]) {
-  errx(EX_USAGE, "Usage: %s <ip>", argv[0]);
-}
-
 int main(int argc, char* argv[]) {
-  if (argc != 2) {
-    usage(argv);
-  }
-  const char* ip = argv[1];
-
   struct sockaddr_in name;
   socklen_t namelen = sizeof(struct sockaddr_in);
   bzero(&name, namelen);
-  if (inet_aton(ip, &name.sin_addr) != 1) {
-    usage(argv);
-  } 
+  if (!pmp::GetDefaultGateway(&name.sin_addr)) {
+    errx(1, "GetDefaultRoute failed");
+  }
   name.sin_family = AF_INET;
   name.sin_port = htons(UPMP_PORT);
+
+  printf("Sending nat-pmp request to Gateway: %s\n", inet_ntoa(name.sin_addr));
 
   int sock;
   if ((sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
@@ -57,6 +51,7 @@ int main(int argc, char* argv[]) {
     err(1, "sendto");
   }
 
+  // TODO: Retry requests and do non-blocking recv
   struct discover_response resp;
   ssize_t nread;
   if ((nread = recvfrom(sock, &resp, sizeof(struct discover_response),
