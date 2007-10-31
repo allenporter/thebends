@@ -1,5 +1,8 @@
 // public-ip.c
 // Author: Allen Porter <allen@thebends.org>
+//
+// Simple tool that makes a NAT PMP request to your gateway, and returns the
+// public IP of the router.
 #include <assert.h>
 #include <arpa/inet.h>
 #include <err.h>
