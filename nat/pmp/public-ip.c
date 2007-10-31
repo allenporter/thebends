@@ -1,4 +1,4 @@
-// client.c
+// test.c
 // Author: Allen Porter <allen@thebends.org>
 #include <assert.h>
 #include <arpa/inet.h>
