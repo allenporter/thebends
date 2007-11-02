@@ -15,6 +15,7 @@
 #include <strings.h>
 #include <unistd.h>
 #include <stdio.h>
+#include "message.h"
 
 namespace pmp {
 
@@ -115,6 +116,17 @@ bool GetDefaultGateway(in_addr* addr) {
   }
 
   memcpy(addr, &saddr->sin_addr, sizeof(struct in_addr));
+  return true;
+}
+
+bool GetPortMapAddress(struct sockaddr_in* name) {
+  socklen_t namelen = sizeof(struct sockaddr_in);
+  bzero(name, namelen);
+  if (!GetDefaultGateway(&name->sin_addr)) {
+    return false;
+  }
+  name->sin_family = AF_INET;
+  name->sin_port = htons(UPMP_PORT);
   return true;
 }
 

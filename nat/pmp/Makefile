@@ -8,7 +8,7 @@ all: public-ip
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
 
-libpmp.a: route.o
+libpmp.a: route.o op.o util.o
 	ar rcs $@ $^
 
 public-ip: public-ip.o libpmp.a
