@@ -14,22 +14,30 @@ enum ResultCode {
   UNSUPPORTED_OPCODE = 5
 };
 
-struct public_ip_request {
+struct request_header {
   uint8_t vers;
   uint8_t op;
 };
 
-struct public_ip_response {
+struct response_header {
   uint8_t vers;
   uint8_t op;
   uint16_t result;
   uint32_t epoch;
+};
+
+struct public_ip_request {
+  struct request_header header;
+};
+
+struct public_ip_response {
+  struct response_header header;
   struct in_addr ip;
 };
 
 struct map_request {
-  uint8_t vers;
-  uint8_t op;  // UDP=1, TCP=2
+  // op: UDP=1, TCP=2
+  struct request_header header;
   uint16_t reserved;  // must be zero
   uint16_t private_port;
   uint16_t public_port;
@@ -37,10 +45,7 @@ struct map_request {
 };
 
 struct map_response {
-  uint8_t vers;
-  uint8_t op;
-  uint16_t result;
-  uint32_t epoch;
+  struct response_header header;
   uint16_t private_port;
   uint16_t public_port;
   uint32_t lifetime;  // seconds

@@ -1,3 +1,10 @@
 Library and tools for playing with the Port Map Protocol, based on the
-draft at:
-http://files.dns-sd.org/draft-cheshire-nat-pmp.txt
+draft at: http://files.dns-sd.org/draft-cheshire-nat-pmp.txt
+
+I've found that there are other NAT-PMP standalone libraries out there, but
+they are less good and more expensive.
+
+Some tools in this package depend on the google-gflags library, available for
+download  at: http://code.google.com/p/google-gflags/
+You can still use the core of the nat-pmp library without this flag library,
+but you may also find it useful for your other projects.

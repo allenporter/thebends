@@ -3,6 +3,7 @@
 //
 // Simple tool that makes a NAT PMP request to your gateway, and returns the
 // public IP of the router.
+
 #include <arpa/inet.h>
 #include <err.h>
 #include <netinet/in.h>
@@ -10,7 +11,10 @@
 #include <sysexits.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <iostream>
 #include "util.h"
+
+using namespace std;
 
 int main(int argc, char* argv[]) {
   in_addr public_ip;
@@ -18,7 +22,8 @@ int main(int argc, char* argv[]) {
   if (!pmp::GetGatewayInfo(&public_ip, &uptime)) {
     errx(1, "pmp::GetGatewayInfo failed");
   }
-  printf("Gateway public ip: %s\n", inet_ntoa(public_ip));
-  printf("Gateway uptime: %u\n", uptime);
+
+  cout << "Gateway public ip: " << inet_ntoa(public_ip) << endl;
+  cout << "Gateway uptime: " << uptime << endl;
   return 0;
 }
