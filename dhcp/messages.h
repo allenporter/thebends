@@ -105,7 +105,11 @@ struct dhcp_message {
 // Populates the specified buffer with a DHCPDISCOVER request from the mac/host
 // specified.  The source_mac must be a 6 byte ethernet address, and hostname
 // is a NULL terminated string.  Returns -1 and logs to stderr on error.
-int build_discover(uint8_t* source_mac, const char* hostname,
-                   uint8_t* buf, uint16_t* size);
+int build_dhcp_discover(uint8_t* source_mac, const char* hostname,
+                        uint8_t* buf, uint16_t* size);
+
+int build_dhcp_request(uint32_t xid, uint8_t* source_mac, const char* hostname,
+                       uint32_t requested_ip, uint32_t server_ip,
+                       uint8_t* buf, uint16_t* size);
 
 #endif

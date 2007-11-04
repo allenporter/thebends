@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 
   uint8_t buf[MAX_DHCP_SIZE];
   uint16_t size = MAX_DHCP_SIZE;
-  build_discover(source_mac, "lozenge", buf, &size);
+  build_dhcp_discover(source_mac, "lozenge", buf, &size);
 
   libnet_ptag_t ether_tag = LIBNET_PTAG_INITIALIZER;
   libnet_ptag_t ip_tag = LIBNET_PTAG_INITIALIZER;
