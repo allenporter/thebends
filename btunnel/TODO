@@ -1,4 +1,9 @@
-- bonjour packet parser, so we can rewrite packets with different host/ports
+quick start:
+- register a fake service, get it to show up in bonjour browser
+- listen on the port, tunnel the shit to the remote side
+
+longer term:
+- rewrite packets with different host/ports
 - generic tunnel for arbitrary packets
 - chownnat library implementation (samy?)
 - GUI
