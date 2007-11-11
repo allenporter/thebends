@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <err.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <netinet/in.h>
 #include <string.h>
 #include <sysexits.h>
@@ -98,8 +99,15 @@ class TcpTunnel : public Tunnel {
       Close(sock_pair);
       return;
     }
+    usleep(10);
+tryagain:
     ssize_t nwrote = write(sock_pair, buf, nread);
     if (nwrote == -1) {
+      if (errno == EAGAIN) {
+        // TODO: Total hack, use a write buffer instead
+        usleep(100);
+        goto tryagain;
+      }
       err(EX_OSERR, "write() (%d)", sock_pair);
       return;
     } else if (nwrote == 0) {

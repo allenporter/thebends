@@ -47,13 +47,6 @@ void TCPServer::Start() {
     err(EX_OSERR, "fcntl()");
   }
 
-  // TODO: Set elsewhere?
-  // 32k send buffer
-  int buf = 32 * 1024;
-  if (setsockopt(sock_, SOL_SOCKET, SO_SNDBUF, &buf, sizeof(buf)) != 0) {
-    err(EX_OSERR, "setsockopt");
-  }
-
   if (bind(sock_, (const struct sockaddr*)&name, sizeof(name)) == -1) {
     err(EX_OSERR, "bind");
   }
@@ -74,6 +67,16 @@ void TCPServer::Accept(int sock) {
   if ((conn.sock = accept(sock, (struct sockaddr*)&conn.addr, &len)) == -1) {
     err(EX_OSERR, "accept");
   }
+
+  // Increase the buffer size so that we hopefully don't cause write() to block
+  // as much.
+  // TODO: Is the maximum buffer size defined somewhere?
+  // TODO: Get rid of this and use a write buffer instead (like yhttpserver?)
+  int buf = 128 * 1024;
+  if (setsockopt(sock_, SOL_SOCKET, SO_SNDBUF, &buf, sizeof(buf)) != 0) {
+    err(EX_OSERR, "setsockopt");
+  }
+
   assert(len == sizeof(conn.addr));
   client_callback_->Execute(&conn);
 }
