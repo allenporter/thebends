@@ -27,4 +27,4 @@ bproxy_server: bproxy_server.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
 
 clean:
-	rm -f *.o *.a core *_capture *_test tcp_proxy register_service bproxy bproxy_server
+	rm -f *.o *.a core tcp_proxy register_service bproxy bproxy_server
