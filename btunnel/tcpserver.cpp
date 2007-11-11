@@ -46,6 +46,14 @@ void TCPServer::Start() {
   if ((fcntl(sock_, F_SETFL, O_NONBLOCK)) == -1) {
     err(EX_OSERR, "fcntl()");
   }
+
+  // TODO: Set elsewhere?
+  // 32k send buffer
+  int buf = 32 * 1024;
+  if (setsockopt(sock_, SOL_SOCKET, SO_SNDBUF, &buf, sizeof(buf)) != 0) {
+    err(EX_OSERR, "setsockopt");
+  }
+
   if (bind(sock_, (const struct sockaddr*)&name, sizeof(name)) == -1) {
     err(EX_OSERR, "bind");
   }

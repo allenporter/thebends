@@ -68,7 +68,7 @@ class TcpTunnel : public Tunnel {
       err(EX_OSERR, "connect()");
     }
     cout << "Connection established. (remote=" << remote_sock
-         << ",client=" << client->sock << endl;
+         << ",client=" << client->sock << ")" << endl;
     // Setup socket pairs pairings
     SetForward(client->sock);
     SetForward(remote_sock);
@@ -90,7 +90,7 @@ class TcpTunnel : public Tunnel {
     char buf[BUFSIZ];
     ssize_t nread = read(sock, buf, BUFSIZ);
     if (nread == -1) {
-      err(EX_OSERR, "read()i (%d)", sock);
+      err(EX_OSERR, "read() (%d)", sock);
       return;
     } else if (nread == 0) {
       cerr << "Connection closed on read" << endl;
