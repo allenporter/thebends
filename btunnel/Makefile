@@ -3,7 +3,7 @@ CFLAGS=-Wall -Werror -g
 LDFLAGS=-lythread
 TOOL_LDFLAGS=$(LDFLAGS) -lgflags -lyhttp
 
-all: libbtunnel.a register_service tcp_proxy bproxy bproxy_serve
+all: libbtunnel.a register_service tcp_proxy bproxy bproxy_server
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
