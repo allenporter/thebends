@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 
 
   cout << "Service '" << service->name() << "' "
-       << " (" << service->type() << ") registered on port " << local_port
+       << " (" << service->type() << ") registered on port " << service->port()
        << endl;
   cout << "Forwarding to " << inet_ntoa(remote_addr) << ":" << remote_port
        << endl;

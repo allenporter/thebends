@@ -3,13 +3,13 @@ CFLAGS=-Wall -Werror
 LDFLAGS=-lythread
 TOOL_LDFLAGS=$(LDFLAGS) -lgflags -lyhttp
 
-all: libbtunnel.a multicast_capture udp_capture register_service tcp_proxy \
+all: libbtunnel.a udp_capture register_service tcp_proxy \
      bproxy
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
 
-libbtunnel.a: socket.o udp.o multicast.o listener.o writer.o tcpserver.o \
+libbtunnel.a: socket.o udp.o listener.o writer.o tcpserver.o \
               util.o packer.o registration.o tunnel.o
 	$(AR) rc $@ $^
 
@@ -28,9 +28,6 @@ tcp_proxy: tcp_proxy.o libbtunnel.a
 
 bproxy: bproxy.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
-
-test: multicast_test
-	./multicast_test
 
 clean:
 	rm -f *.o *.a core *_capture *_test tcp_proxy register_service bproxy
