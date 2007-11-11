@@ -61,17 +61,13 @@ class TcpTunnel : public Tunnel {
       close(client->sock);
       err(EX_OSERR, "socket()");
     }
-/*
-    if ((fcntl(remote_sock, F_SETFL, O_NONBLOCK)) == -1) {
-      err(EX_OSERR, "fcntl()");
-    }
-*/
+    // TODO: Open remote connection asyncronously
     cout << "Openining new remote connection" << endl;
     if (connect(remote_sock, (const struct sockaddr*)&remote_,
                 sizeof(struct sockaddr_in)) != 0) {
       err(EX_OSERR, "connect()");
     }
-    cout << "Opened." << endl;
+    cout << "Connection established." << endl;
     // Setup socket pairs pairings
     SetForward(client->sock);
     SetForward(remote_sock);
