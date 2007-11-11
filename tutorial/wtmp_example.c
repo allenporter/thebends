@@ -1,4 +1,5 @@
-// Tutorial #2
+// Tutorial #2: Show users that previous logged in/out of the system.
+// Author: Allen Porter <allen@thebends.org>
 //
 // Compile with:
 // $ gcc -o wtmp_example wtmp_example.c

@@ -1,4 +1,5 @@
-// Tutorial #1
+// Tutorial #1: Strings and arrays.
+// Author: Allen Porter <allen@thebends.org>
 //
 // Compile with:
 // $ gcc -Wall -Werror -o putc_example putc_example.c

@@ -13,7 +13,7 @@
 //    by perror.  Re-write the error handing routine so that it doesn't use
 //    perror(), but produces equivalent error output using strerror().  (Note:
 //    perror() outputs to stderr by default, and you should make your error
-//    function do the same).  See: man perror, man intro.
+//    handling code do the same).  See: man perror, man intro.
 //    Change the -1 back to NGROUPS_MAX when finished, so the program works
 //    again.
 // 4. Print out the current userid.  See man getuid
