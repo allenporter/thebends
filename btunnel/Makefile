@@ -8,7 +8,7 @@ all: libbtunnel.a multicast_capture udp_capture register_service tcp_proxy
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
 
-libbtunnel.a: socket.o udp.o tcp.o multicast.o listener.o writer.o tcpserver.o \
+libbtunnel.a: socket.o udp.o multicast.o listener.o writer.o tcpserver.o \
               util.o packer.o registration.o tunnel.o
 	$(AR) rc $@ $^
 
