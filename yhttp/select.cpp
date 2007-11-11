@@ -8,7 +8,7 @@
 
 namespace yhttpserver {
 
-Select::Select() : nfds_(0) { }
+Select::Select() : nfds_(0), looping_(false) { }
 
 Select::~Select() {
   // TODO(aporter): delete accept callbacks?
@@ -39,7 +39,8 @@ void Select::RemoveFd(int fd) {
 }
 
 void Select::Start() {
-  while (true) {
+  looping_ = true;
+  while (looping_) {
     fd_set readfds;
     FD_ZERO(&readfds);
     int nfds = nfds_.front() + 1;
@@ -60,6 +61,10 @@ void Select::Start() {
       }
     }
   }
+}
+
+void Select::Stop() {
+  looping_ = false;
 }
 
 }  // yhttpserver

@@ -22,10 +22,12 @@ class Select {
   void RemoveFd(int fd);
 
   void Start();
+  void Stop();
 
  private:
   std::vector<int> nfds_;
   std::map<int, AcceptCallback*> read_callbacks_;
+  bool looping_;
 };
 
 }  // namespace yhttpserver

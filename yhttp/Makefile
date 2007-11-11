@@ -1,7 +1,7 @@
 AR = ar
 CC = g++
 RANLIB = ranlib
-CCFLAGS = -Wall
+CCFLAGS = -Wall -Werror
 INSTALL = install
 INSTALLDIR = /usr/local
 INSTALL_LIBDIR = $(INSTALLDIR)/lib
