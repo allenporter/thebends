@@ -90,8 +90,6 @@ class TcpTunnel : public Tunnel {
     assert(iter != pairs_.end());
     int sock_pair = iter->second;
 
-    cout << "Reading from sock " << sock << endl;
-
     char buf[BUFSIZ];
     ssize_t nread = read(sock, buf, BUFSIZ);
     if (nread == -1) {

@@ -3,6 +3,8 @@
 #ifndef __BTUNNEL_UTIL_H__
 #define __BTUNNEL_UTIL_H__
 
+#include <string>
+#include <sys/types.h>
 #include "listener.h"
 
 namespace btunnel {
@@ -25,6 +27,11 @@ class PacketDumper {
   ReceivedCallback* callback_;
   size_t max_length_;
 };
+
+// Parses a host:port string into individual components.
+bool GetHostPort(const std::string& host_port,
+                 std::string* host,
+                 uint16_t* port);
 
 }  // namespace btunnel
 

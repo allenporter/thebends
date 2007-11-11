@@ -41,4 +41,15 @@ void PacketDumper::DumpPacket(btunnel::packet_info* info) {
   cout << endl;
 }
 
+bool GetHostPort(const string& host_port, string* host, uint16_t* port) {
+  size_t c = host_port.find(":");
+  if (c == string::npos) {
+    return false;
+  }
+  *host = host_port.substr(0, c);
+  *port = (uint16_t)strtoll(host_port.substr(c + 1).c_str(), NULL, 10);
+  return (!host->empty() || *port > 0);
+}
+
+
 }  // namespace btunnel
