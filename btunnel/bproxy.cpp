@@ -14,6 +14,7 @@
 #include <iostream>
 #include "tunnel.h"
 #include "registration.h"
+#include "service.h"
 #include "util.h"
 
 DEFINE_int32(local_port, 0,
@@ -24,6 +25,8 @@ DEFINE_string(service_type, "_daap._tcp",
               "_ssh._tcp.  Only TCP services are currently supported.");
 DEFINE_string(remote_ip_port, "",
               "The IP:Port that the remote service is registered on.");
+DEFINE_string(txt, "",
+              "Text record key=value pairs, comma separated.");
 
 using namespace std;
 
@@ -53,8 +56,13 @@ int main(int argc, char* argv[]) {
     errx(1, "Invalid --remote_ip specified");    
   }
 
-  btunnel::RegisteredService* service =
-    btunnel::NewRegisteredService(FLAGS_service_type, local_port);
+  map<string, string> txt_records;
+  if (!btunnel::GetMap(FLAGS_txt, &txt_records)) {
+    errx(1, "Invalid --txt flag");
+  }
+
+  btunnel::Service* service =
+    btunnel::NewRegisteredService(FLAGS_service_type, local_port, txt_records);
   if (service == NULL) {
     errx(1, "Failed to create RegisteredService");
   }
@@ -67,9 +75,8 @@ int main(int argc, char* argv[]) {
   signal(SIGSEGV, sig_handler);
   signal(SIGBUS, sig_handler);
 
-
   cout << "Service '" << service->name() << "' "
-       << " (" << service->type() << ") registered on port " << service->port()
+       << " (" << service->type() << ") registered on port " << local_port
        << endl;
   cout << "Forwarding to " << inet_ntoa(remote_addr) << ":" << remote_port
        << endl;

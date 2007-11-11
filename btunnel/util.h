@@ -3,6 +3,7 @@
 #ifndef __BTUNNEL_UTIL_H__
 #define __BTUNNEL_UTIL_H__
 
+#include <map>
 #include <string>
 #include <sys/types.h>
 
@@ -12,6 +13,12 @@ namespace btunnel {
 bool GetHostPort(const std::string& host_port,
                  std::string* host,
                  uint16_t* port);
+
+// Returns a map from key value pairs like:
+//    key1=value1,key2=value2,...
+bool GetMap(const std::string& str,
+            std::map<std::string, std::string>* records);
+
 
 }  // namespace btunnel
 

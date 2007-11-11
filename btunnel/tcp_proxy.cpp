@@ -1,7 +1,8 @@
 // tcpproxy.cpp
 // Author: Allen Porter <allen@thebends.org>
 //
-// TCP proxy.
+// Standalone TCP single port proxy, used for basic testing of port forwarding
+// routines of btunnel.
 
 #include <arpa/inet.h>
 #include <err.h>

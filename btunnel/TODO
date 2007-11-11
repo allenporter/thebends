@@ -1,10 +1,7 @@
-quick start:
-- register a fake service, get it to show up in bonjour browser
-- listen on the port, tunnel the shit to the remote side
+short term:
+- separate client + server and forwarding service records to remote hosts.
 
 longer term:
-- rewrite packets with different host/ports
-- generic tunnel for arbitrary packets
-- chownnat library implementation (samy?)
+- libnatpmp / chownnat library integration (samy?)
 - GUI
 - remote server discovery (generic web based api?)

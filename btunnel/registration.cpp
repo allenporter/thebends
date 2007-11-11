@@ -6,42 +6,37 @@
 #include <string>
 #include <err.h>
 #include <dns_sd.h>
+#include "service.h"
 
 using namespace std;
 
 namespace btunnel {
 
-class RegisteredServiceImpl : public RegisteredService {
+class RegisteredService : public Service {
  public:
-  RegisteredServiceImpl() : service_(NULL), name_(""), type_(""), domain_(""),
-                            port_(0) { }
-
-  virtual ~RegisteredServiceImpl() {
-    if (service_ != NULL) {
-      DNSServiceRefDeallocate(service_);
-    }
+  RegisteredService(DNSServiceRef service, 
+                    const string& name,
+                    const string& type,
+                    const string& domain,
+                    const string& host,
+                    uint16_t port,
+                    const map<string, string>& txt_records)
+      : Service(name, type, domain, host, port, txt_records),
+        service_(service) {
   }
 
-  void set_service(DNSServiceRef service) { service_ = service; }
-
-  virtual const string& name() const { return name_; }
-  void set_name(const string& name) { name_ = name; }
-
-  virtual const string& type() const { return type_; }
-  void set_type(const string& type) { type_ = type; }
-
-  virtual const string& domain() const { return domain_; }
-  void set_domain(const string& domain) { domain_ = domain; }
-
-  virtual uint16_t port() const { return port_; }
-  void set_port(uint16_t port) { port_ = port; }
+  virtual ~RegisteredService() {
+    DNSServiceRefDeallocate(service_);
+  }
 
  private:
   DNSServiceRef service_;  
-  string name_;
-  string type_;
-  string domain_;
-  uint16_t port_;
+};
+
+struct Context {
+  RegisteredService* service;
+  uint16_t port;
+  map<string, string> txt_records;
 };
 
 static void RegistrationCallback(DNSServiceRef service, DNSServiceFlags flags,
@@ -52,34 +47,40 @@ static void RegistrationCallback(DNSServiceRef service, DNSServiceFlags flags,
     // Handle with DNSServiceProcessResult() in NewService().
     return;
   }
-  RegisteredServiceImpl* registered_service = (RegisteredServiceImpl*)context;
-  registered_service->set_service(service);
-  registered_service->set_type(regtype);
-  registered_service->set_name(name);
-  registered_service->set_domain(domain);
+  struct Context* ctx = (struct Context*)context;
+  ctx->service = new RegisteredService(service, name, regtype, domain,
+                                       "localhost", ctx->port,
+                                       ctx->txt_records);
 }
 
-RegisteredService* NewRegisteredService(const string& type, uint16_t port) {
-  RegisteredServiceImpl* registered_service = new RegisteredServiceImpl;
-  registered_service->set_port(port);
+Service* NewRegisteredService(const string& type, uint16_t port,
+                              const map<string, string>& txt_records) {
+  struct Context context;
+  context.port = port;
+  context.txt_records = txt_records;
 
   DNSServiceRef service;
   DNSServiceErrorType result;
   result = DNSServiceRegister(&service, 1, 0, NULL,
                               type.c_str(), NULL, NULL, htons(port), 0, NULL,
-                              &RegistrationCallback, registered_service);
+                              &RegistrationCallback, &context);
   if (result != kDNSServiceErr_NoError) {
     warn("DNSServiceRegister failed: %d", result);
-    delete registered_service;
     return NULL;
   }
   result = DNSServiceProcessResult(service);
   if (result != kDNSServiceErr_NoError) {
     warn("DNSServiceProcessResult failed: %d", result);
-    delete registered_service;
     return NULL;
   }
-  return registered_service;
+  result = DNSServiceUpdateRecord(service, NULL, 0,
+                                  context.service->txt().size(),
+                                  context.service->txt().data(), 900);
+  if (result != kDNSServiceErr_NoError) {
+    warn("DNSServiceUpdateRecord failed: %d", result);
+    return NULL;
+  }
+  return context.service;
 }
 
 }  // namespace btunnel
