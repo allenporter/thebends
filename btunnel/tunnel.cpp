@@ -1,92 +1,142 @@
 // tunnel.cpp
 // Author: Allen Porter <allen@thebends.org>
-#include "tunnel.h"
 
-#include <ythread/callback-inl.h>
 #include <arpa/inet.h>
+#include <err.h>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <sysexits.h>
 #include <sys/types.h>
+
 #include <iostream>
-#include "listener.h"
-#include "packer.h"
-#include "writer.h"
-#include "udp.h"
+#include <map>
+
+#include <ythread/callback-inl.h>
+
+#include "tunnel.h"
+#include "tcpserver.h"
 
 using namespace std;
 
 namespace btunnel {
 
-class UdpTunnel : public Tunnel {
+typedef map<int, int> SockMap;
+
+class TcpTunnel : public Tunnel {
  public:
-  UdpTunnel(struct in_addr remote_addr,
+  TcpTunnel(yhttpserver::Select* select,
+            struct in_addr remote_addr,
             uint16_t remote_port,
-            uint16_t local_port,
-            Packer* packer,
-            ReceivedCallback* client_callback)
-      : socket_(NewUdpSocket(local_port)),
-        packer_(packer),
-        client_callback_(client_callback) {
+            uint16_t local_port) : select_(select) {
+    ConnectionCallback* accept_callback =
+      ythread::NewCallback(this, &TcpTunnel::ClientConnected);
+    server_ = new TCPServer(select, local_port, accept_callback);
+
     // Setup remote address
     bzero(&remote_, sizeof(struct sockaddr_in));
     remote_.sin_family = AF_INET;
-    remote_.sin_addr.s_addr = htonl(remote_addr.s_addr);
+    memcpy(&remote_.sin_addr, &remote_addr, sizeof(struct in_addr));
+    remote_.sin_addr.s_addr = remote_addr.s_addr;
     remote_.sin_port = htons(remote_port);
-
-    received_callback_ = 
-      ythread::NewCallback(this, &UdpTunnel::Received);
-    thread_ = NewSocketListenerThread(socket_->sock(), received_callback_);
-    writer_ = NewSocketWriter(socket_->sock());
   }
 
-  virtual ~UdpTunnel() {
-    thread_->Stop();
-    thread_->Join();
-    delete thread_;
-    delete client_callback_;
-    delete received_callback_;
-    delete writer_;
-    delete socket_;
+  virtual ~TcpTunnel() {
+    Stop();
   }
 
-  virtual void Write(const unsigned char* data,
-                     size_t length) {
-// TODO: wrap and send
-//    writer_->Write(remote_, packed_data, packed_length);
+  virtual void Start() {
+    server_->Start();
   }
 
- private:
-  void Received(struct packet_info* wrapped_info) {
-    const struct sockaddr_in& sender = wrapped_info->sender;
-    if (remote_.sin_addr.s_addr != sender.sin_addr.s_addr &&
-        remote_.sin_port != sender.sin_port) {
-      cerr << "Ignoring packet from " << inet_ntoa(sender.sin_addr)
-           << ":" << ntohs(sender.sin_port) << endl;
+  void ClientConnected(struct Connection* client) {
+    cout << "Accepted connection from " << inet_ntoa(client->addr.sin_addr)
+         << endl;
+    assert(pairs_.count(client->sock) == 0);
+
+    // We've received a client connection; Establish a new connection to the
+    // remote address
+    int remote_sock;
+    if ((remote_sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+      close(client->sock);
+      err(EX_OSERR, "socket()");
+    }
+/*
+    if ((fcntl(remote_sock, F_SETFL, O_NONBLOCK)) == -1) {
+      err(EX_OSERR, "fcntl()");
+    }
+*/
+    cout << "Openining new remote connection" << endl;
+    if (connect(remote_sock, (const struct sockaddr*)&remote_,
+                sizeof(struct sockaddr_in)) != 0) {
+      err(EX_OSERR, "connect()");
+    }
+    cout << "Opened." << endl;
+    // Setup socket pairs pairings
+    SetForward(client->sock);
+    SetForward(remote_sock);
+    pairs_[remote_sock] = client->sock;
+    pairs_[client->sock] = remote_sock;
+  }
+
+  void SetForward(int sock) {
+    yhttpserver::Select::AcceptCallback* cb =
+        ythread::NewCallback(this, &TcpTunnel::Read);
+    select_->AddFd(sock, cb);
+  }
+
+  void Read(int sock) {
+    SockMap::const_iterator iter = pairs_.find(sock);
+    assert(iter != pairs_.end());
+    int sock_pair = iter->second;
+
+    cout << "Reading from sock " << sock << endl;
+
+    char buf[BUFSIZ];
+    ssize_t nread = read(sock, buf, BUFSIZ);
+    if (nread == -1) {
+      err(EX_OSERR, "read()");
+      return;
+    } else if (nread == 0) {
+      cerr << "Connection closed on read" << endl;
+      Close(sock);
+      Close(sock_pair);
       return;
     }
-
-    struct packet_info info;
-    info.sender = wrapped_info->sender;
-    packer_->Pack(wrapped_info->data, wrapped_info->length,
-                  info.data, &info.length);
-    client_callback_->Execute(&info);
+    ssize_t nwrote = write(sock_pair, buf, nread);
+    if (nwrote == -1) {
+      err(EX_OSERR, "write()");
+      return;
+    } else if (nwrote == 0) {
+      cerr << "Connection closed on write" << endl;
+      Close(sock);
+      Close(sock_pair);
+      return;
+    }
+    assert(nwrote == nread);
   }
 
-  Socket* socket_;
-  Packer* packer_;
+  void Close(int sock) {
+    select_->RemoveFd(sock);
+    close(sock);
+    pairs_.erase(sock);
+  }
+
+  virtual void Stop() {
+    server_->Stop();
+  }
+
   struct sockaddr_in remote_;
-  ReceivedCallback* client_callback_;
-  ReceivedCallback* received_callback_;
-  ythread::Thread* thread_;
-  Writer* writer_;
+  yhttpserver::Select* select_;
+  TCPServer* server_;
+  SockMap pairs_;
 };
 
-Tunnel* NewUdpTunnel(struct in_addr addr,
+Tunnel* NewTcpTunnel(yhttpserver::Select* select,
+                     struct in_addr addr,
                      uint16_t remote_port,
-                     uint16_t local_port,
-                     Packer* packer,
-                     ReceivedCallback* callback) {
-  return new UdpTunnel(addr, remote_port, local_port, packer, callback);
+                     uint16_t local_port) {
+  return new TcpTunnel(select, addr, remote_port, local_port);
 }
 
 }  // namespace btunnel
