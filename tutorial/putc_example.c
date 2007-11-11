@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 
   // This code is equivalent to printf("%s\n", argv[1]);
   const char* string_argument = argv[1];
-  int length = strlen(string_argument);
+  size_t length = strlen(string_argument);
   int i;
   for (i = 0; i < length; i++) {
     char c = string_argument[i];
