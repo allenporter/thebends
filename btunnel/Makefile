@@ -3,12 +3,13 @@ CFLAGS=-Wall -Werror -g
 LDFLAGS=-lythread
 TOOL_LDFLAGS=$(LDFLAGS) -lgflags -lyhttp
 
-all: libbtunnel.a register_service tcp_proxy bproxy bproxy_server
+all: libbtunnel.a register_service tcp_proxy bproxy bproxy_server buffer_test
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
 
-libbtunnel.a: tcpserver.o util.o registration.o tunnel.o service.o browse.o
+libbtunnel.a: tcpserver.o util.o registration.o tunnel.o service.o browse.o \
+              buffer.o
 	$(AR) rc $@ $^
 
 %_test: %_test.o libbtunnel.a
@@ -27,4 +28,4 @@ bproxy_server: bproxy_server.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
 
 clean:
-	rm -f *.o *.a core tcp_proxy register_service bproxy bproxy_server
+	rm -f *.o *.a core *_test tcp_proxy register_service bproxy bproxy_server

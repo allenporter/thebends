@@ -6,81 +6,66 @@
 #include <string>
 #include <err.h>
 #include <dns_sd.h>
+#include <iostream>
 #include "service.h"
 
 using namespace std;
 
 namespace btunnel {
 
-class RegisteredService : public Service {
- public:
-  RegisteredService(DNSServiceRef service, 
-                    const string& name,
-                    const string& type,
-                    const string& domain,
-                    const string& host,
-                    uint16_t port,
-                    const map<string, string>& txt_records)
-      : Service(name, type, domain, host, port, txt_records),
-        service_(service) {
-  }
+ServiceManager::ServiceManager() { }
 
-  virtual ~RegisteredService() {
-    DNSServiceRefDeallocate(service_);
-  }
-
- private:
-  DNSServiceRef service_;  
-};
-
-struct Context {
-  RegisteredService* service;
-  uint16_t port;
-  map<string, string> txt_records;
-};
+ServiceManager::~ServiceManager() {
+  // Must unregister all services first
+  assert(services_.size() == 0);
+}
 
 static void RegistrationCallback(DNSServiceRef service, DNSServiceFlags flags,
                                  DNSServiceErrorType result, const char *name,
                                  const char *regtype, const char *domain,
                                  void *context) {
   if (result != kDNSServiceErr_NoError) {
-    // Handle with DNSServiceProcessResult() in NewService().
+    // Handle with DNSServiceProcessResult()
     return;
   }
-  struct Context* ctx = (struct Context*)context;
-  ctx->service = new RegisteredService(service, name, regtype, domain,
-                                       "localhost", ctx->port,
-                                       ctx->txt_records);
 }
 
-Service* NewRegisteredService(const string& type, uint16_t port,
-                              const map<string, string>& txt_records) {
-  struct Context context;
-  context.port = port;
-  context.txt_records = txt_records;
+bool ServiceManager::Register(Service* service) {
+  // Host and domain are unused; Sanity check that the caller didn't specify
+  assert(service->domain().size() == 0);
+  assert(service->host().size() == 0);
 
-  DNSServiceRef service;
+  DNSServiceRef dns_service;
   DNSServiceErrorType result;
-  result = DNSServiceRegister(&service, 1, 0, NULL,
-                              type.c_str(), NULL, NULL, htons(port), 0, NULL,
-                              &RegistrationCallback, &context);
+  result = DNSServiceRegister(&dns_service, 1, 0,
+                              service->name().c_str(),
+                              service->type().c_str(),
+                              NULL, // TODO: domain needed?
+                              NULL, // TODO: host needed?
+                              htons(service->port()),
+                              service->txt().size(), service->txt().data(),
+                              RegistrationCallback, NULL);
   if (result != kDNSServiceErr_NoError) {
     warn("DNSServiceRegister failed: %d", result);
-    return NULL;
+    return false;
   }
-  result = DNSServiceProcessResult(service);
+  result = DNSServiceProcessResult(dns_service);
   if (result != kDNSServiceErr_NoError) {
     warn("DNSServiceProcessResult failed: %d", result);
-    return NULL;
+    return false;
   }
-  result = DNSServiceUpdateRecord(service, NULL, 0,
-                                  context.service->txt().size(),
-                                  context.service->txt().data(), 900);
-  if (result != kDNSServiceErr_NoError) {
-    warn("DNSServiceUpdateRecord failed: %d", result);
-    return NULL;
+  services_[service] = dns_service;
+  return true;
+}
+
+bool ServiceManager::Unregister(Service* service) {
+  ServiceMap::iterator iter = services_.find(service);
+  if (iter == services_.end()) {
+    return false;
   }
-  return context.service;
+  DNSServiceRefDeallocate(iter->second);
+  services_.erase(iter);
+  return true;
 }
 
 }  // namespace btunnel

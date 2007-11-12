@@ -49,7 +49,8 @@ int main(int argc, char* argv[]) {
     btunnel::Service* service = services[i];
     cout << "Found: " << service->name() << " "
          << "(" << service->type() << ") at "
-         << service->host() << ":" << service->port() << endl;
+         << service->host() << ":" << service->port()
+         << "; " << service->domain() << endl;
     const map<string, string>& records = service->txt_records();
     for (map<string, string>::const_iterator it = records.begin();
          it != records.end(); ++it) {

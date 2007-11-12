@@ -5,16 +5,24 @@
 // APIs exposed by dns_sd.h.
 
 #include <map>
-#include <string>
 #include <sys/types.h>
+#include <dns_sd.h>
 
 namespace btunnel {
 
 class Service;
 
-// TODO: Support custom service names
-Service* NewRegisteredService(
-    const std::string& type, uint16_t port,
-    const std::map<std::string, std::string>& txt_records);
+class ServiceManager {
+ public:
+  ServiceManager();
+  ~ServiceManager();
+
+  bool Register(Service* service);
+  bool Unregister(Service* service);
+
+ private:
+  typedef std::map<Service*, DNSServiceRef> ServiceMap;
+  ServiceMap services_;
+};
 
 }  // namespace btunnel

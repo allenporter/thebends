@@ -20,6 +20,8 @@
 DEFINE_int32(local_port, 0,
              "The local port to listen on that --service_type will be "
              "advertised on.");
+DEFINE_string(service_name, "",
+              "Name of the remote service");
 DEFINE_string(service_type, "_daap._tcp",
               "The remote bonjour service type, such as _daap._tcp, "
               "_ssh._tcp.  Only TCP services are currently supported.");
@@ -45,6 +47,8 @@ int main(int argc, char* argv[]) {
   if (!btunnel::GetHostPort(FLAGS_remote_ip_port, &remote_ip, &remote_port)) {
     errx(1, "Required flag --remote_ip_port must be specified in the format "
             "<ipaddress>:<port>"); 
+  } else if (FLAGS_service_name.empty()) {
+    errx(1, "Required flag --name was not specified");
   } else if (FLAGS_service_type.empty()) {
     errx(1, "Required flag --service_type was not specified");
   } else if (local_port <= 0) {
@@ -61,10 +65,12 @@ int main(int argc, char* argv[]) {
     errx(1, "Invalid --txt flag");
   }
 
-  btunnel::Service* service =
-    btunnel::NewRegisteredService(FLAGS_service_type, local_port, txt_records);
-  if (service == NULL) {
-    errx(1, "Failed to create RegisteredService");
+  btunnel::Service service(FLAGS_service_name, FLAGS_service_type, "", "",
+                           local_port, txt_records);
+
+  btunnel::ServiceManager mgr;
+  if (!mgr.Register(&service)) {
+    errx(1, "Failed to register service");
   }
 
   signal(SIGINT, sig_handler);
@@ -75,8 +81,8 @@ int main(int argc, char* argv[]) {
   signal(SIGSEGV, sig_handler);
   signal(SIGBUS, sig_handler);
 
-  cout << "Service '" << service->name() << "' "
-       << " (" << service->type() << ") registered on port " << local_port
+  cout << "Service '" << service.name() << "' "
+       << " (" << service.type() << ") registered on port " << local_port
        << endl;
   cout << "Forwarding to " << inet_ntoa(remote_addr) << ":" << remote_port
        << endl;
@@ -87,6 +93,7 @@ int main(int argc, char* argv[]) {
   tunnel->Start();
   select_.Start();  // loop forever
 
-  delete service;
+  mgr.Unregister(&service);
+
   delete tunnel;
 }
