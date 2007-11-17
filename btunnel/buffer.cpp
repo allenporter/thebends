@@ -10,16 +10,16 @@ using namespace std;
 
 namespace btunnel {
 
-Buffer::Buffer(size_t size) : buffer_size_(size + 1), start_(0), end_(0) {
+Buffer::Buffer(int size) : buffer_size_(size + 1), start_(0), end_(0) {
   assert(Size() == 0);
-  buffer_ = new unsigned char[buffer_size_];
+  buffer_ = new char[buffer_size_];
 }
 
 Buffer::~Buffer() {
   delete [] buffer_;
 }
 
-size_t Buffer::Size() const {
+int Buffer::Size() const {
   if (start_ == end_) {
     return 0;
   } else if (start_ < end_) {
@@ -28,16 +28,16 @@ size_t Buffer::Size() const {
   return buffer_size_ - (start_ - end_);
 }
 
-size_t Buffer::SizeLeft() const {
+int Buffer::SizeLeft() const {
   return buffer_size_ - Size() - 1;
 }
 
-bool Buffer::Peek(unsigned char* data, size_t len) const {
+bool Buffer::Peek(char* data, int len) const {
   if (len > Size()) {
     return false;
   }
-  size_t start = start_;
-  size_t left = len;
+  int start = start_;
+  int left = len;
   if (start_ + len > buffer_size_) {
     size_t forward = buffer_size_ - start_;
     memcpy(data, buffer_ + start, forward);
@@ -50,14 +50,14 @@ bool Buffer::Peek(unsigned char* data, size_t len) const {
   return true;
 }
 
-bool Buffer::Read(unsigned char* data, size_t len) {
+bool Buffer::Read(char* data, int len) {
   if (!Peek(data, len)) {
     return false;
   }
   return Advance(len);
 }
 
-bool Buffer::Append(const unsigned char* data, size_t len) {
+bool Buffer::Append(const char* data, int len) {
   if (len > SizeLeft()) {
     return false;
   }
@@ -75,11 +75,23 @@ bool Buffer::Append(const unsigned char* data, size_t len) {
   return true;
 }
 
-bool Buffer::Advance(size_t len) {
+bool Buffer::Advance(int len) {
+  assert(len > 0);
   if (len > Size()) {
     return false;
   }
-  start_ = (start_ + len) % buffer_size_;
+  start_ += len;
+  start_ %= buffer_size_;
+  return true;
+}
+
+bool Buffer::Unadvance(int len) {
+  assert(len > 0);
+  if (len > SizeLeft()) {
+    return false;
+  }
+  start_ -= len;
+  start_ %= buffer_size_;
   return true;
 }
 

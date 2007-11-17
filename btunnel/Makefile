@@ -9,7 +9,7 @@ all: libbtunnel.a register_service tcp_proxy bproxy bproxy_server buffer_test
 	$(CC) $(CFLAGS) -c $<
 
 libbtunnel.a: tcpserver.o util.o registration.o tunnel.o service.o browse.o \
-              buffer.o
+              buffer.o peer.o
 	$(AR) rc $@ $^
 
 %_test: %_test.o libbtunnel.a

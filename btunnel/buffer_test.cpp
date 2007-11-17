@@ -15,23 +15,22 @@ string MakeString(uint8_t size) {
   return data;
 }
 
-void Offset(btunnel::Buffer* buf, size_t offset) {
+void Offset(btunnel::Buffer* buf, int offset) {
   assert(offset > 0);
   assert(buf->Size() == 0);
   const string& data = MakeString(offset);
-  assert(buf->Append((const unsigned char*)data.data(), data.size()));
+  assert(buf->Append(data.data(), data.size()));
   assert(buf->Size() == offset);
   char buffer[offset];
-  assert(buf->Read((unsigned char*)buffer, offset));
+  assert(buf->Read(buffer, offset));
   assert(buf->Size() == 0);
 }
 
-void Fill(btunnel::Buffer* buf, size_t step) {
+void Fill(btunnel::Buffer* buf, int step) {
   assert(step > 0);
   assert(buf->Size() == 0);
   assert(buf->SizeLeft() > 0);
-  const unsigned char* data =
-    (unsigned char*)MakeString(buf->SizeLeft()).c_str();
+  const char* data = MakeString(buf->SizeLeft()).c_str();
   int i = 0;
   while (buf->SizeLeft() > step) {
     assert(buf->Append(data + i, step));
@@ -47,7 +46,7 @@ void Verify(btunnel::Buffer* buf) {
   const string& data = MakeString(buf->Size());
   int len = buf->Size();
   char buf_data[len + 1];
-  buf->Read((unsigned char*)buf_data, len);
+  buf->Read(buf_data, len);
   buf_data[len] = '\0';
   assert(data == string(buf_data));
 }
@@ -58,15 +57,21 @@ void test1() {
   for (i = 0; i < 5; i++) {
     assert(buf.Size() == 0);
     assert(buf.SizeLeft() == 5);
-    assert(buf.Append((const unsigned char*)"abc", 3)); 
+    assert(buf.Append("abc", 3)); 
     assert(buf.Size() == 3);
     assert(buf.SizeLeft() == 2);
-    unsigned char data[5];
+    char data[5];
     assert(buf.Peek(data, 1));
     assert(buf.Peek(data, 2));
     assert(buf.Peek(data, 3));
     assert(!buf.Peek(data, 4));
     assert(buf.Advance(3));
+    assert(buf.Size() == 0);
+    assert(buf.SizeLeft() == 5);
+    assert(buf.Unadvance(1));
+    assert(buf.Size() == 1);
+    assert(buf.SizeLeft() == 4);
+    assert(buf.Advance(1));
   }
 }
 

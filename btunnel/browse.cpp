@@ -58,6 +58,7 @@ static void BrowseCallback(DNSServiceRef service,
     warn("BrowseCallback invoked with: %d", result);
     return;
   }
+  // TODO: Support "remove" flags here
   cout << "DEBUG: BrowseCallback, flags=" << flags << endl;
   struct BrowseContext* ctx = (struct BrowseContext*)context;
   ctx->more = (flags & kDNSServiceFlagsMoreComing);
