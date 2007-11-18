@@ -20,6 +20,11 @@ Buffer::~Buffer() {
 }
 
 int Buffer::Size() const {
+  ythread::MutexLock l(&mutex_);  
+  return SizeInternal();
+}
+
+int Buffer::SizeInternal() const {
   if (start_ == end_) {
     return 0;
   } else if (start_ < end_) {
@@ -29,11 +34,21 @@ int Buffer::Size() const {
 }
 
 int Buffer::SizeLeft() const {
-  return buffer_size_ - Size() - 1;
+  ythread::MutexLock l(&mutex_);  
+  return SizeLeftInternal();
+}
+
+int Buffer::SizeLeftInternal() const {
+  return buffer_size_ - SizeInternal() - 1;
 }
 
 bool Buffer::Peek(char* data, int len) const {
-  if (len > Size()) {
+  ythread::MutexLock l(&mutex_);  
+  return PeekInternal(data, len);
+}
+
+bool Buffer::PeekInternal(char* data, int len) const {
+  if (len > SizeInternal()) {
     return false;
   }
   int start = start_;
@@ -51,14 +66,16 @@ bool Buffer::Peek(char* data, int len) const {
 }
 
 bool Buffer::Read(char* data, int len) {
-  if (!Peek(data, len)) {
+  ythread::MutexLock l(&mutex_);  
+  if (!PeekInternal(data, len)) {
     return false;
   }
-  return Advance(len);
+  return AdvanceInternal(len);
 }
 
 bool Buffer::Append(const char* data, int len) {
-  if (len > SizeLeft()) {
+  ythread::MutexLock l(&mutex_);  
+  if (len > SizeLeftInternal()) {
     return false;
   }
   size_t left = len;
@@ -76,8 +93,13 @@ bool Buffer::Append(const char* data, int len) {
 }
 
 bool Buffer::Advance(int len) {
+  ythread::MutexLock l(&mutex_);  
+  return AdvanceInternal(len);
+}
+
+bool Buffer::AdvanceInternal(int len) {
   assert(len > 0);
-  if (len > Size()) {
+  if (len > SizeInternal()) {
     return false;
   }
   start_ += len;
@@ -86,8 +108,9 @@ bool Buffer::Advance(int len) {
 }
 
 bool Buffer::Unadvance(int len) {
+  ythread::MutexLock l(&mutex_);  
   assert(len > 0);
-  if (len > SizeLeft()) {
+  if (len > SizeLeftInternal()) {
     return false;
   }
   start_ -= len;
@@ -96,3 +119,4 @@ bool Buffer::Unadvance(int len) {
 }
 
 }  // namespace btunnel
+

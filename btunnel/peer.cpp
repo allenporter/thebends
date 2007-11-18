@@ -18,28 +18,30 @@ namespace btunnel {
 
 static const int kBufferSize = 512 * 1024;  // 512k
 
-Peer::Peer(yhttpserver::Select* select) : select_(select) { }
+PeerConnection::PeerConnection(yhttpserver::Select* select)
+    : select_(select) {
+}
 
-Peer::~Peer() { }
+PeerConnection::~PeerConnection() { }
 
-void Peer::AddPeer(int sock) {
+void PeerConnection::AddPeer(int sock) {
   yhttpserver::Select::AcceptCallback* cb =
-    ythread::NewCallback(this, &Peer::Read);
+    ythread::NewCallback(this, &PeerConnection::Read);
   select_->AddFd(sock, cb);
   peers_[sock] = new Buffer(kBufferSize);
 }
 
-void Peer::RemovePeer(int sock) {
+void PeerConnection::RemovePeer(int sock) {
   Close(sock);
 }
 
-Buffer* Peer::GetBuffer(int sock) {
+Buffer* PeerConnection::GetBuffer(int sock) {
   PeerMap::iterator iter = peers_.find(sock);
   assert(iter != peers_.end());   
   return iter->second;
 }
 
-void Peer::Read(int sock) {
+void PeerConnection::Read(int sock) {
   // Throw the pending data from the client into the buffer
   Buffer* buffer = GetBuffer(sock);
   char buf[BUFSIZ];
@@ -77,7 +79,7 @@ void Peer::Read(int sock) {
   }
 }
 
-bool Peer::HandleRegister(int sock) {
+bool PeerConnection::HandleRegister(int sock) {
   Buffer* buffer = GetBuffer(sock);
   assert(buffer);
 // TODO(aporter): finish
@@ -86,13 +88,13 @@ bool Peer::HandleRegister(int sock) {
   return false;
 }
 
-bool Peer::HandleForward(int sock) {
+bool PeerConnection::HandleForward(int sock) {
   Buffer* buffer = GetBuffer(sock);
   assert(buffer);
   return false;
 }
 
-void Peer::Close(int sock) {
+void PeerConnection::Close(int sock) {
   select_->RemoveFd(sock);
   close(sock);
   peers_.erase(sock);

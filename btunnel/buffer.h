@@ -4,6 +4,7 @@
 // Fixed length circular buffer.
 
 #include <sys/types.h>
+#include <ythread/mutex.h>
 
 namespace btunnel {
 
@@ -29,6 +30,13 @@ class Buffer {
   bool Append(const char* data, int len);
 
  private:
+  // Must be called with mutex_ held
+  bool PeekInternal(char* data, int len) const;
+  int SizeInternal() const;
+  int SizeLeftInternal() const;
+  bool AdvanceInternal(int len);
+
+  mutable ythread::Mutex mutex_;
   char* buffer_;
   int buffer_size_;
   int start_;

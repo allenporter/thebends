@@ -10,11 +10,29 @@ namespace yhttpserver {
 namespace btunnel {
 
 class Buffer;
+class RegisterRequest;
+class UnregisterRequest;
+class ForwardRequest;
 
 class Peer {
  public:
-  Peer(yhttpserver::Select* select);
-  ~Peer();
+  virtual ~Peer() { }
+
+  virtual bool Register(int sock, const RegisterRequest* request) = 0;
+
+  virtual bool Unregister(int sock, const UnregisterRequest* request) = 0;
+
+  virtual bool Forward(int sock, const ForwardRequest* request) = 0;
+
+ protected:
+  // Cannot be instantiated directly
+  Peer() { }
+};
+
+class PeerConnection {
+ public:
+  PeerConnection(yhttpserver::Select* select);
+  ~PeerConnection();
 
   void AddPeer(int sock);
   void RemovePeer(int sock);
