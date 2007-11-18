@@ -77,11 +77,12 @@ int MessageReader::HandleForward(int sock, Buffer* buffer) {
 
 int ReadRegister(Buffer* buffer, RegisterRequest* request) {
   int nbytes = 0;
-  if (!buffer->Read((char*)&request->service_id, sizeof(int32_t))) {
+  int32_t service_id;
+  if (!buffer->Read((char*)&service_id, sizeof(int32_t))) {
     return 0;
   }
   nbytes += sizeof(int32_t);
-  request->service_id = ntohl(request->service_id);
+  request->service_id = ntohl(service_id);
 
   int ret = ReadString(buffer, kMaxNameLen, &request->name);
   if (ret <= 0) {
@@ -135,9 +136,11 @@ int WriteRegister(Buffer* buffer, const RegisterRequest& request) {
 }
 
 int ReadUnregister(Buffer* buffer, UnregisterRequest* request) {
-  if (!buffer->Read((char*)&request->service_id, sizeof(int32_t))) {
+  int32_t service_id;
+  if (!buffer->Read((char*)&service_id, sizeof(int32_t))) {
     return 0;
   }
+  request->service_id = ntohl(service_id);
   return sizeof(int32_t);
 }
 
@@ -151,11 +154,12 @@ int WriteUnregister(Buffer* buffer, const UnregisterRequest& request) {
 
 int ReadForward(Buffer* buffer, ForwardRequest* request) {
   int nbytes = 0;
-  if (!buffer->Read((char*)&request->service_id, sizeof(int32_t))) {
+  int32_t service_id;
+  if (!buffer->Read((char*)&service_id, sizeof(int32_t))) {
     return 0;
   }
   nbytes += sizeof(int32_t);
-  request->service_id = ntohl(request->service_id);
+  request->service_id = ntohl(service_id);
 
   int ret = ReadString(buffer, kMaxBufLen, &request->buffer);
   if (ret <= 0) {

@@ -22,7 +22,7 @@ enum Type {
   FORWARD = 0x20
 };
 
-static const int kMaxServiceId = 0xffffffff;
+static const int kMaxServiceId = 0x7fffffff;
 static const int kMaxNameLen = 1024;
 static const int kMaxTypeLen = 1024;
 static const int kMaxTextLen = 8 * 1024;
@@ -74,7 +74,6 @@ class MessageReader {
 
   Peer* peer_;
 };
-
 
 }  // namespace btunnel
 
