@@ -9,6 +9,7 @@
 #include <err.h>
 #include <sys/types.h>
 #include <iostream>
+#include <map>
 #include <google/gflags.h>
 #include <ythread/mutex.h>
 #include <ythread/condvar.h>
