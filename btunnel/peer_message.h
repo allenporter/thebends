@@ -22,17 +22,11 @@ enum Type {
   FORWARD = 0x20
 };
 
-struct MessageHeader {
-  int8_t type;
-};
-
-struct Response {
-  int32_t status;
-};
-
+static const int kMaxServiceId = 0xffffffff;
 static const int kMaxNameLen = 1024;
 static const int kMaxTypeLen = 1024;
 static const int kMaxTextLen = 8 * 1024;
+static const int kMaxBufLen = 1300;
 
 // Type REGISTER
 struct RegisterRequest {
@@ -42,17 +36,25 @@ struct RegisterRequest {
   std::string txt_records;
 };
 
+int ReadRegister(Buffer* buffer, RegisterRequest* request);
+int WriteRegister(Buffer* buffer, const RegisterRequest& request);
+
 // Type UNREGISTER
 struct UnregisterRequest {
-  int32_t id;
+  int32_t service_id;
 };
+
+int ReadUnregister(Buffer* buffer, UnregisterRequest* request);
+int WriteUnregister(Buffer* buffer, const UnregisterRequest& request);
 
 // Type FORWARD
 struct ForwardRequest {
-  int32_t id;
-  int16_t msg_size;
-  char msg[0];
+  int32_t service_id;
+  std::string buffer;
 };
+
+int ReadForward(Buffer* buffer, ForwardRequest* request);
+int WriteForward(Buffer* buffer, const ForwardRequest& request);
 
 // A MessageReader parses incoming requests and invokes the appropriate message
 // on a peer.
@@ -63,18 +65,15 @@ class MessageReader {
 
   // Returns the number of bytes read from the input buffer, or -1 if a parse
   // error occurred.
-  int Read(int sock, Buffer* input_buffer);
+  int Read(int sock, Buffer* buffer);
 
  private:
-  int HandleRegister(int sock, Buffer* input_buffer);
-  int HandleForward(int sock, Buffer* input_buffer);
+  int HandleRegister(int sock, Buffer* buffer);
+  int HandleUnregister(int sock, Buffer* buffer);
+  int HandleForward(int sock, Buffer* buffer);
 
   Peer* peer_;
 };
-
-int ReadRegister(Buffer* buffer, RegisterRequest* request);
-
-int WriteRegister(Buffer* buffer, const RegisterRequest& request);
 
 
 }  // namespace btunnel

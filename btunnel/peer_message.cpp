@@ -26,6 +26,8 @@ int MessageReader::Read(int sock, Buffer* buffer) {
   int nbytes;
   if (type == REGISTER) {
     nbytes = HandleRegister(sock, buffer);
+  } else if (type == UNREGISTER) {
+    nbytes = HandleUnregister(sock, buffer);
   } else if (type == FORWARD) {
     nbytes = HandleForward(sock, buffer);
   } else {
@@ -51,8 +53,18 @@ int MessageReader::HandleRegister(int sock, Buffer* buffer) {
   return nbytes;
 }
 
-int MessageReader::HandleForward(int sock, Buffer* inut_buffer) {
-/*
+int MessageReader::HandleUnregister(int sock, Buffer* buffer) {
+  UnregisterRequest request;
+  int nbytes = ReadUnregister(buffer, &request);
+  if (nbytes > 0) {
+    if (!peer_->Unregister(sock, &request)) {
+      return -1;
+    }
+  }
+  return nbytes;
+}
+
+int MessageReader::HandleForward(int sock, Buffer* buffer) {
   ForwardRequest request;
   int nbytes = ReadForward(buffer, &request);
   if (nbytes > 0) {
@@ -61,8 +73,6 @@ int MessageReader::HandleForward(int sock, Buffer* inut_buffer) {
     }
   }
   return nbytes;
-*/
-  return 0;
 }
 
 int ReadRegister(Buffer* buffer, RegisterRequest* request) {
@@ -124,7 +134,52 @@ int WriteRegister(Buffer* buffer, const RegisterRequest& request) {
   return nbytes;
 }
 
+int ReadUnregister(Buffer* buffer, UnregisterRequest* request) {
+  if (!buffer->Read((char*)&request->service_id, sizeof(int32_t))) {
+    return 0;
+  }
+  return sizeof(int32_t);
+}
 
+int WriteUnregister(Buffer* buffer, const UnregisterRequest& request) {
+  int32_t service_id = htonl(request.service_id);
+  if (!buffer->Append((char*)&service_id, sizeof(int32_t))) {
+    return -1;
+  }
+  return sizeof(int32_t);
+}
 
+int ReadForward(Buffer* buffer, ForwardRequest* request) {
+  int nbytes = 0;
+  if (!buffer->Read((char*)&request->service_id, sizeof(int32_t))) {
+    return 0;
+  }
+  nbytes += sizeof(int32_t);
+  request->service_id = ntohl(request->service_id);
+
+  int ret = ReadString(buffer, kMaxBufLen, &request->buffer);
+  if (ret <= 0) {
+    buffer->Unadvance(nbytes);
+    return ret;
+  }
+  nbytes += ret;
+  return nbytes;
+}
+
+int WriteForward(Buffer* buffer, const ForwardRequest& request) {
+  int32_t service_id = htonl(request.service_id);
+  int nbytes = 0;
+  if (!buffer->Append((char*)&service_id, sizeof(int32_t))) {
+    return -1;
+  }
+  nbytes += sizeof(int32_t);
+
+  int ret = WriteString(buffer, kMaxBufLen, request.buffer);
+  if (ret <= 0) {
+    return -1;
+  }
+  nbytes += ret;
+  return nbytes;
+}
 
 }  // namespace btunnel
