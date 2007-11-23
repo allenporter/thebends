@@ -1,0 +1,6 @@
+ynet is a small set of C++ classes used for building network applications.
+
+To install, just run the following commands:
+
+$ make
+$ sudo make install
