@@ -15,6 +15,26 @@ using namespace std;
 
 namespace btunnel {
 
+void Split(const std::string& message, char c,
+           std::vector<std::string>* parts) {
+  parts->clear();
+  const char *last = message.c_str();
+  const char *end = last + message.size();
+  const char *cur = message.c_str();
+  while (cur < end) {
+    if (*cur == c) {
+      if ((cur - last) != 0) {
+        parts->push_back(std::string(last, cur - last));
+      }
+      last = cur + 1;
+    }
+    cur++;
+  }
+  if (last != end) {
+    parts->push_back(std::string(last, cur - last));
+  }
+}
+
 bool GetHostPort(const string& host_port, string* host, uint16_t* port) {
   size_t c = host_port.find(":");
   if (c == string::npos) {
@@ -28,11 +48,11 @@ bool GetHostPort(const string& host_port, string* host, uint16_t* port) {
 bool GetMap(const string& str, map<string, string>* records) {
   records->clear();
   vector<string> parts;
-  yhttpserver::Split(str, ',', &parts);
+  Split(str, ',', &parts);
   int len = parts.size();
   for (int i = 0; i < len; i++) {
     vector<string> kv;
-    yhttpserver::Split(parts[i], '=', &kv);
+    Split(parts[i], '=', &kv);
     if (kv.size() != 2) {
       records->clear();
       return false;
