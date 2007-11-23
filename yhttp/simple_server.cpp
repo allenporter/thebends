@@ -10,11 +10,8 @@ class SimpleServer {
 
   void Start() {
     printf("Starting server\n");
-    yhttpserver::Select select;
+    ynet::Select select;
     yhttpserver::HTTPServer server(&select, 8080);
-//    ythread::ThreadPool pool(20);
-//    server.SetThreadPool(&pool);
-    // default handler
 
     server.RegisterHandler(
       "", ythread::NewCallback(this, &SimpleServer::HandleRequest));

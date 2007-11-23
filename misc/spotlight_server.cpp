@@ -1,17 +1,17 @@
 // spotlight_server.cpp
 // Author: Allen Porter <allen@thebends.org>
-// $ g++ -Wall -o spotlight_server spotlight_server.cpp -lyhttp -lythread
+// $ g++ -Wall -o spotlight_server spotlight_server.cpp -lyhttp -lythread -lynet
 //       -framework CoreFoundation -framework CoreServices
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h>
 #include <ythread/callback-inl.h>
 #include <yhttp/httpserver.h>
-#include <yhttp/select.h>
+#include <ynet/select.h>
 
 class SpotlightServer {
  public:
   void Start() {
-    yhttpserver::Select select;
+    ynet::Select select;
     yhttpserver::HTTPServer server(&select, 8080);
     server.RegisterHandler(
       "", ythread::NewCallback(this, &SpotlightServer::Input));

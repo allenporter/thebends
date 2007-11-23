@@ -2,6 +2,7 @@
 #include <vector>
 #include <arpa/inet.h>
 #include <err.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <sysexits.h>
@@ -10,8 +11,7 @@
 #include <sysexits.h>
 #include <ythread/callback-inl.h>
 #include <ythread/threadpool.h>
-#include <errno.h>
-#include "select.h"
+#include <ynet/select.h>
 #include "reader.h"
 #include "writer.h"
 #include "util.h"
@@ -118,8 +118,8 @@ class Request : public HTTPRequest {
   std::string content_type_;
 };
 
-HTTPServer::HTTPServer(Select* select, int port) : select_(select),
-                                                   port_(port) {
+HTTPServer::HTTPServer(ynet::Select* select, int port) : select_(select),
+                                                         port_(port) {
   assert(select);
 }
 
@@ -166,8 +166,8 @@ void HTTPServer::Start() {
     err(EX_OSERR, "listen");
   }
   printf("Listening on port %d\n", port_);
-  Select::AcceptCallback* cb = ythread::NewCallback(this, &HTTPServer::Accept);
-  select_->AddFd(sock, cb);
+  ynet::ReadyCallback* cb = ythread::NewCallback(this, &HTTPServer::Accept);
+  select_->AddReadFd(sock, cb);
 }
 
 void HTTPServer::Accept(int sock) {
@@ -183,8 +183,8 @@ void HTTPServer::Accept(int sock) {
     err(EX_SOFTWARE, "Accept on duplicate socket: %d\n", client_sock);
   }
   requests_[client_sock] = new Request(this, client_sock);
-  Select::AcceptCallback* cb = ythread::NewCallback(this, &HTTPServer::Read);
-  select_->AddFd(client_sock, cb);
+  ynet::ReadyCallback* cb = ythread::NewCallback(this, &HTTPServer::Read);
+  select_->AddReadFd(client_sock, cb);
 }
 
 void HTTPServer::Read(int client_sock) {
@@ -213,7 +213,7 @@ void HTTPServer::Read(int client_sock) {
 void HTTPServer::Close(Request* request) {
   int sock = request->Sock();
   printf("Connection closed\n");
-  select_->RemoveFd(sock);
+  select_->RemoveReadFd(sock);
   close(sock);
   requests_.erase(sock);
   delete request;

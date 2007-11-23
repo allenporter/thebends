@@ -7,7 +7,7 @@ INSTALLDIR = /usr/local
 INSTALL_LIBDIR = $(INSTALLDIR)/lib
 INSTALL_INCLUDEDIR = $(INSTALLDIR)/include/yhttp
 
-SRC = url.cpp util.cpp select.cpp reader.cpp writer.cpp httpserver.cpp
+SRC = url.cpp util.cpp reader.cpp writer.cpp httpserver.cpp
 OBJ = $(SRC:.cpp=.o)
 
 .SUFFIXES: .cpp

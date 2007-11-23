@@ -9,15 +9,16 @@
 #include <ythread/callback.h>
 #include "url.h"
 
+namespace ynet { class Select; }
+
 namespace yhttpserver {
 
-class Select;
 class Request;
 class HTTPRequest;
 
 class HTTPServer {
  public:
-  HTTPServer(Select* select, int port);
+  HTTPServer(ynet::Select* select, int port);
   virtual ~HTTPServer();
 
   typedef ythread::Callback1<HTTPRequest*> HandlerCallback;
@@ -40,7 +41,7 @@ class HTTPServer {
   void NotFound(HTTPRequest* request);
   void Busy(HTTPRequest* request);
 
-  Select* select_; 
+  ynet::Select* select_; 
   int port_;
   HandlerMap handlers_;
   RequestMap requests_;
