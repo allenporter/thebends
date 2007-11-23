@@ -1,16 +1,19 @@
 // peer.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "peer.h"
 #include <err.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sysexits.h>
 #include <unistd.h>
-#include <yhttp/select.h>
+#include <ynet/select.h>
 #include <map>
+
+#include "peer.h"
 #include "buffer.h"
 #include "peer_message.h"
+
+using namespace std;
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
@@ -18,86 +21,75 @@ namespace btunnel {
 
 static const int kBufferSize = 512 * 1024;  // 512k
 
-PeerConnection::PeerConnection(yhttpserver::Select* select)
-    : select_(select) {
-}
+//
+// Default peer implementation
+//
 
-PeerConnection::~PeerConnection() { }
-
-void PeerConnection::AddPeer(int sock) {
-  yhttpserver::Select::AcceptCallback* cb =
-    ythread::NewCallback(this, &PeerConnection::Read);
-  select_->AddFd(sock, cb);
-  peers_[sock] = new Buffer(kBufferSize);
-}
-
-void PeerConnection::RemovePeer(int sock) {
-  Close(sock);
-}
-
-Buffer* PeerConnection::GetBuffer(int sock) {
-  PeerMap::iterator iter = peers_.find(sock);
-  assert(iter != peers_.end());   
-  return iter->second;
-}
-
-void PeerConnection::Read(int sock) {
-  // Throw the pending data from the client into the buffer
-  Buffer* buffer = GetBuffer(sock);
-  char buf[BUFSIZ];
-  ssize_t nread = read(sock, buf, BUFSIZ);
-  if (nread == -1) {
-    err(EX_OSERR, "read() (%d)", sock);
-  } else if (nread == 0) {
-    warn("Connection closed on read");
-    Close(sock);
-    return;
-  }
-  buffer->Append(buf, nread);
-
-  // Parse as many protocol messages as possible
-  while (1) {
-    int8_t type;
-    if (!buffer->Read((char*)&type, 1)) {
-      break;
-    } 
-    switch (type) {
-      case REGISTER:
-        if (!HandleRegister(sock)) {
-          buffer->Unadvance(1);  // tpe
-        }
-        break;
-      case FORWARD:
-        if (!HandleForward(sock)) {
-          buffer->Unadvance(1);  // type
-        }
-      default:
-        warn("Invalid message type: %d", type);
-        Close(sock);
-        return;
-    }
-  }
-}
-
-bool PeerConnection::HandleRegister(int sock) {
-  Buffer* buffer = GetBuffer(sock);
-  assert(buffer);
-// TODO(aporter): finish
-//  char buf[buffer->Size()];
-//  buffer->Read(buf, buffer->Size());
+bool Peer::Register(int sock, const RegisterRequest* request) {
+  errx(1, "Register not implemented");
   return false;
 }
 
-bool PeerConnection::HandleForward(int sock) {
-  Buffer* buffer = GetBuffer(sock);
-  assert(buffer);
+bool Peer::Unregister(int sock, const UnregisterRequest* request) {
+  errx(1, "Unregister not implemented");
   return false;
 }
 
-void PeerConnection::Close(int sock) {
-  select_->RemoveFd(sock);
-  close(sock);
-  peers_.erase(sock);
+bool Peer::Forward(int sock, const ForwardRequest* request) {
+  errx(1, "Forward not implemented");
+  return false;
+}
+
+class PeerImpl : public Peer {
+ public:
+  virtual bool Register(int client_sock, const RegisterRequest* request) {
+    // register the service for clients
+    return false;
+  }
+
+  virtual bool Unregister(int client_sock, const UnregisterRequest* request) {
+    // remove the service
+    return false;
+  }
+
+  virtual bool Forward(int client_sock, const ForwardRequest* request) {
+    // lookup service; maybe create a new connection
+    return false;
+  }
+};
+
+// TODO: Server peer vs client peer
+Peer* NewPeer(const vector<btunnel::Service*>& services) {
+  return new PeerImpl();
+}
+
+
+class ClientPeer : public Peer {
+ public:
+  ClientPeer(Buffer* buffer) : buffer_(buffer) { }
+
+  virtual ~ClientPeer() { }
+
+  virtual bool Register(int client_sock, const RegisterRequest* request) {
+    WriteRegister(buffer_, *request);
+    return true;
+  }
+
+  virtual bool Unregister(int client_sock, const UnregisterRequest* request) {
+    WriteUnregister(buffer_, *request);
+    return true;
+  }
+
+  virtual bool Forward(int client_sock, const ForwardRequest* request) {
+    WriteForward(buffer_, *request);
+    return true;
+  }
+
+  Buffer* buffer_;
+};
+
+Peer* NewClientPeer(Buffer* buffer) {
+  return new ClientPeer(buffer);
 }
 
 }  // namespace btunnel

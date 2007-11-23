@@ -50,6 +50,7 @@ int WriteUnregister(Buffer* buffer, const UnregisterRequest& request);
 // Type FORWARD
 struct ForwardRequest {
   int32_t service_id;
+  int32_t session_id;
   std::string buffer;
 };
 

@@ -11,7 +11,7 @@
 
 #include <err.h>
 #include <google/gflags.h>
-#include <yhttp/select.h>
+#include <ynet/select.h>
 #include <iostream>
 #include <string>
 #include <map>
@@ -26,7 +26,7 @@ DEFINE_int32(port, 0,
 
 using namespace std;
 
-yhttpserver::Select select_;
+ynet::Select select_;
 
 void sig_handler(int signal) {
   select_.Stop();

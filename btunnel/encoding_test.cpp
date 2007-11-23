@@ -16,7 +16,7 @@ static void test1() {
   for (int i = 0; i < 10; i++) {
     int length = random() % 1024;
     int expected_size = length + 2;  // sizeof(int16_t)
-    string str = RandString(length);
+    string str = test::RandString(length);
     assert(expected_size == btunnel::WriteString(&buffer, 1024, str));
     string result;
     assert(expected_size == btunnel::ReadString(&buffer, 1024, &result));

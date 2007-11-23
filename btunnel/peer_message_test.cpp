@@ -28,7 +28,7 @@ class FakePeer : public btunnel::Peer {
     assert(type_ == 0);
     invoked_ = true;
     type_ = btunnel::REGISTER;
-    return false;
+    return true;
   }
 
   virtual bool Unregister(int sock, const btunnel::UnregisterRequest* request) {
@@ -36,7 +36,7 @@ class FakePeer : public btunnel::Peer {
     assert(type_ == 0);
     invoked_ = true;
     type_ = btunnel::UNREGISTER;
-    return false;
+    return true;
   }
 
   virtual bool Forward(int sock, const btunnel::ForwardRequest* request) {
@@ -44,7 +44,7 @@ class FakePeer : public btunnel::Peer {
     assert(type_ == 0);
     invoked_ = true;
     type_ = btunnel::FORWARD;
-    return false;
+    return true;
   }
 
   bool invoked_;
@@ -53,9 +53,9 @@ class FakePeer : public btunnel::Peer {
 
 static void RandomRegisterRequest(btunnel::RegisterRequest* request) {
   request->service_id = random() % btunnel::kMaxServiceId;
-  request->name = RandString(btunnel::kMaxNameLen);
-  request->type = RandString(btunnel::kMaxTypeLen);
-  request->txt_records = RandString(btunnel::kMaxTextLen);
+  request->name = test::RandString(btunnel::kMaxNameLen);
+  request->type = test::RandString(btunnel::kMaxTypeLen);
+  request->txt_records = test::RandString(btunnel::kMaxTextLen);
 }
 
 static void RandomUnregisterRequest(btunnel::UnregisterRequest* request) {
@@ -64,7 +64,7 @@ static void RandomUnregisterRequest(btunnel::UnregisterRequest* request) {
 
 static void RandomForwardRequest(btunnel::ForwardRequest* request) {
   request->service_id = random() % btunnel::kMaxServiceId;
-  request->buffer = RandString(random() % btunnel::kMaxBufLen);
+  request->buffer = test::RandString(random() % btunnel::kMaxBufLen);
 }
 
 static void test1() {

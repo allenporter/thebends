@@ -3,6 +3,7 @@
 //
 // A bonjour proxy.  Registers a fake bonjour service on a local address that
 // is proxied to a remote port/ip.
+// TODO(aporter): Retire this tool
 
 #include <arpa/inet.h>
 #include <err.h>
@@ -10,9 +11,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <google/gflags.h>
-#include <yhttp/select.h>
+#include <ynet/select.h>
+#include <ynet/tunnel.h>
 #include <iostream>
-#include "tunnel.h"
 #include "registration.h"
 #include "service.h"
 #include "util.h"
@@ -32,7 +33,7 @@ DEFINE_string(txt, "",
 
 using namespace std;
 
-yhttpserver::Select select_;
+ynet::Select select_;
 
 void sig_handler(int signal) {
   select_.Stop();
@@ -87,9 +88,9 @@ int main(int argc, char* argv[]) {
   cout << "Forwarding to " << inet_ntoa(remote_addr) << ":" << remote_port
        << endl;
 
-  btunnel::Tunnel* tunnel =
-    btunnel::NewTcpTunnel(&select_, remote_addr, remote_port,
-                          (uint16_t)FLAGS_local_port);
+  ynet::Tunnel* tunnel =
+    ynet::NewTcpTunnel(&select_, remote_addr, remote_port,
+                       (uint16_t)FLAGS_local_port);
   tunnel->Start();
   select_.Start();  // loop forever
 

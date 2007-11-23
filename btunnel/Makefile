@@ -1,25 +1,21 @@
 CC=g++
-CFLAGS=-Wall -Werror -g
-LDFLAGS=-lythread
-TOOL_LDFLAGS=$(LDFLAGS) -lgflags -lyhttp
+CFLAGS=-Wall -Werror
+LDFLAGS=-lythread -lynet
+TOOL_LDFLAGS=$(LDFLAGS) -lgflags
 
-all: libbtunnel.a register_service tcp_proxy bproxy bproxy_server buffer_test \
-     peer_message_test encoding_test
+all: libbtunnel.a register_service bproxy bproxy_server
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
 
-libbtunnel.a: tcpserver.o util.o registration.o tunnel.o service.o browse.o \
-              buffer.o peer.o encoding.o peer_message.o
+libbtunnel.a: util.o registration.o service.o browse.o buffer.o peer.o \
+              encoding.o peer_message.o exported_service.o
 	$(AR) rc $@ $^
 
-%_test: %_test.o libbtunnel.a
+%_test: %_test.o test_util.o libbtunnel.a
 	$(CC) $(CFLAGS) -g -o $@ $^ $(LDFLAGS)
 
 register_service: register_service.o libbtunnel.a
-	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
-
-tcp_proxy: tcp_proxy.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
 
 bproxy: bproxy.o libbtunnel.a
@@ -28,10 +24,11 @@ bproxy: bproxy.o libbtunnel.a
 bproxy_server: bproxy_server.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
 
-test: all
+test: buffer_test peer_message_test encoding_test exported_service_test
 	./buffer_test
 	./encoding_test
 	./peer_message_test
+	./exported_service_test
 
 clean:
-	rm -f *.o *.a core *_test tcp_proxy register_service bproxy bproxy_server
+	rm -f *.o *.a core *_test register_service bproxy bproxy_server

@@ -14,7 +14,7 @@ static const int kDefaultBufferSize = 1024 * 1024;  // 1MB
 class Buffer {
  public:
   Buffer(int buffer_size = kDefaultBufferSize);
-  ~Buffer();
+  virtual ~Buffer();
 
   // Size of data in the buffer.
   int Size() const;
