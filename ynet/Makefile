@@ -7,7 +7,7 @@ INSTALLDIR = /usr/local
 INSTALL_LIBDIR = $(INSTALLDIR)/lib
 INSTALL_INCLUDEDIR = $(INSTALLDIR)/include/ynet
 
-SRC = select.cpp
+SRC = select.cpp tcp_server.cpp tunnel.cpp
 OBJ = $(SRC:.cpp=.o)
 
 .SUFFIXES: .cpp
