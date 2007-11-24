@@ -72,12 +72,15 @@ void Select::RemoveWriteFd(int fd) {
 
 void Select::Start() {
   looping_ = true;
+  struct timeval timeout;
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 1000;
   while (looping_) {
     fd_set readfds;
     GetFdSet(&readfds, &readfds_);
     fd_set writefds;
     GetFdSet(&writefds, &writefds_);
-    if (select(nfds(), &readfds, &writefds, NULL, NULL) == -1) {
+    if (select(nfds(), &readfds, &writefds, NULL, &timeout) == -1) {
       err(EX_OSERR, "select()");
     }
     // We make a copy of the file descriptor list so that we don't invalidate

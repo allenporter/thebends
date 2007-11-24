@@ -29,7 +29,7 @@ class TCPServer {
   // Client callback is invoked whenever a new connection arrives.  The callback
   // is owned by the TCPServer and will take care of deallocating it.
   TCPServer(Select* select,
-            uint16_t local_port,
+            int16_t local_port,
             ConnectionCallback* callback);
   ~TCPServer();
 
@@ -40,7 +40,7 @@ class TCPServer {
   void Accept(int sock);
 
   ynet::Select* select_;
-  uint16_t port_;
+  int16_t port_;
   int sock_;
   ConnectionCallback* client_callback_;
 };

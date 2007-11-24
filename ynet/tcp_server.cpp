@@ -20,7 +20,7 @@ using namespace std;
 namespace ynet {
 
 TCPServer::TCPServer(Select* select,
-                     uint16_t port,
+                     int16_t port,
                      ConnectionCallback* callback)
   : select_(select), port_(port), sock_(-1), client_callback_(callback) {
 }
