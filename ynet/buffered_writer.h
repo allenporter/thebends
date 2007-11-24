@@ -6,6 +6,9 @@
 // object to recieve notifications when the buffer is available for writing
 // again.  BufferedWriter should be used with non-blocking sockets.
 
+#ifndef __YNET_BUFFERED_WRITER_H__
+#define __YNET_BUFFERED_WRITER_H__
+
 #include <string>
 #include "buffer.h"
 
@@ -13,9 +16,9 @@ namespace ynet {
 
 class Select;
 
-class BufferedWriter {
+class BufferedWriter : public WriteBuffer {
  public:
-  static const int kDefaultWriteSize = 8 * 1024;  // 8k
+  static const int kDefaultWriteSize = 4 * 1024;  // 4k
 
   BufferedWriter(Select* select,
                  int fd,
@@ -26,7 +29,6 @@ class BufferedWriter {
   // Writes the specified data, or queues it for writing later if writing it
   // now would block.
   bool Write(const char* data, int len);
-  bool Write(const std::string& data);
 
   bool Buffered() const { return fd_buffered_; }
   
@@ -43,3 +45,5 @@ class BufferedWriter {
 };
 
 }  // namespace ynet
+
+#endif  // __YNET_BUFFERED_WRITER_H__

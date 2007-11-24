@@ -72,7 +72,7 @@ bool Buffer::Read(char* data, int len) {
   return AdvanceInternal(len);
 }
 
-bool Buffer::Append(const char* data, int len) {
+bool Buffer::Write(const char* data, int len) {
   ythread::MutexLock l(&mutex_);  
   if (len > SizeLeftInternal()) {
     return false;

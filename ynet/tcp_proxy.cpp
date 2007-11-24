@@ -1,4 +1,4 @@
-// tcpproxy.cpp
+// tcp_proxy.cpp
 // Author: Allen Porter <allen@thebends.org>
 //
 // Standalone TCP single port proxy, used for basic testing of port forwarding
@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <google/gflags.h>
-#include <yhttp/select.h>
+#include "select.h"
 #include "tunnel.h"
 
 DEFINE_string(remote_ip, "",
@@ -36,11 +36,11 @@ int main(int argc, char* argv[]) {
     errx(1, "Invalid --remote_ip specified");    
   }
 
-  yhttpserver::Select select;
-  btunnel::Tunnel* tunnel =
-    btunnel::NewTcpTunnel(&select, remote_addr,
-                          (uint16_t)FLAGS_remote_port,
-                          (uint16_t)FLAGS_local_port);
+  ynet::Select select;
+  ynet::Tunnel* tunnel =
+    ynet::NewTcpTunnel(&select, remote_addr,
+                       (uint16_t)FLAGS_remote_port,
+                       (uint16_t)FLAGS_local_port);
   tunnel->Start();
   select.Start();  // loop forever
 }

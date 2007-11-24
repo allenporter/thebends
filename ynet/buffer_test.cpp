@@ -22,7 +22,7 @@ void Offset(ynet::Buffer* buf, int offset) {
   assert(offset > 0);
   assert(buf->Size() == 0);
   const string& data = MakeString(offset);
-  assert(buf->Append(data.data(), data.size()));
+  assert(buf->Write(data.data(), data.size()));
   assert(buf->Size() == offset);
   char buffer[offset];
   assert(buf->Read(buffer, offset));
@@ -36,11 +36,11 @@ void Fill(ynet::Buffer* buf, int step) {
   const char* data = MakeString(buf->SizeLeft()).c_str();
   int i = 0;
   while (buf->SizeLeft() > step) {
-    assert(buf->Append(data + i, step));
+    assert(buf->Write(data + i, step));
     i += step;
   }
   if (buf->SizeLeft() > 0) {
-    assert(buf->Append(data + i, buf->SizeLeft()));
+    assert(buf->Write(data + i, buf->SizeLeft()));
   }
   assert(buf->SizeLeft() == 0);
 }
@@ -60,7 +60,7 @@ void test1() {
   for (i = 0; i < 5; i++) {
     assert(buf.Size() == 0);
     assert(buf.SizeLeft() == 5);
-    assert(buf.Append("abc", 3)); 
+    assert(buf.Write("abc", 3)); 
     assert(buf.Size() == 3);
     assert(buf.SizeLeft() == 2);
     char data[5];

@@ -34,10 +34,6 @@ BufferedWriter::~BufferedWriter() {
   }
 }
 
-bool BufferedWriter::Write(const string& data) {
-  return Write(data.data(), data.size());
-}
-
 bool BufferedWriter::Write(const char* data, int len) {
   assert(len > 0);
   bool should_buffer = fd_buffered_;
@@ -48,7 +44,7 @@ bool BufferedWriter::Write(const char* data, int len) {
     should_buffer = true;
   }
   if (should_buffer) {
-    if (!buffer_.Append(data + nbytes, len - nbytes)) {
+    if (!buffer_.Write(data + nbytes, len - nbytes)) {
       warnx("write buffer full!");
       return false;
     }

@@ -8,8 +8,8 @@ INSTALLDIR = /usr/local
 INSTALL_LIBDIR = $(INSTALLDIR)/lib
 INSTALL_INCLUDEDIR = $(INSTALLDIR)/include/ynet
 
-SRC = select.cpp tcp_server.cpp tunnel.cpp buffer.cpp buffered_writer.cpp \
-      util.cpp
+SRC = select.cpp tcp_server.cpp tunnel.cpp buffer.cpp \
+      buffered_reader.cpp buffered_writer.cpp util.cpp
 OBJ = $(SRC:.cpp=.o)
 
 .SUFFIXES: .cpp
@@ -33,6 +33,9 @@ buffer_test: buffer_test.o libynet.a
 
 buffered_writer_test: buffered_writer_test.o libynet.a
 	$(CC) $(CFLAGS) -g -o $@ $^ $(LDFLAGS)
+
+tcp_proxy: tcp_proxy.o libynet.a
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lgflags
 
 test: buffer_test buffered_writer_test
 	./buffer_test

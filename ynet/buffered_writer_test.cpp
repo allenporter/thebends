@@ -51,7 +51,6 @@ class FakeServer : public ythread::Thread {
 
   void Connect(ynet::Connection* conn) {
     // Do nothing
-    cout << "Connect()" << endl;
   }
 
  private:
