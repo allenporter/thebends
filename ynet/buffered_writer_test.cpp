@@ -67,8 +67,6 @@ static int RandomPort() {
 }
 
 void test1() {
-  // Tests filling up the buffer
-
   int port = RandomPort();
   FakeServer server(port);
 
@@ -87,9 +85,20 @@ void test1() {
   int size = 256 * 1024;
   char* buf = new char[size];
   bzero(buf, size);
-  ynet::Select select;
-  ynet::BufferedWriter writer(&select, sock, 512, 256);
-  assert(!writer.Write(buf, size));
+  {
+    // size is too large for the socket, and too large for the buffer
+    ynet::Select select;
+    ynet::BufferedWriter writer(&select, sock, 512, 256);
+    assert(!writer.Write(buf, size));
+    assert(!writer.Buffered());
+  }
+  {
+    // size is too large for the socket, but not the buffer
+    ynet::Select select;
+    ynet::BufferedWriter writer(&select, sock, size * 2, 256);
+    assert(writer.Write(buf, size));
+    assert(writer.Buffered());
+  }
   delete [] buf;
 }
 

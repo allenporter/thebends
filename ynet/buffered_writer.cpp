@@ -48,17 +48,16 @@ bool BufferedWriter::Write(const char* data, int len) {
     should_buffer = true;
   }
   if (should_buffer) {
+    if (!buffer_.Append(data + nbytes, len - nbytes)) {
+      warnx("write buffer full!");
+      return false;
+    }
     if (!fd_buffered_) {
       fd_buffered_ = true;
       select_->AddWriteFd(
           fd_, ythread::NewCallback(this, &BufferedWriter::WriteFromBuffer));
     }
-    if (!buffer_.Append(data + nbytes, len - nbytes)) {
-      warnx("Append failed, buffer full!");
-      return false;
-    }
   }
-warnx("true!");
   return true;
 }
 
@@ -73,13 +72,15 @@ void BufferedWriter::WriteFromBuffer(int fd) {
     nbytes = min(buffer_.Size(), write_buf_size_);
     // TODO: It would be more efficient to just write directly from the buffer
     // instead of copying it out first.
-    if (!buffer_.Read(write_buf_, nbytes)) {
+    if (!buffer_.Peek(write_buf_, nbytes)) {
       errx(1, "Unexpected error while reading from buffer");
     }
-    int wrote;
-    if ((wrote = TryWrite(write_buf_, nbytes)) != nbytes) {
-      // Still requires buffering
-      buffer_.Unadvance(nbytes - wrote);
+    int wrote = TryWrite(write_buf_, nbytes);
+    if (wrote > 0) {
+      buffer_.Advance(wrote);
+    }
+    if (wrote != nbytes) {
+      // Part of the message wasn't written
       break;
     }
   }
@@ -97,9 +98,7 @@ int BufferedWriter::TryWrite(const char* data, int len) {
     }
     return 0;
   }
-  if (nbytes != len) {
-    printf("nbytes=%ld, len=%d\n", nbytes, len);
-  }
+  // nbytes may != len, so return how much we actually wrote
   return nbytes;
 }
 
