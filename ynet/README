@@ -1,6 +1,8 @@
-ynet is a small set of C++ classes used for building network applications.
+ynet is a small set of C++ classes used for building network applications. This
+library depends on the ythread library.
 
 To install, just run the following commands:
 
 $ make
 $ sudo make install
+
