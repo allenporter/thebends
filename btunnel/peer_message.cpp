@@ -4,21 +4,19 @@
 #include "peer_message.h"
 #include <err.h>
 #include <string>
-#include "buffer.h"
+#include <ynet/buffer.h>
 #include "encoding.h"
 #include "peer.h"
 
 namespace btunnel {
 
 MessageReader::MessageReader(Peer* peer) : peer_(peer) {
-
 }
 
 MessageReader::~MessageReader() {
-
 }
 
-int MessageReader::Read(int sock, Buffer* buffer) {
+int MessageReader::Read(int sock, ynet::ReadBuffer* buffer) {
   int8_t type;
   if (!buffer->Read((char*)&type, 1)) {
     return 0;
@@ -42,7 +40,7 @@ int MessageReader::Read(int sock, Buffer* buffer) {
   return nbytes;
 }
 
-int MessageReader::HandleRegister(int sock, Buffer* buffer) {
+int MessageReader::HandleRegister(int sock, ynet::ReadBuffer* buffer) {
   RegisterRequest request;
   int nbytes = ReadRegister(buffer, &request);
   if (nbytes > 0) {
@@ -53,7 +51,7 @@ int MessageReader::HandleRegister(int sock, Buffer* buffer) {
   return nbytes;
 }
 
-int MessageReader::HandleUnregister(int sock, Buffer* buffer) {
+int MessageReader::HandleUnregister(int sock, ynet::ReadBuffer* buffer) {
   UnregisterRequest request;
   int nbytes = ReadUnregister(buffer, &request);
   if (nbytes > 0) {
@@ -64,7 +62,7 @@ int MessageReader::HandleUnregister(int sock, Buffer* buffer) {
   return nbytes;
 }
 
-int MessageReader::HandleForward(int sock, Buffer* buffer) {
+int MessageReader::HandleForward(int sock, ynet::ReadBuffer* buffer) {
   ForwardRequest request;
   int nbytes = ReadForward(buffer, &request);
   if (nbytes > 0) {
@@ -75,7 +73,7 @@ int MessageReader::HandleForward(int sock, Buffer* buffer) {
   return nbytes;
 }
 
-int ReadRegister(Buffer* buffer, RegisterRequest* request) {
+int ReadRegister(ynet::ReadBuffer* buffer, RegisterRequest* request) {
   int nbytes = 0;
   int32_t service_id;
   if (!buffer->Read((char*)&service_id, sizeof(int32_t))) {
@@ -107,10 +105,10 @@ int ReadRegister(Buffer* buffer, RegisterRequest* request) {
   return nbytes;
 }
 
-int WriteRegister(Buffer* buffer, const RegisterRequest& request) {
+int WriteRegister(ynet::WriteBuffer* buffer, const RegisterRequest& request) {
   int32_t service_id = htonl(request.service_id);
   int nbytes = 0;
-  if (!buffer->Append((char*)&service_id, sizeof(int32_t))) {
+  if (!buffer->Write((char*)&service_id, sizeof(int32_t))) {
     return -1;
   }
   nbytes += sizeof(int32_t);
@@ -135,7 +133,7 @@ int WriteRegister(Buffer* buffer, const RegisterRequest& request) {
   return nbytes;
 }
 
-int ReadUnregister(Buffer* buffer, UnregisterRequest* request) {
+int ReadUnregister(ynet::ReadBuffer* buffer, UnregisterRequest* request) {
   int32_t service_id;
   if (!buffer->Read((char*)&service_id, sizeof(int32_t))) {
     return 0;
@@ -144,15 +142,16 @@ int ReadUnregister(Buffer* buffer, UnregisterRequest* request) {
   return sizeof(int32_t);
 }
 
-int WriteUnregister(Buffer* buffer, const UnregisterRequest& request) {
+int WriteUnregister(ynet::WriteBuffer* buffer,
+                    const UnregisterRequest& request) {
   int32_t service_id = htonl(request.service_id);
-  if (!buffer->Append((char*)&service_id, sizeof(int32_t))) {
+  if (!buffer->Write((char*)&service_id, sizeof(int32_t))) {
     return -1;
   }
   return sizeof(int32_t);
 }
 
-int ReadForward(Buffer* buffer, ForwardRequest* request) {
+int ReadForward(ynet::ReadBuffer* buffer, ForwardRequest* request) {
   int nbytes = 0;
   int32_t service_id;
   if (!buffer->Read((char*)&service_id, sizeof(int32_t))) {
@@ -170,10 +169,10 @@ int ReadForward(Buffer* buffer, ForwardRequest* request) {
   return nbytes;
 }
 
-int WriteForward(Buffer* buffer, const ForwardRequest& request) {
+int WriteForward(ynet::WriteBuffer* buffer, const ForwardRequest& request) {
   int32_t service_id = htonl(request.service_id);
   int nbytes = 0;
-  if (!buffer->Append((char*)&service_id, sizeof(int32_t))) {
+  if (!buffer->Write((char*)&service_id, sizeof(int32_t))) {
     return -1;
   }
   nbytes += sizeof(int32_t);

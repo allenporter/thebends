@@ -1,15 +1,17 @@
 // encoding.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "encoding.h"
 #include <string>
-#include "buffer.h"
+#include <ynet/buffer.h>
+#include "encoding.h"
 
 using namespace std;
 
 namespace btunnel {
 
-int ReadString(Buffer* buffer, int16_t max_length,  string* input) {
+int ReadString(ynet::ReadBuffer* buffer,
+               int16_t max_length,
+               string* input) {
   assert(max_length > 0);
   int nbytes = 0;
   int16_t length;
@@ -34,20 +36,21 @@ int ReadString(Buffer* buffer, int16_t max_length,  string* input) {
   return nbytes;
 }
 
-int WriteString(Buffer* buffer, int16_t max_length, const string& output) {
+int WriteString(ynet::WriteBuffer* buffer,
+                int16_t max_length,
+                const string& output) {
   assert(max_length > 0);
   if (output.size() > (size_t)max_length) {
     return -1;
   }
   int nbytes = 0;
   int16_t length = htons(output.size());
-  if (!buffer->Append((char*)&length, sizeof(int16_t))) {
-    buffer->Unadvance(nbytes);
-    return 0;
+  if (!buffer->Write((char*)&length, sizeof(int16_t))) {
+    return -1;
   }
   nbytes += sizeof(int16_t);
-  if (!buffer->Append(output.c_str(), output.size())) {
-    return 0;
+  if (!buffer->Write(output.c_str(), output.size())) {
+    return -1;
   }
   nbytes += output.size();
   return nbytes;

@@ -8,13 +8,10 @@
 #include <map>
 #include "peer_message.h"
 
-namespace ynet {
-  class Select;
-}
+namespace ynet { class WriteBuffer; }
 
 namespace btunnel {
 
-class Buffer;
 class RegisterRequest;
 class UnregisterRequest;
 class ForwardRequest;
@@ -35,7 +32,7 @@ class Peer {
   Peer() { }
 };
 
-Peer* NewPeer(int sock, const std::vector<btunnel::Service*>& services);
+Peer* NewPeerWriter(ynet::WriteBuffer* buffer);
 
 }  // namespace btunnel
 

@@ -1,65 +1,52 @@
-// exported_service.cpp
+// local_service.cpp
 // Author: Allen Porter <allen@thebends.org>
 
 #include <ythread/callback-inl.h>
 
-#include <map>
+#include <arpa/inet.h>
 #include <err.h>
 #include <stdlib.h>
 #include <time.h>
+#include <netinet/in.h>
 #include <sysexits.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <ynet/select.h>
 #include <ynet/tcp_server.h>
 #include <ynet/buffered_writer.h>
 #include <ynet/util.h>
+#include <map>
 
-#include "exported_service.h"
+#include "local_service.h"
 #include "peer.h"
 #include "peer_message.h"
-
 
 using namespace std;
 
 namespace btunnel {
 
-ExportedService::ExportedService(ynet::Select* select,
-                                 int port,
+LocalService::LocalService(ynet::Select* select,
                                  int service_id,
+                                 struct in_addr addr,
+                                 uint16_t port,
                                  Peer* peer)
-    : select_(select), port_(port), service_id_(service_id), peer_(peer) {
-  tcp_server_ = new ynet::TCPServer(
-      select, port, ythread::NewCallback(this, &ExportedService::Connect));
-  tcp_server_->Start();
+    : select_(select), service_id_(service_id), port_(port), peer_(peer) {
+  bzero(&addr_, sizeof(struct sockaddr_in));
+  addr_.sin_family = AF_INET;
+  addr_.sin_addr.s_addr = addr.s_addr;
+  addr_.sin_port = htons(port);
 }
 
-ExportedService::~ExportedService() {
-  // Shutdown open clients
+LocalService::~LocalService() {
   while (socket_to_session_.size() > 0) {
     int sock = socket_to_session_.begin()->first;
     Close(sock);
   }
   assert(socket_to_session_.size() == 0);
-  assert(socket_writers_.size() == 0);
   assert(session_to_socket_.size() == 0);
-  tcp_server_->Stop();
-  delete tcp_server_;
 }
 
-void ExportedService::Connect(ynet::Connection* conn) { 
-  int session_id;
-  assert(socket_to_session_.count(conn->sock) == 0);
-  do {
-    session_id = random() % kMaxServiceId;
-  } while (session_to_socket_.count(session_id) != 0);
-  socket_to_session_[conn->sock] = session_id;
-  session_to_socket_[session_id] = conn->sock;
-  socket_writers_[conn->sock] = new ynet::BufferedWriter(select_, conn->sock);
-  ynet::SetNonBlocking(conn->sock);
-  select_->AddReadFd(conn->sock,
-                     ythread::NewCallback(this, &ExportedService::Read));
-}
-
-void ExportedService::Read(int sock) {
+void LocalService::Read(int sock) {
   assert(socket_to_session_.count(sock) == 1);
 
   char buffer[kMaxBufLen];
@@ -81,11 +68,26 @@ void ExportedService::Read(int sock) {
   }
 }
 
-bool ExportedService::Forward(const ForwardRequest* request) {
+bool LocalService::Forward(const ForwardRequest* request) {
+  // TODO: Non-blocking connect
   assert(request->service_id == service_id_);
   if (session_to_socket_.count(request->session_id) == 0) {
-    warn("Forward request for unknown session id: %d", request->session_id);
-    return false;
+    // Establish a new connection
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock == -1) {
+      err(1, "socket");
+    }
+    int ret = connect(sock, (struct sockaddr*)&addr_,
+                      sizeof(struct sockaddr_in));
+    if (ret != 0) {
+      warn("connect");
+      return false;
+    }
+    assert(socket_writers_.count(sock) == 0);
+    socket_writers_[sock] = new ynet::BufferedWriter(select_, sock);
+    session_to_socket_[request->session_id] = sock;
+    select_->AddReadFd(sock,
+                       ythread::NewCallback(this, &LocalService::Read));
   }
   int sock = session_to_socket_[request->session_id];
   ynet::BufferedWriter* writer = socket_writers_[sock];
@@ -96,7 +98,7 @@ bool ExportedService::Forward(const ForwardRequest* request) {
   return true;
 }
 
-void ExportedService::Close(int sock) {
+void LocalService::Close(int sock) {
   assert(socket_to_session_.count(sock) == 1);
   select_->RemoveReadFd(sock);
   close(sock);

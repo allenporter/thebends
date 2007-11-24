@@ -7,10 +7,10 @@
 #include <sysexits.h>
 #include <unistd.h>
 #include <ynet/select.h>
+#include <ynet/buffer.h>
 #include <map>
 
 #include "peer.h"
-#include "buffer.h"
 #include "peer_message.h"
 
 using namespace std;
@@ -40,56 +40,38 @@ bool Peer::Forward(int sock, const ForwardRequest* request) {
   return false;
 }
 
-class PeerImpl : public Peer {
+class PeerMessageWriter : public Peer {
  public:
-  virtual bool Register(int client_sock, const RegisterRequest* request) {
-    // register the service for clients
-    return false;
-  }
+  PeerMessageWriter(ynet::WriteBuffer* buffer) : buffer_(buffer) { }
 
-  virtual bool Unregister(int client_sock, const UnregisterRequest* request) {
-    // remove the service
-    return false;
-  }
-
-  virtual bool Forward(int client_sock, const ForwardRequest* request) {
-    // lookup service; maybe create a new connection
-    return false;
-  }
-};
-
-// TODO: Server peer vs client peer
-Peer* NewPeer(const vector<btunnel::Service*>& services) {
-  return new PeerImpl();
-}
-
-
-class ClientPeer : public Peer {
- public:
-  ClientPeer(Buffer* buffer) : buffer_(buffer) { }
-
-  virtual ~ClientPeer() { }
+  virtual ~PeerMessageWriter() { }
 
   virtual bool Register(int client_sock, const RegisterRequest* request) {
-    WriteRegister(buffer_, *request);
+    if (WriteRegister(buffer_, *request) < 0) {
+      return false;
+    }
     return true;
   }
 
   virtual bool Unregister(int client_sock, const UnregisterRequest* request) {
-    WriteUnregister(buffer_, *request);
+    if (WriteUnregister(buffer_, *request) < 0) {
+      return false;
+    }
     return true;
   }
 
   virtual bool Forward(int client_sock, const ForwardRequest* request) {
-    WriteForward(buffer_, *request);
+    if (WriteForward(buffer_, *request) < 0) {
+      return false;
+    }
     return true;
   }
 
-  Buffer* buffer_;
+  ynet::WriteBuffer* buffer_;
 };
 
-Peer* NewClientPeer(Buffer* buffer) {
-  return new ClientPeer(buffer);
+Peer* NewPeerWriter(ynet::WriteBuffer* buffer) {
+  return new PeerMessageWriter(buffer);
 }
 
 }  // namespace btunnel

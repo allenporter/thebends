@@ -9,11 +9,15 @@
 #include <string>
 #include <sys/types.h>
 
+namespace ynet {
+class ReadBuffer;
+class WriteBuffer;
+}
+
 namespace btunnel {
 
 class Service;
 class Peer;
-class Buffer;
 
 // Type identifiers are one byte
 enum Type {
@@ -36,16 +40,17 @@ struct RegisterRequest {
   std::string txt_records;
 };
 
-int ReadRegister(Buffer* buffer, RegisterRequest* request);
-int WriteRegister(Buffer* buffer, const RegisterRequest& request);
+int ReadRegister(ynet::ReadBuffer* buffer, RegisterRequest* request);
+int WriteRegister(ynet::WriteBuffer* buffer, const RegisterRequest& request);
 
 // Type UNREGISTER
 struct UnregisterRequest {
   int32_t service_id;
 };
 
-int ReadUnregister(Buffer* buffer, UnregisterRequest* request);
-int WriteUnregister(Buffer* buffer, const UnregisterRequest& request);
+int ReadUnregister(ynet::ReadBuffer* buffer, UnregisterRequest* request);
+int WriteUnregister(ynet::WriteBuffer* buffer,
+                    const UnregisterRequest& request);
 
 // Type FORWARD
 struct ForwardRequest {
@@ -54,8 +59,8 @@ struct ForwardRequest {
   std::string buffer;
 };
 
-int ReadForward(Buffer* buffer, ForwardRequest* request);
-int WriteForward(Buffer* buffer, const ForwardRequest& request);
+int ReadForward(ynet::ReadBuffer* buffer, ForwardRequest* request);
+int WriteForward(ynet::WriteBuffer* buffer, const ForwardRequest& request);
 
 // A MessageReader parses incoming requests and invokes the appropriate message
 // on a peer.
@@ -66,12 +71,12 @@ class MessageReader {
 
   // Returns the number of bytes read from the input buffer, or -1 if a parse
   // error occurred.
-  int Read(int sock, Buffer* buffer);
+  int Read(int sock, ynet::ReadBuffer* buffer);
 
  private:
-  int HandleRegister(int sock, Buffer* buffer);
-  int HandleUnregister(int sock, Buffer* buffer);
-  int HandleForward(int sock, Buffer* buffer);
+  int HandleRegister(int sock, ynet::ReadBuffer* buffer);
+  int HandleUnregister(int sock, ynet::ReadBuffer* buffer);
+  int HandleForward(int sock, ynet::ReadBuffer* buffer);
 
   Peer* peer_;
 };

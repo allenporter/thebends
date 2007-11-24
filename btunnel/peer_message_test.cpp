@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include "buffer.h"
+#include <ynet/buffer.h>
 #include "peer.h"
 #include "peer_message.h"
 #include "test_util.h"
@@ -69,12 +69,12 @@ static void RandomForwardRequest(btunnel::ForwardRequest* request) {
 
 static void test1() {
   btunnel::RegisterRequest request;
-  btunnel::Buffer buffer;
+  ynet::Buffer buffer;
   assert(0 == btunnel::ReadRegister(&buffer, &request));
 }
 
 static void test2() {
-  btunnel::Buffer buffer;
+  ynet::Buffer buffer;
   for (int i = 0; i < 10; ++i) {
     btunnel::RegisterRequest request1;
     RandomRegisterRequest(&request1);
@@ -96,7 +96,7 @@ static void test2() {
 }
 
 static void test3() {
-  btunnel::Buffer buffer;
+  ynet::Buffer buffer;
   for (int i = 0; i < 10; ++i) {
     btunnel::UnregisterRequest request1;
     RandomUnregisterRequest(&request1);
@@ -115,7 +115,7 @@ static void test3() {
 }
 
 static void test4() {
-  btunnel::Buffer buffer;
+  ynet::Buffer buffer;
   for (int i = 0; i < 10; ++i) {
     btunnel::ForwardRequest request1;
     RandomForwardRequest(&request1);
@@ -136,7 +136,7 @@ static void test4() {
 
 static void test5() {
   FakePeer peer;
-  btunnel::Buffer buffer;
+  ynet::Buffer buffer;
   btunnel::MessageReader reader(&peer);
   int sock = random() % 1024 + 1024;
 
@@ -149,7 +149,7 @@ static void test5() {
     {
       btunnel::RegisterRequest request;
       RandomRegisterRequest(&request);
-      buffer.Append("\x10", 1);  // type = REGISTER
+      buffer.Write("\x10", 1);  // type = REGISTER
       WriteRegister(&buffer, request);
 
       assert(!peer.invoked_);
@@ -161,7 +161,7 @@ static void test5() {
     {
       btunnel::UnregisterRequest request;
       RandomUnregisterRequest(&request);
-      buffer.Append("\x11", 1);  // type = UNREGISTER
+      buffer.Write("\x11", 1);  // type = UNREGISTER
       WriteUnregister(&buffer, request);
 
       assert(!peer.invoked_);
@@ -173,7 +173,7 @@ static void test5() {
     {
       btunnel::ForwardRequest request;
       RandomForwardRequest(&request);
-      buffer.Append("\x20", 1);  // type = FORWARD
+      buffer.Write("\x20", 1);  // type = FORWARD
       WriteForward(&buffer, request);
 
       assert(!peer.invoked_);

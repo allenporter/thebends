@@ -5,12 +5,19 @@
 
 #include <string>
 
+namespace ynet {
+class ReadBuffer;
+class WriteBuffer;
+}
+
 namespace btunnel {
 
-class Buffer;
+int ReadString(ynet::ReadBuffer* buffer,
+               int16_t max_length,
+               std::string* input);
 
-int ReadString(Buffer* buffer, int16_t max_length,  std::string* input);
-
-int WriteString(Buffer* buffer, int16_t max_length, const std::string& output);
+int WriteString(ynet::WriteBuffer* buffer,
+                int16_t max_length,
+                const std::string& output);
 
 }  // namespace btunnel

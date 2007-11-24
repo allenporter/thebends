@@ -11,15 +11,19 @@
 #include <ythread/callback.h>
 
 namespace ynet {
-  class Select;
-  class TCPServer;
-  struct Connection;
+class BufferedWriter;
+class Select;
+class TCPServer;
+struct Connection;
 };
 
 namespace btunnel {
 
 class Peer;
+class ForwardRequest;
 
+// Callers should invoke srandom() at the start of the application, before
+// creating an ExportedService.
 class ExportedService {
  public:
   ExportedService(ynet::Select* select,
@@ -27,6 +31,10 @@ class ExportedService {
                   int service_id,
                   Peer* peer);
   ~ExportedService();
+
+  // Forwards the request to a connected client.  Invoked by the Core when a 
+  // message is received from the real remote service.
+  bool Forward(const ForwardRequest* request);
 
  private:
   void Connect(ynet::Connection* conn);
@@ -42,6 +50,7 @@ class ExportedService {
   // Mapping from session ids to sockets and back
   std::map<int, int> session_to_socket_;
   std::map<int, int> socket_to_session_;
+  std::map<int, ynet::BufferedWriter*> socket_writers_;
 };
 
 }  // namespace btunnel
