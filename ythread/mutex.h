@@ -30,13 +30,13 @@ class Mutex {
   pthread_mutex_t pt_mutex_;
 };
 
-// YMutexLock will lock a mutex and release it when it goes out of scope.  For
+// MutexLock will lock a mutex and release it when it goes out of scope.  For
 // example:
 // 
-// YMutex mutex;
+// Mutex mutex;
 // ...
 // {
-//   YMutexLock m(&mutex);  // Lock held
+//   MutexLock m(&mutex);  // Lock held
 //   ..
 // }  // m goes out of scope, mutex is released
 //
