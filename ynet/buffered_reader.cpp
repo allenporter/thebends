@@ -1,6 +1,7 @@
 // buffered_reader.cpp
 // Author: Allen Porter <allen@thebend.org>
 
+#include <ythread/callback-inl.h>
 #include <errno.h>
 #include <err.h>
 #include <sys/types.h>

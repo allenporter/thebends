@@ -14,6 +14,7 @@
 
 #include "tcp_server.h"
 #include "select.h"
+#include "util.h"
 
 using namespace std;
 
@@ -45,10 +46,7 @@ void TCPServer::Start() {
                  (char*)&reuse, sizeof(int)) == -1) {
     err(EX_OSERR, "sotsockopt()");
   }
-  if ((fcntl(sock_, F_SETFL, O_NONBLOCK)) == -1) {
-    err(EX_OSERR, "fcntl()");
-  }
-
+  ynet::SetNonBlocking(sock_);
   if (bind(sock_, (const struct sockaddr*)&name, sizeof(name)) == -1) {
     err(EX_OSERR, "bind");
   }
