@@ -25,7 +25,7 @@ test: test.cpp libythread.a
 install: libythread.a
 	$(INSTALL) -p -m 755 libythread.a $(INSTALL_LIBDIR)
 	mkdir -p $(INSTALL_INCLUDEDIR)
-	$(INSTALL) -p -m 755 callback*.h thread.h mutex.h condvar.h threadpool.h $(INSTALL_INCLUDEDIR)
+	$(INSTALL) -p -m 755 *.h $(INSTALL_INCLUDEDIR)
 
 clean:
 	-rm -f core *.o test libythread.a
