@@ -56,7 +56,7 @@ void BufferedReader::Ready(int fd) {
       if (errno != EAGAIN) {
         err(1, "read");
       }
-      return;
+      break;
     } else if (nbytes == 0) {
       eof_ = true;
       changed = true;
