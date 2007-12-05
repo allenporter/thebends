@@ -17,8 +17,8 @@ BufferedReader::BufferedReader(Select* select,
                                ythread::Callback* ready_callback,
                                int buffer_size,
                                int read_size)
-    : select_(select), fd_(fd), buffer_(buffer_size),
-      read_buf_size_(read_size), eof_(false) {
+    : select_(select), fd_(fd), ready_callback_(ready_callback),
+      buffer_(buffer_size), read_buf_size_(read_size), eof_(false) {
   assert(buffer_size > 0);
   assert(read_size > 0);
   read_buf_ = new char[read_buf_size_];
@@ -66,7 +66,7 @@ void BufferedReader::Ready(int fd) {
     changed = true;
   } while (true);
   if (changed) {
-    ready_callback->Execute();
+    ready_callback_->Execute();
   }
 }
 

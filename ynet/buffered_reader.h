@@ -39,7 +39,7 @@ class BufferedReader : public ReadBuffer {
 
   Select* select_;
   int fd_;
-  ythread::Callback* ready_callback;
+  ythread::Callback* ready_callback_;
   Buffer buffer_;
   char* read_buf_;
   int read_buf_size_;
