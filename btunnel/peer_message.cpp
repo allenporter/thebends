@@ -29,7 +29,7 @@ int MessageReader::Read(int sock, ynet::ReadBuffer* buffer) {
   } else if (type == FORWARD) {
     nbytes = HandleForward(sock, buffer);
   } else {
-    warn("Invalid message type: %d", type);
+    warnx("Invalid message type: 0x%02x", type);
     return -1;
   }
   if (nbytes == 0) {
@@ -97,7 +97,7 @@ int ReadRegister(ynet::ReadBuffer* buffer, RegisterRequest* request) {
   nbytes += ret;
 
   ret = ReadString(buffer, kMaxTextLen, &request->txt_records);
-  if (ret <= 0) {
+  if (ret < 0) {
     buffer->Unadvance(nbytes);
     return ret;
   }
@@ -106,13 +106,12 @@ int ReadRegister(ynet::ReadBuffer* buffer, RegisterRequest* request) {
 }
 
 int WriteRegister(ynet::WriteBuffer* buffer, const RegisterRequest& request) {
-  int32_t service_id = htonl(request.service_id);
   int nbytes = 0;
+  int32_t service_id = htonl(request.service_id);
   if (!buffer->Write((char*)&service_id, sizeof(int32_t))) {
     return -1;
   }
   nbytes += sizeof(int32_t);
-
   int ret = WriteString(buffer, kMaxNameLen, request.name);
   if (ret <= 0) {
     return -1;
@@ -170,8 +169,8 @@ int ReadForward(ynet::ReadBuffer* buffer, ForwardRequest* request) {
 }
 
 int WriteForward(ynet::WriteBuffer* buffer, const ForwardRequest& request) {
-  int32_t service_id = htonl(request.service_id);
   int nbytes = 0;
+  int32_t service_id = htonl(request.service_id);
   if (!buffer->Write((char*)&service_id, sizeof(int32_t))) {
     return -1;
   }

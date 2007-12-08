@@ -59,4 +59,7 @@ int main(int argc, char* argv[]) {
   }
 
   cout << "Picking the first server, to make life easier." << endl;
+ 
+
+
 }

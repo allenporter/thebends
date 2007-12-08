@@ -12,9 +12,6 @@ namespace ynet { class WriteBuffer; }
 
 namespace btunnel {
 
-class RegisterRequest;
-class UnregisterRequest;
-class ForwardRequest;
 class Service;
 
 class Peer {

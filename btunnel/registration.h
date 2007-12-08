@@ -4,6 +4,9 @@
 // Manages registration of bonjour services, a thin wrapper around the
 // APIs exposed by dns_sd.h.
 
+#ifndef __BTUNNEL_REGISTRATION_H__
+#define __BTUNNEL_REGISTRATION_H__
+
 #include <map>
 #include <sys/types.h>
 #include <dns_sd.h>
@@ -26,3 +29,5 @@ class ServiceManager {
 };
 
 }  // namespace btunnel
+
+#endif   // __BTUNNEL_REGISTRATION_H__

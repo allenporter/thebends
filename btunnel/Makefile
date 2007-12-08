@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-Wall -Werror
+CFLAGS=-Wall -Werror -g
 LDFLAGS=-lynet -lythread
 TOOL_LDFLAGS=$(LDFLAGS) -lgflags
 
@@ -25,10 +25,11 @@ bproxy: bproxy.o libbtunnel.a
 bproxy_server: bproxy_server.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
 
-test: peer_message_test encoding_test exported_service_test
+test: peer_message_test encoding_test exported_service_test core_test
 	./encoding_test
 	./peer_message_test
 	./exported_service_test
+	./core_test
 
 clean:
 	rm -f *.o *.a core *_test register_service bproxy bproxy_server
