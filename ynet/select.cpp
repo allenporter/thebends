@@ -1,10 +1,12 @@
 #include "select.h"
-#include <algorithm>
 #include <err.h>
+#include <errno.h>
 #include <sysexits.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/select.h>
+#include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -81,6 +83,10 @@ void Select::Start() {
     fd_set writefds;
     GetFdSet(&writefds, &writefds_);
     if (select(nfds(), &readfds, &writefds, NULL, &timeout) == -1) {
+      if (errno == EINTR) {
+        // Interruped, try again
+        break;
+      }
       err(EX_OSERR, "select()");
     }
     // We make a copy of the file descriptor list so that we don't invalidate
@@ -92,11 +98,17 @@ void Select::Start() {
          it != fds.end(); ++it) {
       unsigned int fd = *it;
       if (FD_ISSET(fd, &readfds)) {
-        assert(read_callbacks_.count(fd) > 0);
+        if (read_callbacks_.count(fd) == 0) {
+          // We're no longer interested in this socket; Ignoring.
+          continue;
+        }
         (read_callbacks_[fd])->Execute(fd);
       }
       if (FD_ISSET(fd, &writefds)) {
-        assert(write_callbacks_.count(fd) > 0);
+        if (write_callbacks_.count(fd) == 0) {
+          // We're no longer interested in this socket; Ignoring.
+          continue;
+        }
         (write_callbacks_[fd])->Execute(fd);
       }
     }

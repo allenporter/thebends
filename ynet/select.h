@@ -1,8 +1,8 @@
 // select.h
 // Author: Allen Porter <allen@thebends.org>
 
-#ifndef _SELECT_H_
-#define _SELECT_H_
+#ifndef __YNET_SELECT_H__
+#define __YNET_SELECT_H__
 
 #include <map>
 #include <vector>
@@ -39,4 +39,4 @@ class Select {
 
 }  // namespace ynet
 
-#endif  // _SELECT_H_
+#endif  // __YNET_SELECT_H__
