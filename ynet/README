@@ -6,6 +6,10 @@ To install, just run the following commands:
 $ make
 $ sudo make install
 
+This library changes often, and interfaces may break from time to time.  The
+latest revision can always be found at:
+  http://thebends.googlecode.com/svn/trunk/ynet/
+
 TODO:
 - Better standalone tests for this library.  It currently relies on testing
   done in other libraries.

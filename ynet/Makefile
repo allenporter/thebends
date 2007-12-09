@@ -41,5 +41,9 @@ test: buffer_test buffered_writer_test
 	./buffer_test
 	./buffered_writer_test
 
+dist: clean
+	REVISION=`svn info | grep "^Revision:" | cut -f 2 -d ' '` && \
+	cd .. && tar zcvf ynet/ynet-$$REVISION.tgz ynet/*.cpp ynet/*.h ynet/Makefile ynet/README
+
 clean:
-	-rm -fr *.o *.a core *_test tcp_proxy
+	-rm -fr *.o *.a *.tgz core *_test tcp_proxy
