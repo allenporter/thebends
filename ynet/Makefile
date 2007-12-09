@@ -42,4 +42,4 @@ test: buffer_test buffered_writer_test
 	./buffered_writer_test
 
 clean:
-	-rm -fr *.o *.a core *_test
+	-rm -fr *.o *.a core *_test tcp_proxy
