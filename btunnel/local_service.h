@@ -20,7 +20,7 @@ class Peer;
 class ForwardRequest;
 
 // Callers should invoke srandom() at the start of the application, before
-// creating an ExportedService.
+// creating a LocalService.
 class LocalService {
  public:
   LocalService(ynet::Select* select,

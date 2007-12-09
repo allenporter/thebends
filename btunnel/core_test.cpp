@@ -41,7 +41,7 @@ static void test1() {
 
   ynet::Select select;
   vector<btunnel::Service*> empty;
-  btunnel::Core core(&select, server_sock, &empty);
+  btunnel::Core core(&select, server_sock, &empty, NULL);
   assert(core.GetRemoteServiceCount() == 0);
   assert(core.GetLocalServiceCount() == 0);
   // Sanity check; do nothing and delete
@@ -135,7 +135,8 @@ static void test2() {
   AllocateServices(5, &services);
 
   // Test exporting of registration messages on startup
-  btunnel::Core *core = new btunnel::Core(&select, server_sock, &services);
+  btunnel::Core *core = new btunnel::Core(&select, server_sock, &services,
+                                          NULL);
   assert(core->GetRemoteServiceCount() == 0);
   assert(core->GetLocalServiceCount() == 5);
 

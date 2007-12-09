@@ -31,8 +31,12 @@ struct LocalServiceInfo {
 
 class Core : public Peer {
  public:
+  // TODO: The shutdown interface is kind of strange. Do something better here.
+  typedef ythread::Callback1<int> ShutdownCallback;
+
   Core(ynet::Select* select, int sock,
-       std::vector<btunnel::Service*>* services);
+       std::vector<btunnel::Service*>* services,
+       ShutdownCallback* callback);
   virtual ~Core();
 
   // Peer interface. TODO: Don't subclass Peer, use an inner class instead since
@@ -52,8 +56,12 @@ class Core : public Peer {
  private:
   void Read();
 
+  void Shutdown();
+
   ynet::Select* select_;
   int sock_;
+
+  ShutdownCallback* shutdown_;
 
   // Mappings of local services
   std::map<int, LocalServiceInfo*> local_services_;

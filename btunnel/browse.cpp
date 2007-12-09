@@ -1,8 +1,13 @@
 // browse.cpp
 // Author: Allen Porter <allen@thebends.org>
 
+#include <arpa/inet.h>
 #include <err.h>
 #include <dns_sd.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <string>
 #include <vector>
 #include <map>
@@ -36,8 +41,14 @@ static void ResolveCallback(DNSServiceRef client,
     return;
   }
   struct ResolveContext* ctx = (struct ResolveContext*)context;
-  ctx->host = string(host_target);
-  ctx->port = port;
+  struct hostent* h = gethostbyname(host_target);
+  if (h == NULL) {
+    herror("gethostbyname");
+    exit(1);
+  }
+  assert(h->h_length == sizeof(struct in_addr));
+  ctx->host = inet_ntoa(*(struct in_addr*)(h->h_addr_list[0]));
+  ctx->port = htons(port);
   ctx->txt = string(txt, txt_len);
 }
 

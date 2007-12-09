@@ -70,6 +70,9 @@ class PeerMessageWriter : public Peer {
   }
 
   virtual bool Forward(int client_sock, const ForwardRequest* request) {
+    cout << "Outgoing forward " << request->service_id << " "
+         << request->session_id << " (" << request->buffer.size() << ")"
+         << endl;
     int8_t type = FORWARD;
     if (!buffer_->Write((char*)&type, 1)) {
       return false;

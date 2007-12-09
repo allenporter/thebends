@@ -4,6 +4,7 @@
 #include <ythread/callback-inl.h>
 
 #include <map>
+#include <iostream>
 #include <err.h>
 #include <stdlib.h>
 #include <time.h>
@@ -17,10 +18,11 @@
 #include "peer.h"
 #include "peer_message.h"
 
-
 using namespace std;
 
 namespace btunnel {
+
+static const int kBufferSize = 5 * 1024 * 1024;  // 5MB
 
 ExportedService::ExportedService(ynet::Select* select,
                                  int port,
@@ -46,14 +48,17 @@ ExportedService::~ExportedService() {
 }
 
 void ExportedService::Connect(ynet::Connection* conn) { 
+  cout << "New connection for exported service on port " << port_ << endl;
   int session_id;
   assert(socket_to_session_.count(conn->sock) == 0);
   do {
     session_id = random() % kMaxServiceId;
   } while (session_to_socket_.count(session_id) != 0);
+  cout << "Created session id " << session_id << endl;
   socket_to_session_[conn->sock] = session_id;
   session_to_socket_[session_id] = conn->sock;
-  socket_writers_[conn->sock] = new ynet::BufferedWriter(select_, conn->sock);
+  socket_writers_[conn->sock] = new ynet::BufferedWriter(select_, conn->sock,
+                                                         kBufferSize);
   ynet::SetNonBlocking(conn->sock);
   select_->AddReadFd(conn->sock,
                      ythread::NewCallback(this, &ExportedService::Read));
@@ -67,7 +72,7 @@ void ExportedService::Read(int sock) {
   if (nread == -1) {
     err(EX_OSERR, "read() (%d)", sock);
   } else if (nread == 0) {
-    warn("Connection closed on read");
+    warnx("ExportedService Connection closed on read");
     Close(sock);
     return;
   }
@@ -84,7 +89,7 @@ void ExportedService::Read(int sock) {
 bool ExportedService::Forward(const ForwardRequest* request) {
   assert(request->service_id == service_id_);
   if (session_to_socket_.count(request->session_id) == 0) {
-    warn("Forward request for unknown session id: %d", request->session_id);
+    warnx("Forward request for unknown session id: %d", request->session_id);
     return false;
   }
   int sock = session_to_socket_[request->session_id];

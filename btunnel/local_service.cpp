@@ -16,6 +16,7 @@
 #include <ynet/buffered_writer.h>
 #include <ynet/util.h>
 #include <map>
+#include <iostream>
 
 #include "local_service.h"
 #include "peer.h"
@@ -24,6 +25,9 @@
 using namespace std;
 
 namespace btunnel {
+
+static const int kBufferSize = 5 * 1024 * 1024;  // 5MB
+
 
 LocalService::LocalService(ynet::Select* select,
                                  int service_id,
@@ -48,16 +52,16 @@ LocalService::~LocalService() {
 
 void LocalService::Read(int sock) {
   assert(socket_to_session_.count(sock) == 1);
-
   char buffer[kMaxBufLen];
   ssize_t nread = read(sock, buffer, kMaxBufLen);
   if (nread == -1) {
     err(EX_OSERR, "read() (%d)", sock);
   } else if (nread == 0) {
-    warn("Connection closed on read");
+    warnx("LocalService Connection closed on read");
     Close(sock);
     return;
   }
+  cout << "Local service read (" << nread << ")" << endl;
 
   ForwardRequest request;
   request.service_id = service_id_;
@@ -83,12 +87,18 @@ bool LocalService::Forward(const ForwardRequest* request) {
       warn("connect");
       return false;
     }
+    // TODO: Use tcp_client instead
+    cout << "Local service connection created" << endl;
     assert(socket_writers_.count(sock) == 0);
-    socket_writers_[sock] = new ynet::BufferedWriter(select_, sock);
+    socket_writers_[sock] = new ynet::BufferedWriter(select_, sock,
+                                                     kBufferSize);
+    socket_to_session_[sock] = request->session_id;
     session_to_socket_[request->session_id] = sock;
     select_->AddReadFd(sock,
                        ythread::NewCallback(this, &LocalService::Read));
   }
+  cout << "Local service write (" << request->buffer.size() << ")"
+       << endl;
   int sock = session_to_socket_[request->session_id];
   ynet::BufferedWriter* writer = socket_writers_[sock];
   if (!writer->Write(request->buffer.data(), request->buffer.size())) {

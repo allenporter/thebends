@@ -3,7 +3,7 @@ CFLAGS=-Wall -Werror -g
 LDFLAGS=-lynet -lythread
 TOOL_LDFLAGS=$(LDFLAGS) -lgflags
 
-all: libbtunnel.a register_service bproxy bproxy_server
+all: libbtunnel.a register_service bproxy bproxy_server bproxy_client
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
@@ -23,6 +23,9 @@ bproxy: bproxy.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
 
 bproxy_server: bproxy_server.o libbtunnel.a
+	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
+
+bproxy_client: bproxy_client.o libbtunnel.a
 	$(CC) -o $@ $^ $(TOOL_LDFLAGS)
 
 test: peer_message_test encoding_test exported_service_test core_test

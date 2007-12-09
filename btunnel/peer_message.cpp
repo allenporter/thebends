@@ -5,8 +5,11 @@
 #include <err.h>
 #include <string>
 #include <ynet/buffer.h>
+#include <iostream>
 #include "encoding.h"
 #include "peer.h"
+
+using namespace std;
 
 namespace btunnel {
 
@@ -17,7 +20,8 @@ MessageReader::~MessageReader() {
 }
 
 int MessageReader::Read(int sock, ynet::ReadBuffer* buffer) {
-  int8_t type;
+  cout << "MessageReader::Read on " << sock << endl; 
+  int8_t type = -1;
   if (!buffer->Read((char*)&type, 1)) {
     return 0;
   }
@@ -159,6 +163,14 @@ int ReadForward(ynet::ReadBuffer* buffer, ForwardRequest* request) {
   nbytes += sizeof(int32_t);
   request->service_id = ntohl(service_id);
 
+  int32_t session_id;
+  if (!buffer->Read((char*)&session_id, sizeof(int32_t))) {
+    buffer->Unadvance(nbytes);
+    return 0;
+  }
+  nbytes += sizeof(int32_t);
+  request->session_id = ntohl(session_id);
+
   int ret = ReadString(buffer, kMaxBufLen, &request->buffer);
   if (ret <= 0) {
     buffer->Unadvance(nbytes);
@@ -172,6 +184,12 @@ int WriteForward(ynet::WriteBuffer* buffer, const ForwardRequest& request) {
   int nbytes = 0;
   int32_t service_id = htonl(request.service_id);
   if (!buffer->Write((char*)&service_id, sizeof(int32_t))) {
+    return -1;
+  }
+  nbytes += sizeof(int32_t);
+
+  int32_t session_id = htonl(request.session_id);
+  if (!buffer->Write((char*)&session_id, sizeof(int32_t))) {
     return -1;
   }
   nbytes += sizeof(int32_t);
