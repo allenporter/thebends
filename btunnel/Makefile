@@ -35,4 +35,5 @@ test: peer_message_test encoding_test exported_service_test core_test
 	./core_test
 
 clean:
-	rm -f *.o *.a core *_test register_service bproxy bproxy_server
+	rm -f *.o *.a core *_test register_service bproxy \
+		bproxy_server bproxy_client
