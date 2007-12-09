@@ -8,7 +8,7 @@ INSTALLDIR = /usr/local
 INSTALL_LIBDIR = $(INSTALLDIR)/lib
 INSTALL_INCLUDEDIR = $(INSTALLDIR)/include/ynet
 
-SRC = select.cpp tcp_server.cpp tunnel.cpp buffer.cpp \
+SRC = select.cpp tcp_server.cpp tcp_client.cpp tunnel.cpp buffer.cpp \
       buffered_reader.cpp buffered_writer.cpp util.cpp
 OBJ = $(SRC:.cpp=.o)
 
