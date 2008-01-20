@@ -6,11 +6,11 @@
 #include <err.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <libnet.h>
 #include "options.h"
 
 #define MTU 1500
