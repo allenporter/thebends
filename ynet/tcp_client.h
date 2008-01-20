@@ -7,6 +7,7 @@
 #ifndef __YNET_TCP_CLIENT_H__
 #define __YNET_TCP_CLIENT_H__
 
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <ythread/callback.h>

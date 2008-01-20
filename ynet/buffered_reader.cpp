@@ -2,12 +2,16 @@
 // Author: Allen Porter <allen@thebend.org>
 
 #include <ythread/callback-inl.h>
+
+#include "buffered_reader.h"
+
+#include <assert.h>
 #include <errno.h>
 #include <err.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
-#include "buffered_reader.h"
+
 #include "select.h"
 
 namespace ynet {

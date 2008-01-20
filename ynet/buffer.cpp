@@ -1,9 +1,10 @@
 // buffer.cpp
 // Author: Allen Porter <allen@thebends.org>
 
+#include "buffer.h"
+#include <assert.h>
 #include <string.h>
 #include <iostream>
-#include "buffer.h"
 
 using namespace std;
 

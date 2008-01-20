@@ -1,7 +1,9 @@
 // util.h
 // Author: Allen Porter <allen@thebends.org>
 
+#include <arpa/inet.h>
 #include <sys/types.h>
+#include <netinet/in.h>
 
 namespace ynet {
 

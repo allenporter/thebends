@@ -1,6 +1,11 @@
 // tunnel.cpp
 // Author: Allen Porter <allen@thebends.org>
 
+#include <ythread/callback-inl.h>
+
+#include "tunnel.h"
+
+#include <assert.h>
 #include <arpa/inet.h>
 #include <err.h>
 #include <fcntl.h>
@@ -9,13 +14,12 @@
 #include <string.h>
 #include <sysexits.h>
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #include <iostream>
 #include <map>
 
-#include <ythread/callback-inl.h>
-
-#include "tunnel.h"
 #include "select.h"
 #include "tcp_server.h"
 

@@ -1,10 +1,16 @@
+// select.cpp
+// Author: Allen Porter <allen@thebends.org>
+
 #include "select.h"
+
+#include <assert.h>
 #include <err.h>
 #include <errno.h>
 #include <sysexits.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/select.h>
+
 #include <algorithm>
 #include <iostream>
 

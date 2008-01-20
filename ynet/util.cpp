@@ -1,6 +1,7 @@
 // util.cpp
 // Author: Allen Porter <allen@thebends.org>
 
+#include "util.h"
 #include <assert.h>
 #include <arpa/inet.h>
 #include <err.h>
@@ -9,7 +10,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <strings.h>
-#include "util.h"
 
 namespace ynet {
 

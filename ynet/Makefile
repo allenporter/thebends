@@ -1,7 +1,7 @@
 AR = ar
 CC = g++
 RANLIB = ranlib
-CCFLAGS = -Wall -Werror
+CCFLAGS = -Wall -Werror -I/usr/local/include
 LDFLAGS = -lythread
 INSTALL = install
 INSTALLDIR = /usr/local

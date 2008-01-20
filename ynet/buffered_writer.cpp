@@ -2,14 +2,18 @@
 // Author: Allen Porter <allen@thebends.org>
 
 #include <ythread/callback-inl.h>
+
+#include "buffered_writer.h"
+
 #include <assert.h>
 #include <err.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
+
 #include <string>
-#include "buffered_writer.h"
+
 #include "select.h"
 
 using namespace std;

@@ -3,6 +3,9 @@
 
 #include <ythread/callback-inl.h>
 
+#include "tcp_client.h"
+
+#include <assert.h>
 #include <arpa/inet.h>
 #include <err.h>
 #include <errno.h>
@@ -11,9 +14,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sysexits.h>
+#include <unistd.h>
 #include <iostream>
 
-#include "tcp_client.h"
 #include "select.h"
 #include "util.h"
 

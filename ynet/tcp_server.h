@@ -8,6 +8,7 @@
 #ifndef __YNET_TCP_SERVER_H__
 #define __YNET_TCP_SERVER_H__
 
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <ythread/callback.h>
