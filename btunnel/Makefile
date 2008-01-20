@@ -1,9 +1,11 @@
 CC=g++
-CFLAGS=-Wall -Werror -g
+CFLAGS=-Wall -Werror -g -I/usr/local/include
 LDFLAGS=-lynet -lythread
 TOOL_LDFLAGS=$(LDFLAGS) -lgflags
 
 all: libbtunnel.a register_service bproxy bproxy_server bproxy_client
+
+.SUFFIXES: .cpp
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
