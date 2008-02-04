@@ -90,31 +90,30 @@ int main(int argc, char* argv[]) {
   if (FLAGS_port <= 0) {
     errx(1, "Required flag --port was not specified");
   }
-  if (FLAGS_service_type.empty()) {
-    errx(1, "Required flag --service_type was not specified");
-  }
   uint16_t port = (uint16_t)FLAGS_port;
   struct in_addr addr;
   if (inet_aton(FLAGS_ip.c_str(), &addr) != 1) {
     err(1, "Flag --ip was not a valid ip address");
   }
 
-  cout << "Looking for services of type '" << FLAGS_service_type << "'" << endl;
-
   vector<btunnel::Service*> services;
-  btunnel::BrowseService(FLAGS_service_type, &services);
+  if (!FLAGS_service_type.empty()) {
+    cout << "Looking for services of type '" << FLAGS_service_type << "'"
+         << endl;
+    btunnel::BrowseService(FLAGS_service_type, &services);
 
-  cout << "Total services found: " << services.size() << endl;
-  for (unsigned int i = 0; i < services.size(); ++i) {
-    btunnel::Service* service = services[i];
-    cout << "Found: " << service->name() << " "
-         << "(" << service->type() << ") at "
-         << service->host() << ":" << service->port()
-         << "; " << service->domain() << endl;
-    const map<string, string>& records = service->txt_records();
-    for (map<string, string>::const_iterator it = records.begin();
-         it != records.end(); ++it) {
-      cout << "  " << it->first << " => " << it->second << endl;
+    cout << "Total services found: " << services.size() << endl;
+    for (unsigned int i = 0; i < services.size(); ++i) {
+      btunnel::Service* service = services[i];
+      cout << "Found: " << service->name() << " "
+           << "(" << service->type() << ") at "
+           << service->host() << ":" << service->port()
+           << "; " << service->domain() << endl;
+      const map<string, string>& records = service->txt_records();
+      for (map<string, string>::const_iterator it = records.begin();
+           it != records.end(); ++it) {
+        cout << "  " << it->first << " => " << it->second << endl;
+      }
     }
   }
 

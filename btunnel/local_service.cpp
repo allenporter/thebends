@@ -30,10 +30,10 @@ static const int kBufferSize = 5 * 1024 * 1024;  // 5MB
 
 
 LocalService::LocalService(ynet::Select* select,
-                                 int service_id,
-                                 struct in_addr addr,
-                                 uint16_t port,
-                                 Peer* peer)
+                           int service_id,
+                           struct in_addr addr,
+                           uint16_t port,
+                           Peer* peer)
     : select_(select), service_id_(service_id), port_(port), peer_(peer) {
   bzero(&addr_, sizeof(struct sockaddr_in));
   addr_.sin_family = AF_INET;
