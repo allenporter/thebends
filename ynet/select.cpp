@@ -118,6 +118,15 @@ void Select::Start() {
         (write_callbacks_[fd])->Execute(fd);
       }
     }
+    set<ythread::Callback*> callbacks;
+    callbacks_mutex_.Lock();
+    callbacks = callbacks_;
+    callbacks_.clear();
+    callbacks_mutex_.Unlock();
+    for (set<ythread::Callback*>::const_iterator it = callbacks.begin();
+         it != callbacks.end(); ++it) {
+      (*it)->Execute();
+    }
   }
 }
 
@@ -136,6 +145,12 @@ int Select::nfds() const {
     n = max(n, writefds_.front());
   }
   return n + 1;
+}
+
+void Select::AddCallback(ythread::Callback* callback) {
+  callbacks_mutex_.Lock();
+  callbacks_.insert(callback);
+  callbacks_mutex_.Unlock();
 }
 
 }  // ynet

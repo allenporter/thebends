@@ -28,5 +28,11 @@ void SetNonBlocking(int sock) {
   }
 }
 
+void SetBlocking(int sock) {
+  if ((fcntl(sock, F_SETFL, 0)) == -1) {
+    err(1, "fcntl");
+  }
+}
+
 }  // namespace ynet
 

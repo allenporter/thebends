@@ -10,5 +10,6 @@ namespace ynet {
 struct sockaddr_in SockAddr(const char* ip, int16_t port);
 
 void SetNonBlocking(int sock);
+void SetBlocking(int sock);
 
 }  // namespace ynet

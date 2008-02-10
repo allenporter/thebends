@@ -1,7 +1,7 @@
 // buffer.h
 // Author: Allen Porter <allen@thebends.org>
 //
-// Fixed length circular buffer.
+// Dynamic length circular buffer.
 
 #ifndef __YNET_BUFFER_H__
 #define __YNET_BUFFER_H__
@@ -62,6 +62,7 @@ class Buffer : public WriteBuffer, public ReadBuffer {
   int SizeInternal() const;
   int SizeLeftInternal() const;
   bool AdvanceInternal(int len);
+  void Grow();
 
   mutable ythread::Mutex mutex_;
   char* buffer_;

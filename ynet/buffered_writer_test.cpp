@@ -85,11 +85,12 @@ void test1() {
   char* buf = new char[size];
   bzero(buf, size);
   {
-    // size is too large for the socket, and too large for the buffer
+    // size is too large for the socket, and too large for the buffer, causing
+    // it to grow.
     ynet::Select select;
     ynet::BufferedWriter writer(&select, sock, 512, 256);
-    assert(!writer.Write(buf, size));
-    assert(!writer.Buffered());
+    assert(writer.Write(buf, size));
+    assert(writer.Buffered());
   }
   {
     // size is too large for the socket, but not the buffer

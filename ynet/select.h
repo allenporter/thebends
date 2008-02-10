@@ -5,8 +5,10 @@
 #define __YNET_SELECT_H__
 
 #include <map>
+#include <set>
 #include <vector>
 #include <ythread/callback.h>
+#include <ythread/mutex.h>
 
 namespace ynet {
 
@@ -27,6 +29,9 @@ class Select {
   void Start();
   void Stop();
 
+  // Threadsafe methods
+  void AddCallback(ythread::Callback* callback);
+
  private:
   int nfds() const;
 
@@ -35,6 +40,9 @@ class Select {
   std::map<int, ReadyCallback*> read_callbacks_;
   std::map<int, ReadyCallback*> write_callbacks_;
   bool looping_;
+
+  ythread::Mutex callbacks_mutex_;  // protects callbacks_
+  std::set<ythread::Callback*> callbacks_;
 };
 
 }  // namespace ynet

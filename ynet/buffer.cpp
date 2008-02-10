@@ -75,8 +75,10 @@ bool Buffer::Read(char* data, int len) {
 
 bool Buffer::Write(const char* data, int len) {
   ythread::MutexLock l(&mutex_);  
-  if (len > SizeLeftInternal()) {
-    return false;
+  while (len > SizeLeftInternal()) {
+    // double the size of the buffer.  this is a bit expensive, since we copy
+    // everything.
+    Grow();
   }
   size_t left = len;
   if (end_ + len > buffer_size_) {
@@ -90,6 +92,18 @@ bool Buffer::Write(const char* data, int len) {
     end_ = (end_ + left) % buffer_size_;
   }
   return true;
+}
+
+void Buffer::Grow() {
+  int new_buffer_size = (buffer_size_ - 1) * 2 + 1;
+  int size = SizeInternal();
+  char* new_buffer = new char[new_buffer_size];
+  PeekInternal(new_buffer, size);
+  delete [] buffer_;
+  buffer_ = new_buffer;
+  buffer_size_ = new_buffer_size;
+  start_ = 0;
+  end_ = size;
 }
 
 bool Buffer::Advance(int len) {

@@ -45,13 +45,16 @@ void Fill(ynet::Buffer* buf, int step) {
   assert(buf->SizeLeft() == 0);
 }
 
-void Verify(ynet::Buffer* buf) {
-  const string& data = MakeString(buf->Size());
-  int len = buf->Size();
+void Verify(ynet::Buffer* buf, int len) {
+  const string& data = MakeString(len);
   char buf_data[len + 1];
   buf->Read(buf_data, len);
   buf_data[len] = '\0';
   assert(data == string(buf_data));
+}
+
+void Verify(ynet::Buffer* buf) {
+  Verify(buf, buf->Size());
 }
 
 void test1() {
@@ -97,8 +100,32 @@ void test2() {
   }
 }
 
+void test3() {
+  ynet::Buffer buf(2);
+  assert(buf.Size() + buf.SizeLeft() == 2);
+  buf.Write(MakeString(2).c_str(), 2);
+  assert(buf.Size() == 2);
+  assert(buf.SizeLeft() == 0);
+  buf.Write(MakeString(1).c_str(), 1);
+  assert(buf.Size() == 3);
+  assert(buf.SizeLeft() == 1);
+  assert(buf.Size() + buf.SizeLeft() == 4);
+  buf.Write(MakeString(10).c_str(), 10);
+  assert(buf.Size() == 13);
+  assert(buf.Size() + buf.SizeLeft() == 16);
+  buf.Write(MakeString(4).c_str(), 4);
+  assert(buf.Size() == 17);
+  assert(buf.Size() + buf.SizeLeft() == 32);
+  Verify(&buf, 2);
+  Verify(&buf, 1);
+  Verify(&buf, 10);
+  Verify(&buf, 4);
+}
+
+
 int main(int argc, char* argv[]) {
   test1();
   test2();
+  test3();
   cout << "PASS" << endl;
 }
