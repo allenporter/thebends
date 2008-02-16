@@ -5,8 +5,8 @@
 // TODO(aporter): Make this work
 
 #include <iostream>
+#include <CoreFoundation/CoreFoundation.h>
 #include <AudioToolbox/AudioToolbox.h>
-#include <AudioToolbox/AudioFileStream.h>
 
 using namespace std;
 
@@ -30,12 +30,17 @@ int main(int argc, char* argv[]) {
   AudioFileStreamID stream;
   OSStatus ret = AudioFileStreamOpen(NULL,
                                      &PropertyListener,
-                                     &Packets,
-                                     AudioFileStreamClose,
+                                     &PacketsProc,
+                                     kAudioFileWAVEType,
                                      &stream);
+  if (ret != 0) {
+  }
   cout << "AudioFileStreamOpen: " << ret << endl;
   for (int i = 0; i < 10; i++) {
-    ret = AudioFileStreamParseBytes(stream, inDataByteSize, data, 0);
+    int size = 100;
+    char data[100];
+    bzero(data, 100);
+    ret = AudioFileStreamParseBytes(stream, size, data, 0);
     cout << "AudioFileStreamParseBytes: " << ret << endl;
   }
   ret = AudioFileStreamClose(stream);

@@ -2,7 +2,8 @@ AR = ar
 CC = g++
 RANLIB = ranlib
 CCFLAGS = -Wall -Werror
-LDFLAGS =
+LDFLAGS = -framework CoreFoundation -framework AudioToolbox \
+          -framework CoreServices
 
 SRC =
 OBJ = $(SRC:.cpp=.o)
