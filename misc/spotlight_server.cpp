@@ -58,7 +58,7 @@ class SpotlightServer {
       char title[BUFSIZ];
       for (int i = 0; i < count; ++i) {
         MDItemRef resultItem = (MDItemRef)MDQueryGetResultAtIndex(query, i);
-	CFStringRef titleRef =
+        CFStringRef titleRef =
           (CFStringRef)MDItemCopyAttribute(resultItem, CFSTR("kMDItemFSName"));
         CFStringGetCString(titleRef, title, BUFSIZ, kCFStringEncodingMacRoman);
         request->WriteString("<li>");
