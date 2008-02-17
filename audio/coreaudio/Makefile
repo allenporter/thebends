@@ -4,7 +4,7 @@ RANLIB = ranlib
 CCFLAGS = -Wall -Werror
 LDFLAGS = -framework CoreFoundation -framework CoreAudio
 
-SRC =
+SRC = util.cpp
 OBJ = $(SRC:.cpp=.o)
 
 .SUFFIXES: .cpp
@@ -12,10 +12,17 @@ OBJ = $(SRC:.cpp=.o)
 .cpp.o:
 	$(CC) $(CCFLAGS) -c $<
 
-all: devices
+all: libyaudio.a devices sample
+
+libyaudio.a: $(OBJ)
+	$(AR) rc $@ $(OBJ)
+	$(RANLIB) $@
 
 devices: devices.o
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -L. -lyaudio
+
+sample: sample.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -L. -lyaudio
 
 clean:
-	-rm -fr *.o *.a *.tgz core devices
+	-rm -fr *.o *.a *.tgz core devices sample
