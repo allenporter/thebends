@@ -24,5 +24,9 @@ devices: devices.o
 sample: sample.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -L. -lyaudio
 
+dist: clean
+	REVISION=`svn info | grep "^Revision:" | cut -f 2 -d ' '` && \
+	cd .. && tar zcvf ycoreaudio/libycoreaudio-$$REVISION.tgz ycoreaudio/*.cpp ycoreaudio/*.h ycoreaudio/Makefile ycoreaudio/README
+
 clean:
 	-rm -fr *.o *.a *.tgz core devices sample
