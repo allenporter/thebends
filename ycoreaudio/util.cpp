@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace coreaudio {
+namespace ycoreaudio {
 
 bool GetDevices(vector<AudioDeviceID>* devices) {
   OSStatus ret;
@@ -123,4 +123,4 @@ bool HasInputStream(AudioDeviceID device) {
   return (ret == 0 && size > 0);
 }
 
-}  // namespace coreaudio
+}  // namespace ycoreaudio

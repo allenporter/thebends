@@ -1,14 +1,14 @@
 // util.h
 // Author: Allen Porter <allen@thebends.org>
 
-#ifndef __COREAUDIO_UTIL_H__
+#ifndef __YCOREAUDIO_UTIL_H__
 #define __COREAUDIO_UTIL_H__
 
 #include <CoreAudio/CoreAudio.h>
 #include <vector>
 #include <string>
 
-namespace coreaudio {
+namespace ycoreaudio {
 
 bool GetDevices(std::vector<AudioDeviceID>* devices);
 
@@ -30,6 +30,6 @@ AudioStreamID GetDefaultOutputStream();
 bool GetStreamDescription(AudioStreamID stream,
                           AudioStreamBasicDescription* description);
 
-}  // namespace coreaudio
+}  // namespace ycoreaudio
 
 #endif  // __COREAUDIO_UTIL_H__

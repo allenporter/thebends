@@ -19,16 +19,15 @@ using namespace std;
 struct SoundState {
   int sample;
   int freq;
-  float multiplier;
   AudioStreamBasicDescription description;
 };
 
+/*
 int note = 0;
 int notes[] = {
  659, 587, 523, 587, 659, 659, 659, 587, 587, 587, 659, 698, 698, 0
-//  523, 493, 440, 0,
-//  261, 277, 293, 311, 329, 349, 369, 392, 0
 };
+*/
 
 OSStatus Proc(AudioDeviceID inDevice, 
               const AudioTimeStamp* inNow,
@@ -46,12 +45,15 @@ OSStatus Proc(AudioDeviceID inDevice,
   int units = buf->mDataByteSize / sizeof(float);
   float* data = (float*)buf->mData;
   for (int i = 0; i < units; ++i) {
-    if (state->sample == 0) {
+    if (state->sample % 1000 == 0) {
+/*
       state->freq = notes[note++];
       if (state->freq == 0) {
         note = 0;
         state->freq = notes[0];
       }
+*/
+      state->freq = 200 + (random() % 1500);
       cout << state->freq << endl;
     }
     state->sample = (state->sample + 1) % (int)state->description.mSampleRate;
@@ -63,15 +65,14 @@ OSStatus Proc(AudioDeviceID inDevice,
 
 int main(int argc, char* argv[]) {
   srandom(time(NULL));
-  AudioDeviceID device = coreaudio::GetDefaultOutputDevice();
+  AudioDeviceID device = ycoreaudio::GetDefaultOutputDevice();
 
   SoundState state;
   state.sample = 0;
-  state.multiplier = 1;
-  state.freq = notes[0];
+//  state.freq = notes[0];
 
-  if (!coreaudio::GetStreamDescription(coreaudio::GetDefaultOutputStream(),
-                                       &state.description)) {
+  if (!ycoreaudio::GetStreamDescription(ycoreaudio::GetDefaultOutputStream(),
+                                        &state.description)) {
     cerr << "GetStreamDescription failed" << endl;
     return 1;
   }
