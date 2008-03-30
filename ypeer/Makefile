@@ -8,7 +8,7 @@ INSTALLDIR = /usr/local
 INSTALL_LIBDIR = $(INSTALLDIR)/lib
 INSTALL_INCLUDEDIR = $(INSTALLDIR)/include/ypeer
 
-SRC = response.cpp bencode.cpp peers.cpp
+SRC = response.cpp bencode.cpp peers.cpp sha1.cpp http_response.cpp
 OBJ = $(SRC:.cpp=.o)
 
 .SUFFIXES: .cpp
@@ -33,8 +33,12 @@ find_peers: find_peers.o libypeer.a
 response_test: response_test.o libypeer.a
 	$(CC) $(CFLAGS) -g -o $@ $^ $(LDFLAGS)
 
-test: response_test
+http_response_test: http_response_test.o libypeer.a
+	$(CC) $(CFLAGS) -g -o $@ $^ $(LDFLAGS)
+
+test: response_test http_response_test
 	./response_test
+	./http_response_test
 
 
 dist: clean
