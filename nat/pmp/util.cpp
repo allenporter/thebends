@@ -47,7 +47,7 @@ bool GetGatewayInfo(in_addr* public_ip, uint32_t* uptime) {
   return true;
 }
 
-bool CreateMap(Protocol proto,
+bool CreateMap(Proto proto,
                uint16_t private_port,
                uint16_t* public_port,
                uint32_t* lifetime) {
