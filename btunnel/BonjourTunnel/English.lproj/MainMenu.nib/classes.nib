@@ -1,0 +1,22 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {connectPressed = id; }; 
+            CLASS = MainController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                connect = NSButton; 
+                progress = NSProgressIndicator; 
+                roomName = NSTextField; 
+                status = NSTextField; 
+                tableView = NSTableView; 
+                trackerUrl = NSTextField; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = UrlFormatter; LANGUAGE = ObjC; SUPERCLASS = NSFormatter; }
+    ); 
+    IBVersion = 1; 
+}

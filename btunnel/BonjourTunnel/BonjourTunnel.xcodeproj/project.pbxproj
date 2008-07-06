@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2C129C380DA8113A008BC099 /* libnatpmp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C129C370DA8113A008BC099 /* libnatpmp.a */; };
+		2C129DA10DA82985008BC099 /* Peer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C129DA00DA82985008BC099 /* Peer.m */; };
+		2C30FD180DA7E94800835065 /* browse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD030DA7E94800835065 /* browse.cpp */; };
+		2C30FD190DA7E94800835065 /* browse.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD040DA7E94800835065 /* browse.h */; };
+		2C30FD1A0DA7E94800835065 /* core.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD050DA7E94800835065 /* core.cpp */; };
+		2C30FD1B0DA7E94800835065 /* core.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD060DA7E94800835065 /* core.h */; };
+		2C30FD1C0DA7E94800835065 /* encoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD070DA7E94800835065 /* encoding.cpp */; };
+		2C30FD1D0DA7E94800835065 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD080DA7E94800835065 /* encoding.h */; };
+		2C30FD1E0DA7E94800835065 /* exported_service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD090DA7E94800835065 /* exported_service.cpp */; };
+		2C30FD1F0DA7E94800835065 /* exported_service.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD0A0DA7E94800835065 /* exported_service.h */; };
+		2C30FD200DA7E94800835065 /* local_service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD0B0DA7E94800835065 /* local_service.cpp */; };
+		2C30FD210DA7E94800835065 /* local_service.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD0C0DA7E94800835065 /* local_service.h */; };
+		2C30FD220DA7E94800835065 /* peer_message.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD0D0DA7E94800835065 /* peer_message.cpp */; };
+		2C30FD230DA7E94800835065 /* peer_message.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD0E0DA7E94800835065 /* peer_message.h */; };
+		2C30FD240DA7E94800835065 /* peer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD0F0DA7E94800835065 /* peer.cpp */; };
+		2C30FD250DA7E94800835065 /* peer.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD100DA7E94800835065 /* peer.h */; };
+		2C30FD270DA7E94800835065 /* registration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD120DA7E94800835065 /* registration.cpp */; };
+		2C30FD280DA7E94800835065 /* registration.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD130DA7E94800835065 /* registration.h */; };
+		2C30FD290DA7E94800835065 /* service.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD140DA7E94800835065 /* service.cpp */; };
+		2C30FD2A0DA7E94800835065 /* service.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD150DA7E94800835065 /* service.h */; };
+		2C30FD2B0DA7E94800835065 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C30FD160DA7E94800835065 /* util.cpp */; };
+		2C30FD2C0DA7E94800835065 /* util.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C30FD170DA7E94800835065 /* util.h */; };
+		2C30FD3D0DA7E9DD00835065 /* libyhttp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C30FD3A0DA7E9DD00835065 /* libyhttp.a */; };
+		2C30FD3E0DA7E9DD00835065 /* libynet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C30FD3B0DA7E9DD00835065 /* libynet.a */; };
+		2C30FD3F0DA7E9DD00835065 /* libythread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C30FD3C0DA7E9DD00835065 /* libythread.a */; };
+		2C30FD640DA7ECE800835065 /* libypeer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C30FD630DA7ECE800835065 /* libypeer.a */; };
+		2C30FDD30DA7F06F00835065 /* libyhttp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C30FD3A0DA7E9DD00835065 /* libyhttp.a */; };
+		2C30FDD40DA7F07300835065 /* libynet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C30FD3B0DA7E9DD00835065 /* libynet.a */; };
+		2C30FDDC0DA7F08D00835065 /* libythread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C30FD3C0DA7E9DD00835065 /* libythread.a */; };
+		2CA5C36C0DA0B87C0088B470 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA5C36A0DA0B87C0088B470 /* Settings.m */; };
+		2CBBE97F0D9F315600C538A8 /* Apple_Bonjour_Icon.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2CBBE97E0D9F315600C538A8 /* Apple_Bonjour_Icon.gif */; };
+		2CBBE9820D9F455C00C538A8 /* SetupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CBBE9800D9F455C00C538A8 /* SetupController.m */; };
+		2CBBE9920D9F478A00C538A8 /* MainController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2CBBE9910D9F478A00C538A8 /* MainController.mm */; };
+		2CCE97480DA5E3AF0095ED44 /* LocalService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CCE97470DA5E3AF0095ED44 /* LocalService.m */; };
+		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		2C129C370DA8113A008BC099 /* libnatpmp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnatpmp.a; path = /usr/local/lib/libnatpmp.a; sourceTree = "<absolute>"; };
+		2C129D9F0DA82985008BC099 /* Peer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peer.h; sourceTree = "<group>"; };
+		2C129DA00DA82985008BC099 /* Peer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Peer.m; sourceTree = "<group>"; };
+		2C30FCFC0DA7E8B800835065 /* libbtunnel.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libbtunnel.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C30FD030DA7E94800835065 /* browse.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = browse.cpp; path = ../lib/browse.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD040DA7E94800835065 /* browse.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = browse.h; path = ../lib/browse.h; sourceTree = SOURCE_ROOT; };
+		2C30FD050DA7E94800835065 /* core.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = core.cpp; path = ../lib/core.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD060DA7E94800835065 /* core.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = core.h; path = ../lib/core.h; sourceTree = SOURCE_ROOT; };
+		2C30FD070DA7E94800835065 /* encoding.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = encoding.cpp; path = ../lib/encoding.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD080DA7E94800835065 /* encoding.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = encoding.h; path = ../lib/encoding.h; sourceTree = SOURCE_ROOT; };
+		2C30FD090DA7E94800835065 /* exported_service.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = exported_service.cpp; path = ../lib/exported_service.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD0A0DA7E94800835065 /* exported_service.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = exported_service.h; path = ../lib/exported_service.h; sourceTree = SOURCE_ROOT; };
+		2C30FD0B0DA7E94800835065 /* local_service.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = local_service.cpp; path = ../lib/local_service.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD0C0DA7E94800835065 /* local_service.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = local_service.h; path = ../lib/local_service.h; sourceTree = SOURCE_ROOT; };
+		2C30FD0D0DA7E94800835065 /* peer_message.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = peer_message.cpp; path = ../lib/peer_message.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD0E0DA7E94800835065 /* peer_message.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = peer_message.h; path = ../lib/peer_message.h; sourceTree = SOURCE_ROOT; };
+		2C30FD0F0DA7E94800835065 /* peer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = peer.cpp; path = ../lib/peer.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD100DA7E94800835065 /* peer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = peer.h; path = ../lib/peer.h; sourceTree = SOURCE_ROOT; };
+		2C30FD120DA7E94800835065 /* registration.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = registration.cpp; path = ../lib/registration.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD130DA7E94800835065 /* registration.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = registration.h; path = ../lib/registration.h; sourceTree = SOURCE_ROOT; };
+		2C30FD140DA7E94800835065 /* service.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = service.cpp; path = ../lib/service.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD150DA7E94800835065 /* service.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = service.h; path = ../lib/service.h; sourceTree = SOURCE_ROOT; };
+		2C30FD160DA7E94800835065 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = ../lib/util.cpp; sourceTree = SOURCE_ROOT; };
+		2C30FD170DA7E94800835065 /* util.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = util.h; path = ../lib/util.h; sourceTree = SOURCE_ROOT; };
+		2C30FD3A0DA7E9DD00835065 /* libyhttp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libyhttp.a; path = /usr/local/lib/libyhttp.a; sourceTree = "<absolute>"; };
+		2C30FD3B0DA7E9DD00835065 /* libynet.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libynet.a; path = /usr/local/lib/libynet.a; sourceTree = "<absolute>"; };
+		2C30FD3C0DA7E9DD00835065 /* libythread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libythread.a; path = /usr/local/lib/libythread.a; sourceTree = "<absolute>"; };
+		2C30FD630DA7ECE800835065 /* libypeer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libypeer.a; path = /usr/local/lib/libypeer.a; sourceTree = "<absolute>"; };
+		2CA5C36A0DA0B87C0088B470 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
+		2CA5C36B0DA0B87C0088B470 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		2CBBE97E0D9F315600C538A8 /* Apple_Bonjour_Icon.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = Apple_Bonjour_Icon.gif; path = design/Apple_Bonjour_Icon.gif; sourceTree = "<group>"; };
+		2CBBE9800D9F455C00C538A8 /* SetupController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SetupController.m; sourceTree = "<group>"; };
+		2CBBE9810D9F455C00C538A8 /* SetupController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SetupController.h; sourceTree = "<group>"; };
+		2CBBE9900D9F478A00C538A8 /* MainController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MainController.h; sourceTree = "<group>"; };
+		2CBBE9910D9F478A00C538A8 /* MainController.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = MainController.mm; sourceTree = "<group>"; };
+		2CCE97460DA5E3AF0095ED44 /* LocalService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LocalService.h; sourceTree = "<group>"; };
+		2CCE97470DA5E3AF0095ED44 /* LocalService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = LocalService.m; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* BonjourTunnel_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BonjourTunnel_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* BonjourTunnel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BonjourTunnel.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2C30FCFA0DA7E8B800835065 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C30FD3D0DA7E9DD00835065 /* libyhttp.a in Frameworks */,
+				2C30FD3E0DA7E9DD00835065 /* libynet.a in Frameworks */,
+				2C30FD3F0DA7E9DD00835065 /* libythread.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C30FDDC0DA7F08D00835065 /* libythread.a in Frameworks */,
+				2C30FDD40DA7F07300835065 /* libynet.a in Frameworks */,
+				2C30FDD30DA7F06F00835065 /* libyhttp.a in Frameworks */,
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				2C30FD640DA7ECE800835065 /* libypeer.a in Frameworks */,
+				2C129C380DA8113A008BC099 /* libnatpmp.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				2C129D9F0DA82985008BC099 /* Peer.h */,
+				2C129DA00DA82985008BC099 /* Peer.m */,
+				2CBBE9800D9F455C00C538A8 /* SetupController.m */,
+				2CBBE9810D9F455C00C538A8 /* SetupController.h */,
+				2CBBE9900D9F478A00C538A8 /* MainController.h */,
+				2CBBE9910D9F478A00C538A8 /* MainController.mm */,
+				2CA5C36A0DA0B87C0088B470 /* Settings.m */,
+				2CA5C36B0DA0B87C0088B470 /* Settings.h */,
+				2CCE97460DA5E3AF0095ED44 /* LocalService.h */,
+				2CCE97470DA5E3AF0095ED44 /* LocalService.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2C129C370DA8113A008BC099 /* libnatpmp.a */,
+				2C30FD630DA7ECE800835065 /* libypeer.a */,
+				2C30FD3A0DA7E9DD00835065 /* libyhttp.a */,
+				2C30FD3B0DA7E9DD00835065 /* libynet.a */,
+				2C30FD3C0DA7E9DD00835065 /* libythread.a */,
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* BonjourTunnel.app */,
+				2C30FCFC0DA7E8B800835065 /* libbtunnel.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* BonjourTunnel */ = {
+			isa = PBXGroup;
+			children = (
+				2C30FD2D0DA7E95200835065 /* btunnel */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = BonjourTunnel;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* BonjourTunnel_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107310486CEB800E47090 /* Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				2CBBE97E0D9F315600C538A8 /* Apple_Bonjour_Icon.gif */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2C30FD2D0DA7E95200835065 /* btunnel */ = {
+			isa = PBXGroup;
+			children = (
+				2C30FD030DA7E94800835065 /* browse.cpp */,
+				2C30FD040DA7E94800835065 /* browse.h */,
+				2C30FD050DA7E94800835065 /* core.cpp */,
+				2C30FD060DA7E94800835065 /* core.h */,
+				2C30FD070DA7E94800835065 /* encoding.cpp */,
+				2C30FD080DA7E94800835065 /* encoding.h */,
+				2C30FD090DA7E94800835065 /* exported_service.cpp */,
+				2C30FD0A0DA7E94800835065 /* exported_service.h */,
+				2C30FD0B0DA7E94800835065 /* local_service.cpp */,
+				2C30FD0C0DA7E94800835065 /* local_service.h */,
+				2C30FD0D0DA7E94800835065 /* peer_message.cpp */,
+				2C30FD0E0DA7E94800835065 /* peer_message.h */,
+				2C30FD0F0DA7E94800835065 /* peer.cpp */,
+				2C30FD100DA7E94800835065 /* peer.h */,
+				2C30FD120DA7E94800835065 /* registration.cpp */,
+				2C30FD130DA7E94800835065 /* registration.h */,
+				2C30FD140DA7E94800835065 /* service.cpp */,
+				2C30FD150DA7E94800835065 /* service.h */,
+				2C30FD160DA7E94800835065 /* util.cpp */,
+				2C30FD170DA7E94800835065 /* util.h */,
+			);
+			name = btunnel;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2C30FCF80DA7E8B800835065 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C30FD190DA7E94800835065 /* browse.h in Headers */,
+				2C30FD1B0DA7E94800835065 /* core.h in Headers */,
+				2C30FD1D0DA7E94800835065 /* encoding.h in Headers */,
+				2C30FD1F0DA7E94800835065 /* exported_service.h in Headers */,
+				2C30FD210DA7E94800835065 /* local_service.h in Headers */,
+				2C30FD230DA7E94800835065 /* peer_message.h in Headers */,
+				2C30FD250DA7E94800835065 /* peer.h in Headers */,
+				2C30FD280DA7E94800835065 /* registration.h in Headers */,
+				2C30FD2A0DA7E94800835065 /* service.h in Headers */,
+				2C30FD2C0DA7E94800835065 /* util.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2C30FCFB0DA7E8B800835065 /* btunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C30FD000DA7E8E600835065 /* Build configuration list for PBXNativeTarget "btunnel" */;
+			buildPhases = (
+				2C30FCF80DA7E8B800835065 /* Headers */,
+				2C30FCF90DA7E8B800835065 /* Sources */,
+				2C30FCFA0DA7E8B800835065 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = btunnel;
+			productName = btunnel;
+			productReference = 2C30FCFC0DA7E8B800835065 /* libbtunnel.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		8D1107260486CEB800E47090 /* BonjourTunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BonjourTunnel" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BonjourTunnel;
+			productInstallPath = "$(HOME)/Applications";
+			productName = BonjourTunnel;
+			productReference = 8D1107320486CEB800E47090 /* BonjourTunnel.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "BonjourTunnel" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* BonjourTunnel */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* BonjourTunnel */,
+				2C30FCFB0DA7E8B800835065 /* btunnel */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				2CBBE97F0D9F315600C538A8 /* Apple_Bonjour_Icon.gif in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2C30FCF90DA7E8B800835065 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C30FD180DA7E94800835065 /* browse.cpp in Sources */,
+				2C30FD1A0DA7E94800835065 /* core.cpp in Sources */,
+				2C30FD1C0DA7E94800835065 /* encoding.cpp in Sources */,
+				2C30FD1E0DA7E94800835065 /* exported_service.cpp in Sources */,
+				2C30FD200DA7E94800835065 /* local_service.cpp in Sources */,
+				2C30FD220DA7E94800835065 /* peer_message.cpp in Sources */,
+				2C30FD240DA7E94800835065 /* peer.cpp in Sources */,
+				2C30FD270DA7E94800835065 /* registration.cpp in Sources */,
+				2C30FD290DA7E94800835065 /* service.cpp in Sources */,
+				2C30FD2B0DA7E94800835065 /* util.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				2CBBE9820D9F455C00C538A8 /* SetupController.m in Sources */,
+				2CBBE9920D9F478A00C538A8 /* MainController.mm in Sources */,
+				2CA5C36C0DA0B87C0088B470 /* Settings.m in Sources */,
+				2CCE97480DA5E3AF0095ED44 /* LocalService.m in Sources */,
+				2C129DA10DA82985008BC099 /* Peer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29B97319FDCFA39411CA2CEA /* English */,
+			);
+			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2C30FD010DA7E8E600835065 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = btunnel;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		2C30FD020DA7E8E600835065 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = btunnel;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = BonjourTunnel;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = BonjourTunnel;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2C30FD000DA7E8E600835065 /* Build configuration list for PBXNativeTarget "btunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C30FD010DA7E8E600835065 /* Debug */,
+				2C30FD020DA7E8E600835065 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BonjourTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "BonjourTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

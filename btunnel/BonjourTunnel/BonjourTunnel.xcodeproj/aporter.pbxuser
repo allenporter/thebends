@@ -1,0 +1,430 @@
+// !$*UTF8*$!
+{
+	089C165DFE840E0CC02AAC07 /* English */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {701, 689}}";
+			sepNavSelRange = "{87, 0}";
+			sepNavVisRect = "{{0, 0}, {701, 689}}";
+			sepNavWindowFrame = "{{65, 13}, {740, 818}}";
+		};
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeArchitecture = i386;
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 2CBBE9560D9F2C7200C538A8 /* BonjourTunnel */;
+		activeTarget = 8D1107260486CEB800E47090 /* BonjourTunnel */;
+		addToTargets = (
+			8D1107260486CEB800E47090 /* BonjourTunnel */,
+		);
+		breakpoints = (
+			2C204BAE0D9F4CF7001D24D0 /* SetupController.m:34 */,
+			2C204C750D9F5496001D24D0 /* MainController.mm:1 */,
+			2C204C810D9F5875001D24D0 /* SetupController.m:34 */,
+			2CA5C2270DA087B90088B470 /* SetupController.m:34 */,
+			2CA5C2D70DA09CF10088B470 /* SetupController.m:39 */,
+			2CA5C42C0DA0CC7A0088B470 /* Settings.m:20 */,
+			2C30FDA80DA7EEBA00835065 /* MainController.mm:125 */,
+			2C129C0C0DA7FB96008BC099 /* LocalService.m:19 */,
+			2C129E7F0DA83026008BC099 /* MainController.mm:16 */,
+		);
+		codeSenseManager = 2CBBE9650D9F2C7800C538A8 /* Code sense */;
+		executables = (
+			2CBBE9560D9F2C7200C538A8 /* BonjourTunnel */,
+		);
+		perUserDictionary = {
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					210,
+					20,
+					110,
+					109,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					240,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					408,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					200,
+					172,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 237069016;
+			PBXWorkspaceStateSaveDate = 237069016;
+		};
+		sourceControlManager = 2CBBE9640D9F2C7800C538A8 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	29B97316FDCFA39411CA2CEA /* main.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {701, 689}}";
+			sepNavSelRange = "{150, 0}";
+			sepNavVisRect = "{{0, 0}, {701, 689}}";
+			sepNavWindowFrame = "{{19, 55}, {740, 818}}";
+		};
+	};
+	2C129C0C0DA7FB96008BC099 /* LocalService.m:19 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CCE97470DA5E3AF0095ED44 /* LocalService.m */;
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 19;
+		location = LocalService.ob;
+		modificationTime = 229126367.370958;
+		state = 1;
+	};
+	2C129D9F0DA82985008BC099 /* Peer.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {781, 557}}";
+			sepNavSelRange = "{151, 19}";
+			sepNavVisRect = "{{0, 0}, {781, 557}}";
+			sepNavWindowFrame = "{{134, 82}, {820, 686}}";
+		};
+	};
+	2C129DA00DA82985008BC099 /* Peer.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {768, 658}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{131, 788}";
+			sepNavVisRect = "{{0, 321}, {710, 309}}";
+			sepNavWindowFrame = "{{169, 115}, {820, 686}}";
+		};
+	};
+	2C129E7F0DA83026008BC099 /* MainController.mm:16 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CBBE9910D9F478A00C538A8 /* MainController.mm */;
+		functionName = "FakePeers()";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 16;
+		location = MainController.ob;
+		modificationTime = 229126354.850024;
+		state = 1;
+	};
+	2C204BAE0D9F4CF7001D24D0 /* SetupController.m:34 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CBBE9800D9F455C00C538A8 /* SetupController.m */;
+		functionName = "-validate";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 34;
+		location = SetupController.ob;
+		modificationTime = 229126353.006253;
+		state = 2;
+	};
+	2C204C750D9F5496001D24D0 /* MainController.mm:1 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CBBE9910D9F478A00C538A8 /* MainController.mm */;
+		functionName = "-applicationDidFinishLaunching:";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 1;
+		location = MainController.ob;
+		modificationTime = 229126354.79699;
+		state = 1;
+	};
+	2C204C810D9F5875001D24D0 /* SetupController.m:34 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CBBE9800D9F455C00C538A8 /* SetupController.m */;
+		functionName = "-validate";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 34;
+		location = SetupController.ob;
+		modificationTime = 229126367.3709361;
+		state = 1;
+	};
+	2C30FCFB0DA7E8B800835065 /* btunnel */ = {
+		activeExec = 0;
+	};
+	2C30FD050DA7E94800835065 /* core.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {592, 2506}}";
+			sepNavSelRange = "{131, 34}";
+			sepNavVisRect = "{{0, 0}, {592, 237}}";
+		};
+	};
+	2C30FDA80DA7EEBA00835065 /* MainController.mm:125 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CBBE9910D9F478A00C538A8 /* MainController.mm */;
+		functionName = "-connectPressed:";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 125;
+		location = MainController.ob;
+		modificationTime = 229126354.816416;
+		state = 1;
+	};
+	2CA5C2270DA087B90088B470 /* SetupController.m:34 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CBBE9800D9F455C00C538A8 /* SetupController.m */;
+		functionName = "-validate";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 34;
+		location = SetupController.ob;
+		modificationTime = 229126353.006269;
+		state = 2;
+	};
+	2CA5C2D70DA09CF10088B470 /* SetupController.m:39 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CBBE9800D9F455C00C538A8 /* SetupController.m */;
+		functionName = "-validate";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 39;
+		location = SetupController.ob;
+		modificationTime = 229126367.37095;
+		state = 1;
+	};
+	2CA5C36A0DA0B87C0088B470 /* Settings.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {686, 1302}}";
+			sepNavSelRange = "{251, 0}";
+			sepNavVisRange = "{0, 1120}";
+			sepNavVisRect = "{{0, 0}, {706, 666}}";
+			sepNavWindowFrame = "{{471, 79}, {745, 795}}";
+		};
+	};
+	2CA5C36B0DA0B87C0088B470 /* Settings.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {689, 637}}";
+			sepNavSelRange = "{193, 66}";
+			sepNavVisRect = "{{0, 0}, {689, 637}}";
+			sepNavWindowFrame = "{{520, 95}, {728, 766}}";
+		};
+	};
+	2CA5C42C0DA0CC7A0088B470 /* Settings.m:20 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 2CA5C36A0DA0B87C0088B470 /* Settings.m */;
+		functionName = "-validateTrackerUrl:error:";
+		hitCount = 1;
+		ignoreCount = 0;
+		lineNumber = 20;
+		location = Settings.ob;
+		modificationTime = 229126367.370965;
+		state = 1;
+	};
+	2CBBE9560D9F2C7200C538A8 /* BonjourTunnel */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = BonjourTunnel;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	2CBBE9640D9F2C7800C538A8 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+		scmType = "";
+	};
+	2CBBE9650D9F2C7800C538A8 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	2CBBE9800D9F455C00C538A8 /* SetupController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {618, 1148}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{695, 709}";
+			sepNavVisRect = "{{0, 554}, {638, 594}}";
+			sepNavWindowFrame = "{{506, 155}, {677, 723}}";
+		};
+	};
+	2CBBE9810D9F455C00C538A8 /* SetupController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {592, 294}}";
+			sepNavSelRange = "{421, 0}";
+			sepNavVisRect = "{{0, 15}, {592, 237}}";
+			sepNavWindowFrame = "{{42, 34}, {740, 818}}";
+		};
+	};
+	2CBBE9900D9F478A00C538A8 /* MainController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {710, 350}}";
+			sepNavSelRange = "{622, 0}";
+			sepNavVisRect = "{{0, 41}, {710, 309}}";
+			sepNavWindowFrame = "{{19, 387}, {596, 487}}";
+		};
+	};
+	2CBBE9910D9F478A00C538A8 /* MainController.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {853, 3262}}";
+			sepNavSelRange = "{3650, 0}";
+			sepNavVisRange = "{3092, 1199}";
+			sepNavVisRect = "{{0, 799}, {662, 542}}";
+			sepNavWindowFrame = "{{196, 13}, {912, 753}}";
+		};
+	};
+	2CCE97460DA5E3AF0095ED44 /* LocalService.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {558, 394}}";
+			sepNavSelRange = "{119, 92}";
+			sepNavVisRect = "{{0, 0}, {558, 394}}";
+			sepNavWindowFrame = "{{65, 308}, {597, 523}}";
+		};
+	};
+	2CCE97470DA5E3AF0095ED44 /* LocalService.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {758, 309}}";
+			sepNavSelRange = "{417, 5}";
+			sepNavVisRect = "{{0, 0}, {710, 309}}";
+			sepNavWindowFrame = "{{88, 301}, {706, 509}}";
+		};
+	};
+	8D1107260486CEB800E47090 /* BonjourTunnel */ = {
+		activeExec = 0;
+		executables = (
+			2CBBE9560D9F2C7200C538A8 /* BonjourTunnel */,
+		);
+	};
+	8D1107310486CEB800E47090 /* Info.plist */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {701, 689}}";
+			sepNavSelRange = "{412, 0}";
+			sepNavVisRect = "{{0, 0}, {701, 689}}";
+			sepNavWindowFrame = "{{42, 34}, {740, 818}}";
+		};
+	};
+}
