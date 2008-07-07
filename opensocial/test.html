@@ -1,0 +1,42 @@
+<html>
+<head>
+<script src="example.js"></script>
+<script>
+function main() {
+  var entries = data.entries;
+  var html = '';
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.hidden) {
+       continue;
+    }
+    html += "<img src=" + entry.service.iconUrl + "> <a href=" + entry.link + ">" + entry.title + "</a> ";
+    html += "(via <a href=" + entry.service.profileUrl + ">" + entry.service.name + "</a>)<br>";
+  }
+  document.getElementById('main').innerHTML = html;
+}
+
+</script>
+<!--
+<body onload='main();'>
+-->
+<style>
+.text {
+  font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+  font-size:11px
+}
+</style>
+</head>
+<body>
+  <div id=main></div>
+  <div class=text style="width:290">
+  <img src="http://friendfeed.com/static/images/logo-small.png"><br>
+  <hr size=1 color=blue>
+  <center>
+  FriendFeed nickname or email:<br>
+  <input type=text name="nickname" size=20><br>
+  <input type=submit></center>
+  </div>
+
+</body>
+</html>

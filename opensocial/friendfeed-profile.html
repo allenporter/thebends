@@ -1,0 +1,64 @@
+<style>
+.text {
+  font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+  font-size:11px
+}
+</style>
+<div id="heading">
+<a href="http://friendfeed.com" target="_top"><img src="http://friendfeed.com/static/images/logo-small.png" width=160 height=34></a>
+</div>
+<hr size="1px" />
+<div id="main" class="text"></div>
+
+<script>
+  function load() {
+      var req = opensocial.newDataRequest();
+      req.add(req.newFetchPersonAppDataRequest(opensocial.DataRequest.PersonId.OWNER, "friendfeed-nickname"),
+                  "loading");
+      req.send(loadComplete);
+  }
+
+  // There has to be a better way. What is the users friend id?
+  function getFirstResult(data) {
+    for (var member in data) {
+      return data[member];
+    }
+  }
+
+  function loadComplete(data) {
+    var nicknameData = data.get("loading");
+    if (nicknameData.hadError()) {
+      return;
+    }
+    var data = getFirstResult(nicknameData.getData());
+    init(data["friendfeed-nickname"]);
+  }
+
+    function init(nickname)
+    {
+        var params = {};
+        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+        var url = "http://friendfeed.com/api/feed/user/" + nickname;
+        gadgets.io.makeRequest(url, callback, params);                
+        
+        function callback(response){
+            var data = response.data;
+            var entries = data.entries;
+            var html = '';
+
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.hidden) {
+       continue;
+    }
+    html += '<img src="' + entry.service.iconUrl + '"> <a href="' + entry.link + '" target=top>' + entry.title + '</a> ';
+    html += '(via <a href="' + entry.service.profileUrl + '" target=top>' + entry.service.name + '</a>)<br>';
+  }
+
+            document.getElementById('main').innerHTML = html;
+        }
+    }
+    
+    
+    load();
+</script>
