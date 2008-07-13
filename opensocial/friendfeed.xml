@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="FriendFeed">
+    <Require feature="opensocial-0.7"/>
+    <Require feature="minimessage" />
+    <Require feature="views" />
+  </ModulePrefs>
+  <!-- TODO specify left: 430? -->
+  <Content type="html" view="profile-left">
+  <![CDATA[
+  <script>
+    function getData(data, arg) {
+      if (data.hadError()) {
+        showAlert("Error: " + data.getErrorMessage());
+        return null;
+      }
+      var field = data.get(arg);
+      if (!field) {
+        showAlert("'" + arg + "' not found");
+        return null;
+      }
+      if (field.hadError()) {
+        showAlert("Error for '" + field + "': " + field.getErrorMessage());
+        return null;
+      }
+      return field.getData();
+    }
+
+    function load() {
+      var req = opensocial.newDataRequest();
+      req.add(
+          req.newFetchPersonRequest(opensocial.DataRequest.PersonId.OWNER),
+          "owner");
+      req.add(
+          req.newFetchPersonRequest(opensocial.DataRequest.PersonId.VIEWER),
+          "viewer");
+      req.add(
+          req.newFetchPersonAppDataRequest(
+              opensocial.DataRequest.PersonId.OWNER, "friendfeed-nickname"),
+          "persondata");
+      req.send(loadComplete);
+    }
+
+    function loadComplete(data) {
+      var owner = getData(data, "owner");
+      var viewer = getData(data, "viewer");
+      var personData = getData(data, "persondata");
+      var nickname = '';
+      if (personData[owner.getId()]) {
+        var ownerData = personData[owner.getId()];
+        nickname = ownerData['friendfeed-nickname'];
+        showFeed(nickname);
+      }
+    }
+
+    function showFeed(nickname) {
+        var params = {};
+        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+        var url = "http://friendfeed.com/api/feed/user/" + nickname;
+        gadgets.io.makeRequest(url, callback, params);                
+        
+        function callback(response) {
+            var data = response.data;
+            var entries = data.entries;
+            var html = '';
+
+            for (var i = 0; i < entries.length; ++i) {
+              var entry = entries[i];
+              if (entry.hidden) {
+                continue;
+              }
+              html += '<img src="' + entry.service.iconUrl + '"> ';
+              html += '<a href="' + entry.link + '" target=top>' +
+                      entry.title + '</a> ';
+              html += '(via <a href="' + entry.service.profileUrl + '" ' +
+                      'target=top>' + entry.service.name + '</a>)<br>';
+            }
+
+            document.getElementById('main').innerHTML = html;
+        }
+    }
+  </script>
+
+  <style>
+    .tabhead {
+      background-color: #ecf2fa;
+      border-bottom: 1px solid #6797d3;
+      padding: 5px;
+    }
+    .feed {
+      font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+      font-size: 11px;
+    }
+    .page {
+      height: 270px;
+      overflow: auto;
+    }
+  </style>
+
+  <div class="page">
+
+  <!-- TODO: Display a "Change" link to change your feed settings (link to canvas -->
+  <div class="tabhead">
+  <a href="http://friendfeed.com" target="_blank">
+  <img src="http://friendfeed.com/static/images/logo-small.png" width="160" height="34"></a>
+  </div>
+
+  <div id="main" class="feed"></div>
+  </div>
+
+  <script>
+    gadgets.util.registerOnLoadHandler(load);
+  </script>
+    ]]>
+  </Content>
+
+  <!-- TODO: Specify width=800? -->
+  <Content type="html" view="canvas">
+  <![CDATA[
+
+  <script>
+    function showAlert(message) {
+      var msg = new gadgets.MiniMessage(__MODULE_ID__);
+      msg.createDismissibleMessage(message);
+    }
+
+    function loadSettings() {
+      var req = opensocial.newDataRequest();
+      req.add(
+          req.newFetchPersonRequest(opensocial.DataRequest.PersonId.OWNER),
+          "owner");
+      req.add(
+          req.newFetchPersonRequest(opensocial.DataRequest.PersonId.VIEWER),
+          "viewer");
+      req.add(
+          req.newFetchPersonAppDataRequest(
+              opensocial.DataRequest.PersonId.VIEWER, "friendfeed-nickname"),
+          "persondata");
+      req.send(loadComplete);
+    }
+
+    function dumpObj(obj) {
+      var s = '';
+      for (o in obj) {
+        s += o + '=' + obj[o] + "\n";
+      }
+      alert(s);
+    }
+
+    function getData(data, arg) {
+      if (data.hadError()) {
+        showAlert("Error: " + data.getErrorMessage());
+        return null;
+      }
+      var field = data.get(arg);
+      if (!field) {
+        showAlert("'" + arg + "' not found");
+        return null;
+      }
+      if (field.hadError()) {
+        showAlert("Error for '" + field + "': " + field.getErrorMessage());
+        return null;
+      }
+      return field.getData();
+    }
+
+    function loadComplete(data) {
+      var owner = getData(data, "owner");
+      var viewer = getData(data, "viewer");
+      var personData = getData(data, "persondata");
+      var nickname = '';
+      if (personData[owner.getId()]) {
+        var ownerData = personData[owner.getId()];
+        nickname = ownerData['friendfeed-nickname'];
+      }
+      var form = document.getElementById('friendfeedprefs');
+      form.nickname.value = nickname;
+      form.savebutton.disabled = '';
+      form.nickname.disabled = '';
+    }
+
+    function save(form) {
+      var nickname = form.nickname.value;
+      var req = opensocial.newDataRequest();
+      req.add(req.newUpdatePersonAppDataRequest(
+                      opensocial.DataRequest.PersonId.VIEWER,
+                      "friendfeed-nickname", nickname),
+                  "nickname");
+      req.send(saveComplete);
+    }
+
+    function saveComplete(data) {
+      var nickname = getData(data, "nickname");
+      if (getData(data, "nickname")) {
+        showAlert("Preferences saved");
+      }
+    }
+
+  </script>
+
+  <style>
+    .text {
+      font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+    }
+    .tabhead {
+      background-color: #ecf2fa;
+      border-bottom: 1px solid #6797d3;
+      padding: 5px;
+    }
+    .settings {
+      padding-left: 15px;
+    }
+  </style>
+
+  <div id=configuration class="text">
+
+  <div class="tabhead">
+  <a href="http://friendfeed.com" target="_blank">
+  <img src="http://friendfeed.com/static/images/logo-small.png" width="160" height="34"></a>
+  </div>
+  <div class="settings">
+  <h2>Feed preferences</h2>
+
+  <form id="friendfeedprefs" onsubmit="save(this); return false;">
+  FriendFeed Nickname or Email:
+  <input type=text name="nickname" size=20 disabled="disabled" value="Loading..."><br>
+
+  <input name="savebutton" type="submit" value="Save changes" disabled="disabled">
+  </form>
+
+  </div>
+  <script>
+    gadgets.util.registerOnLoadHandler(loadSettings);
+  </script>
+
+  ]]>
+  </Content>
+</Module>
