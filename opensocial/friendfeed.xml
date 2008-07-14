@@ -122,7 +122,7 @@
       font-size: 11px;
     }
     .page {
-      height: 270px;
+      height: 260px;
       overflow: auto;
     }
   </style>
