@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
   <ModulePrefs title="FriendFeed (Unofficial)"
-               description="Suck your friendfeed into this gadget.">
+               description="Suck your friendfeed into your profile.">
     <Require feature="opensocial-0.7"/>
     <Require feature="minimessage" />
     <Require feature="views" />
