@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-  <ModulePrefs title="FriendFeed"
+  <ModulePrefs title="FriendFeed (Unofficial)"
                description="Suck your friendfeed into this gadget.">
     <Require feature="opensocial-0.7"/>
     <Require feature="minimessage" />
@@ -9,6 +9,16 @@
   <Content type="html" view="profile.right" preferredHeight="270">
   <![CDATA[
   <script>
+    function showAlert(message) {
+      var isAble = gadgets.util.hasFeature("gadgets.MiniMessage");
+      if (isAble) {
+        var msg = new gadgets.MiniMessage(__MODULE_ID__);
+        msg.createDismissibleMessage(message);
+      } else {
+        alert(message);
+      }
+    }
+
     function getData(data, arg) {
       if (data.hadError()) {
         showAlert("Error: " + data.getErrorMessage());
@@ -44,40 +54,60 @@
     function loadComplete(data) {
       var owner = getData(data, "owner");
       var viewer = getData(data, "viewer");
+      var isOwner = (owner.getId() == viewer.getId());
       var personData = getData(data, "persondata");
       var nickname = '';
-      if (personData[owner.getId()]) {
-        var ownerData = personData[owner.getId()];
+      var ownerData = personData[owner.getId()];
+      if (ownerData && ownerData['friendfeed-nickname'] &&
+          ownerData['friendfeed-nickname'].length > 0) {
         nickname = ownerData['friendfeed-nickname'];
         showFeed(nickname);
+      } else {
+        var html = '<p>The owner has not yet configured their friendfeed.</p>';
+        if (isOwner) {
+          html += '<p><a href="javascript:config()">Configure your ' +
+                  'friendfeed</a></p>';
+        }
+        document.getElementById('main').innerHTML = html;
+      }
+    }
+
+    function config() {
+      var views = gadgets.views.getSupportedViews();  
+      var view = views['canvas'];
+      if (view) {
+        gadgets.views.requestNavigateTo(view);
+      } else {
+        showAlert('Unable to find canvas surface');
       }
     }
 
     function showFeed(nickname) {
-        var params = {};
-        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
-        var url = "http://friendfeed.com/api/feed/user/" + nickname;
-        gadgets.io.makeRequest(url, callback, params);                
+      var params = {};
+      params[gadgets.io.RequestParameters.CONTENT_TYPE] =
+          gadgets.io.ContentType.JSON;
+      var url = "http://friendfeed.com/api/feed/user/" + encodeURI(nickname);
+      gadgets.io.makeRequest(url, callback, params);                
         
-        function callback(response) {
-            var data = response.data;
-            var entries = data.entries;
-            var html = '';
+      function callback(response) {
+        var data = response.data;
+        var entries = data.entries;
+        var html = '';
 
-            for (var i = 0; i < entries.length; ++i) {
-              var entry = entries[i];
-              if (entry.hidden) {
-                continue;
-              }
-              html += '<img src="' + entry.service.iconUrl + '"> ';
-              html += '<a href="' + entry.link + '" target=top>' +
-                      entry.title + '</a> ';
-              html += '(via <a href="' + entry.service.profileUrl + '" ' +
-                      'target=top>' + entry.service.name + '</a>)<br>';
-            }
-
-            document.getElementById('main').innerHTML = html;
+        for (var i = 0; i < entries.length; ++i) {
+          var entry = entries[i];
+          if (entry.hidden) {
+            continue;
+          }
+          html += '<img src="' + entry.service.iconUrl + '"> ';
+          html += '<a href="' + entry.link + '" target=top>' +
+                  entry.title + '</a> ';
+          html += '(via <a href="' + entry.service.profileUrl + '" ' +
+                  'target=top>' + entry.service.name + '</a>)<br>';
         }
+
+        document.getElementById('main').innerHTML = html;
+      }
     }
   </script>
 
@@ -120,8 +150,13 @@
 
   <script>
     function showAlert(message) {
-      var msg = new gadgets.MiniMessage(__MODULE_ID__);
-      msg.createDismissibleMessage(message);
+      var isAble = gadgets.util.hasFeature("gadgets.MiniMessage");
+      if (isAble) {
+        var msg = new gadgets.MiniMessage(__MODULE_ID__);
+        msg.createDismissibleMessage(message);
+      } else {
+        alert(message);
+      }
     }
 
     function loadSettings() {
@@ -137,14 +172,6 @@
               opensocial.DataRequest.PersonId.VIEWER, "friendfeed-nickname"),
           "persondata");
       req.send(loadComplete);
-    }
-
-    function dumpObj(obj) {
-      var s = '';
-      for (o in obj) {
-        s += o + '=' + obj[o] + "\n";
-      }
-      alert(s);
     }
 
     function getData(data, arg) {
@@ -171,7 +198,9 @@
       var nickname = '';
       if (personData[owner.getId()]) {
         var ownerData = personData[owner.getId()];
-        nickname = ownerData['friendfeed-nickname'];
+        if (ownerData['friendfeed-nickname']) {
+          nickname = ownerData['friendfeed-nickname'];
+        }
       }
       var form = document.getElementById('friendfeedprefs');
       form.nickname.value = nickname;
@@ -220,6 +249,10 @@
   </div>
   <div class="settings">
   <h2>Feed preferences</h2>
+
+  Enter your FriendFeed account name below and your feed will be displayed in
+  the gadget window on your profile.
+  <p>
 
   <form id="friendfeedprefs" onsubmit="save(this); return false;">
   FriendFeed Nickname or Email:
