@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-  <ModulePrefs title="FriendFeed">
+  <ModulePrefs title="FriendFeed"
+               description="Suck your friendfeed into this gadget.">
     <Require feature="opensocial-0.7"/>
     <Require feature="minimessage" />
     <Require feature="views" />
   </ModulePrefs>
-  <!-- TODO specify left: 430? -->
-  <Content type="html" view="profile-left">
+  <Content type="html" view="profile.right" preferredHeight="430">
   <![CDATA[
   <script>
     function getData(data, arg) {
@@ -115,7 +115,7 @@
   </Content>
 
   <!-- TODO: Specify width=800? -->
-  <Content type="html" view="canvas">
+  <Content type="html" view="canvas" preferredHeight="800">
   <![CDATA[
 
   <script>
