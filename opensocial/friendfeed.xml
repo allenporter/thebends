@@ -6,7 +6,7 @@
     <Require feature="minimessage" />
     <Require feature="views" />
   </ModulePrefs>
-  <Content type="html" view="profile.right" preferredHeight="430">
+  <Content type="html" view="profile.right" preferredHeight="270">
   <![CDATA[
   <script>
     function getData(data, arg) {
