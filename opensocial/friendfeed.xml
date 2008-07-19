@@ -10,27 +10,23 @@
   <![CDATA[
   <script>
     function showAlert(message) {
-      var isAble = gadgets.util.hasFeature("gadgets.MiniMessage");
-      if (isAble) {
-        var msg = new gadgets.MiniMessage(__MODULE_ID__);
-        msg.createDismissibleMessage(message);
-      } else {
+//      var isAble = gadgets.util.hasFeature("gadgets.MiniMessage");
+//      if (isAble) {
+//        var msg = new gadgets.MiniMessage(__MODULE_ID__);
+//        msg.createDismissibleMessage(message);
+//      } else {
         alert(message);
-      }
+//      }
     }
 
     function getData(data, arg) {
-      if (data.hadError()) {
-        showAlert("Error: " + data.getErrorMessage());
-        return null;
-      }
       var field = data.get(arg);
       if (!field) {
         showAlert("'" + arg + "' not found");
         return null;
       }
       if (field.hadError()) {
-        showAlert("Error for '" + field + "': " + field.getErrorMessage());
+//        showAlert("Error for '" + field + "': " + field.getErrorMessage());
         return null;
       }
       return field.getData();
@@ -54,7 +50,7 @@
     function loadComplete(data) {
       var owner = getData(data, "owner");
       var viewer = getData(data, "viewer");
-      var isOwner = (owner.getId() == viewer.getId());
+      var isOwner = (viewer == null);
       var personData = getData(data, "persondata");
       var nickname = '';
       var ownerData = personData[owner.getId()];
@@ -175,17 +171,13 @@
     }
 
     function getData(data, arg) {
-      if (data.hadError()) {
-        showAlert("Error: " + data.getErrorMessage());
-        return null;
-      }
       var field = data.get(arg);
       if (!field) {
         showAlert("'" + arg + "' not found");
         return null;
       }
       if (field.hadError()) {
-        showAlert("Error for '" + field + "': " + field.getErrorMessage());
+//        showAlert("Error for '" + field + "': " + field.getErrorMessage());
         return null;
       }
       return field.getData();
@@ -194,6 +186,11 @@
     function loadComplete(data) {
       var owner = getData(data, "owner");
       var viewer = getData(data, "viewer");
+      if (viewier == null) {
+        var settings = document.getElementById('settings');
+        settings.style.display = 'none';
+        return;
+      }
       var personData = getData(data, "persondata");
       var nickname = '';
       if (personData[owner.getId()]) {
@@ -250,7 +247,7 @@
   <div class="settings">
   <h2>Feed preferences</h2>
 
-  Enter your FriendFeed account name below and your feed will be displayed in
+  Enter a FriendFeed account name below and the feed will be displayed in
   the gadget window on your profile.
   <p>
 
