@@ -22,6 +22,13 @@ class Peers {
  public:
   virtual ~Peers() { }
 
+  // Returns true if an error occurred on the last attempt to find peers.
+  virtual bool Error() = 0;
+  virtual std::string ErrorString() = 0;
+
+  // Returns true if the last connection was successful.
+  virtual bool Connected() = 0;
+
   // Returns a list of peers.  May be empty if we haven't yet made a
   // connection with the server.  Returns false if any error occurred while
   // trying to get the list of peers (the tracker went down, or sent back

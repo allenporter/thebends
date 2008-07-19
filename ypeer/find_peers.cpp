@@ -44,12 +44,15 @@ int main(int argc, char* argv[]) {
       cout << "Failed to get peers" << endl;
       return 0;
     }
-    cout << endl;
-    cout << "Current peer list:" << endl;
-    for (vector<ypeer::Peer>::const_iterator iter = active.begin();
-         iter != active.end(); ++iter) {
-      const ypeer::Peer& peer = *iter;
-      cout << "Peer: " << peer.ip << ":" << peer.port << endl;
+    if (active.empty()) {
+      cout << "Currently no active peers" << endl;
+    } else {
+      cout << "Current peer list:" << endl;
+      for (vector<ypeer::Peer>::const_iterator iter = active.begin();
+          iter != active.end(); ++iter) {
+        const ypeer::Peer& peer = *iter;
+        cout << "Peer: " << peer.ip << ":" << peer.port << endl;
+      }
     }
     sleep(5);
   }

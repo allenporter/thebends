@@ -54,7 +54,9 @@ class PeersImpl : public Peers {
         local_port_(local_port),
         thread_(ythread::NewCallback(this, &PeersImpl::StartInThread)),
         shutdown_(false),
-        error_(false) {
+        error_(false),
+        connected_(false),
+        callback_(NULL) {
     thread_.Start();
   }
 
@@ -63,6 +65,27 @@ class PeersImpl : public Peers {
     shutdown_ = true;
     mu_.Unlock();
     thread_.Join();
+  }
+
+  bool Error() {
+    mu_.Lock();
+    bool e = error_;
+    mu_.Unlock();
+    return e;
+  }
+
+  string ErrorString() {
+    mu_.Lock();
+    string s = error_string_;
+    mu_.Unlock();
+    return s;
+  }
+
+  virtual bool Connected() {
+    mu_.Lock();
+    bool c = connected_;
+    mu_.Unlock();
+    return c;
   }
 
   bool GetPeers(vector<Peer>* peers) {
@@ -77,13 +100,16 @@ class PeersImpl : public Peers {
   }
 
   void SetCallback(ythread::Callback* callback) {
-    // TODO(allen): implement this when its needed
+    mu_.Lock();
+    callback_ = callback;
+    mu_.Unlock();
   }
 
  private:
-  void SetError() {
+  void SetError(const string& error_string) {
     mu_.Lock();
     error_ = true;
+    error_string_ = error_string;
     mu_.Unlock();
   }
 
@@ -194,7 +220,7 @@ class PeersImpl : public Peers {
 
       int sock;
       if ((sock = ConnectAndSendMessage(addr, message)) < 0) {
-        SetError();
+        SetError("Unable to connect to host");
         return;
       }
       
@@ -202,7 +228,7 @@ class PeersImpl : public Peers {
       if (!GetResponse(sock, &http_response)) {
         close(sock);
         cerr << "Failed to get HTTP response" << endl;
-        SetError();
+        SetError("Failed to get HTTP response");
         return;
       }
       close(sock);
@@ -210,19 +236,19 @@ class PeersImpl : public Peers {
       string body;
       if (!ParseHTTPResponse(http_response, &body)) {
         cerr << "Parsing HTTP request failed" << endl;
-        SetError();
+        SetError("HTTP Request parsing failed");
         return;
       }
 
       ResponseMessage result;
       if (!ParseResponseMessage(body, &result)) {
         cerr << "Failed to parse tracker response" << endl;
-        SetError();
+        SetError("Failed to parse tracker response");
         return;
       }
       if (!result.failure_reason.empty()) {
         cerr << "Failure from tracker: " << result.failure_reason << endl;
-        SetError();
+        SetError("Failure from tracker");
         return;
       }
 
@@ -235,8 +261,17 @@ class PeersImpl : public Peers {
            << " peers.  Will check again in " << result.interval << " seconds."
            << endl;
       mu_.Lock();
+      error_ = false;
+      error_string_.clear();
+      connected_ = true;
       peers_ = result.peers;
+      ythread::Callback* cb = callback_;
       mu_.Unlock();
+      // Don't invoke the callback with the lock held, since likely the
+      // caller will invoke GetPeers()
+      if (cb != NULL) {
+        cb->Execute();
+      }
 
       // Update parameters for next request
       params["trackerid"] = result.tracker_id;
@@ -295,6 +330,9 @@ class PeersImpl : public Peers {
   vector<ypeer::Peer> peers_;
   bool shutdown_;
   bool error_;
+  string error_string_;
+  bool connected_;
+  ythread::Callback* callback_;
 };
 
 Peers* NewPeers(const std::string& tracker_url,

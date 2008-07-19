@@ -43,7 +43,7 @@ test: response_test http_response_test
 
 dist: clean
 	REVISION=`svn info | grep "^Revision:" | cut -f 2 -d ' '` && \
-	cd .. && tar zcvf ypeer/ypeer-$$REVISION.tgz ypeer/*.cpp ypeer/*.h ypeer/Makefile ypeer/README
+	cd .. && tar zcvf ypeer/libypeer-$$REVISION.tgz ypeer/*.cpp ypeer/*.h ypeer/Makefile ypeer/README
 
 clean:
 	-rm -fr *.o *.a *.tgz core *_test find_peers
