@@ -9,14 +9,15 @@
   <Content type="html" view="profile.right" preferredHeight="270">
   <![CDATA[
   <script>
+    // Only for debugging messages
     function showAlert(message) {
-//      var isAble = gadgets.util.hasFeature("gadgets.MiniMessage");
-//      if (isAble) {
-//        var msg = new gadgets.MiniMessage(__MODULE_ID__);
-//        msg.createDismissibleMessage(message);
-//      } else {
-        alert(message);
-//      }
+      var isAble = gadgets.util.hasFeature("gadgets.MiniMessage");
+      if (isAble) {
+        var msg = new gadgets.MiniMessage(__MODULE_ID__);
+        msg.createDismissibleMessage(message);
+      } else {
+          alert(message);
+      }
     }
 
     function getData(data, arg) {
@@ -26,7 +27,6 @@
         return null;
       }
       if (field.hadError()) {
-//        showAlert("Error for '" + field + "': " + field.getErrorMessage());
         return null;
       }
       return field.getData();
@@ -117,6 +117,10 @@
       font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
       font-size: 11px;
     }
+    .disclaimer {
+      font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+      font-size: 9px;
+    }
     .page {
       height: 260px;
       overflow: auto;
@@ -125,12 +129,12 @@
 
   <div class="page">
 
-  <!-- TODO: Display a "Change" link to change your feed settings (link to canvas -->
   <div class="tabhead">
-  <a href="http://friendfeed.com" target="_blank">
-  <img src="http://friendfeed.com/static/images/logo-small.png" width="160" height="34"></a>
-  </div>
+    <div style="float: right;" class="disclaimer"><a href="http://friendfeed.com" target="_blank">Sign up at friendfeed.com</a></div>
 
+  <a href="http://friendfeed.com" target="_blank">
+  <img src="http://friendfeed.com/static/images/logo-small.png" width="160" height="34" border=0></a>
+  </div>
   <div id="main" class="feed"></div>
   </div>
 
@@ -145,6 +149,7 @@
   <![CDATA[
 
   <script>
+    // Only for debugging messages
     function showAlert(message) {
       var isAble = gadgets.util.hasFeature("gadgets.MiniMessage");
       if (isAble) {
@@ -177,7 +182,6 @@
         return null;
       }
       if (field.hadError()) {
-//        showAlert("Error for '" + field + "': " + field.getErrorMessage());
         return null;
       }
       return field.getData();
@@ -186,9 +190,12 @@
     function loadComplete(data) {
       var owner = getData(data, "owner");
       var viewer = getData(data, "viewer");
-      if (viewier == null) {
+      if (viewer == null) {
+        // The canvas page isn't very useful if you aren't the owner
         var settings = document.getElementById('settings');
         settings.style.display = 'none';
+        var settings = document.getElementById('install');
+        settings.style.display = 'block';
         return;
       }
       var personData = getData(data, "persondata");
@@ -242,13 +249,13 @@
 
   <div class="tabhead">
   <a href="http://friendfeed.com" target="_blank">
-  <img src="http://friendfeed.com/static/images/logo-small.png" width="160" height="34"></a>
+  <img src="http://friendfeed.com/static/images/logo-small.png" width="160" height="34" border=0></a>
   </div>
-  <div class="settings">
+  <div id="settings" class="settings">
   <h2>Feed preferences</h2>
 
   Enter a FriendFeed account name below and the feed will be displayed in
-  the gadget window on your profile.
+  the gadget window on your profile.  <a href="http://friendfeed.com" target="_blank">Sign up</a>.
   <p>
 
   <form id="friendfeedprefs" onsubmit="save(this); return false;">
@@ -258,6 +265,11 @@
   <input name="savebutton" type="submit" value="Save changes" disabled="disabled">
   </form>
 
+  </div>
+  <div id="install" style="display:none;">
+    <p>
+    In order to view this page you must install this application and have a <a href="http://friendfeed.com" target="_blank">friendfeed</a> nickname or email (on a 3rd party site) you would like to display on your profile.
+    </p>
   </div>
   <script>
     gadgets.util.registerOnLoadHandler(loadSettings);
