@@ -1,0 +1,7 @@
+A static files webserver based on Google AppEngine.
+
+This largely duplicates the existing logic of the "static_data" configuration
+parameter in app.yaml.
+
+Update serve.py with the ROOT directory to use, or use the current directory by
+default.
