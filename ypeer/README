@@ -1,1 +1,3 @@
 libypeer is a C++ library that can find network peers using BitTorrent trackers.
+
+This library depends on CoreFoundation, so it requires OS X.

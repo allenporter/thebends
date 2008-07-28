@@ -2,13 +2,14 @@ AR = ar
 CC = g++
 RANLIB = ranlib
 CCFLAGS = -Wall -Werror -I/usr/local/include -g
-LDFLAGS = -L/usr/local/lib -lyhttp -lynet -lythread
+LDFLAGS = -L/usr/local/lib -lythread -framework CoreFoundation \
+          -framework CoreServices
 INSTALL = install
 INSTALLDIR = /usr/local
 INSTALL_LIBDIR = $(INSTALLDIR)/lib
 INSTALL_INCLUDEDIR = $(INSTALLDIR)/include/ypeer
 
-SRC = response.cpp bencode.cpp peers.cpp sha1.cpp http_response.cpp
+SRC = response.cpp bencode.cpp peers.cpp sha1.cpp
 OBJ = $(SRC:.cpp=.o)
 
 .SUFFIXES: .cpp
@@ -33,12 +34,8 @@ find_peers: find_peers.o libypeer.a
 response_test: response_test.o libypeer.a
 	$(CC) $(CFLAGS) -g -o $@ $^ $(LDFLAGS)
 
-http_response_test: http_response_test.o libypeer.a
-	$(CC) $(CFLAGS) -g -o $@ $^ $(LDFLAGS)
-
-test: response_test http_response_test
+test: response_test
 	./response_test
-	./http_response_test
 
 
 dist: clean

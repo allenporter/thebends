@@ -6,22 +6,15 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <arpa/inet.h>
-#include <ctype.h>
 #include <err.h>
 #include <sysexits.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <yhttp/httpserver.h>
-#include <ynet/buffer.h>
 #include <ythread/callback-inl.h>
 #include <ythread/condvar.h>
 #include <ythread/mutex.h>
 #include <ythread/thread.h>
 #include "response.h"
-#include "http_response.h"
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreServices/CoreServices.h>
 
 using namespace std;
 
@@ -42,14 +35,10 @@ class CBThread : public ythread::Thread {
 
 class PeersImpl : public Peers {
  public:
-  PeersImpl(const string& host,
-            int16_t port,
-            const string& path,
+  PeersImpl(CFURLRef url,
             const string& info_hash,
             int16_t local_port)
-      : host_(host),
-        port_(port),
-        path_(path),
+      : base_url_(url),
         info_hash_(info_hash),
         local_port_(local_port),
         thread_(ythread::NewCallback(this, &PeersImpl::StartInThread)),
@@ -60,10 +49,11 @@ class PeersImpl : public Peers {
     thread_.Start();
   }
 
-  ~PeersImpl() {
+  virtual ~PeersImpl() {
     mu_.Lock();
     shutdown_ = true;
     mu_.Unlock();
+    CFRelease(base_url_);
     thread_.Join();
   }
 
@@ -119,87 +109,51 @@ class PeersImpl : public Peers {
     return string(buf);
   }
 
-  int ConnectAndSendMessage(in_addr addr, const string& message) {
-    struct sockaddr_in name;
-    memset(&name, 0, sizeof(struct sockaddr_in));
-    name.sin_family = AF_INET;
-    name.sin_port = htons(port_);
-    name.sin_addr = addr;
+  CFHTTPMessageRef BuildRequest(const map<string, string>& params) {
+    // Prepare the query parameters
+    CFMutableDataRef query = CFDataCreateMutable(kCFAllocatorDefault, 0);
+    BuildQuery(params, query);
 
-    int sock;
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-      err(EX_OSERR, "socket()");
-    }
-
-    int ret = connect(sock, (const struct sockaddr*)&name, sizeof(name));
-    if (ret == -1) {
-      cerr << "Failed to connect to host" << endl;
-      return -1;
-    }
-
-    size_t s = write(sock, message.data(), message.size());
-    if (s != message.size()) {
-      cerr << "write size mismatch " << s << " != " << message.size() << endl;
-      return -1;
-    }
-    return sock;
+    // Append the query parameters to the base URL
+    CFURLRef url = CFURLCreateWithBytes(kCFAllocatorDefault,
+                                        CFDataGetBytePtr(query),
+                                        CFDataGetLength(query),
+                                        kCFStringEncodingUTF8,
+                                        base_url_);
+    CFHTTPMessageRef request =
+        CFHTTPMessageCreateRequest(kCFAllocatorDefault, CFSTR("GET"),
+                                   url, kCFHTTPVersion1_1);
+    CFHTTPMessageSetHeaderFieldValue(request, CFSTR("User-Agent"),
+        CFSTR("libypeer"));
+    CFRelease(query);
+    CFRelease(url);
+    return request;
   }
 
-  bool Read(int sock, ynet::Buffer* buffer) {
-    char buf[1024];
-    int nbytes;
+  bool ReadStream(CFReadStreamRef stream, CFMutableDataRef data) {
     do {
-      nbytes = read(sock, buf, 1024);
-      if (nbytes == -1) {
-        perror("read");
-        return false;
-      } else if (nbytes == 0) {
+      uint8 buf[1024];
+      CFStreamStatus stream_status = CFReadStreamGetStatus(stream);
+      if (stream_status == kCFStreamStatusAtEnd) {
         return true;
       }
-      buffer->Write(buf, nbytes);
+      if (stream_status != kCFStreamStatusOpen) {
+        cerr << "Stream status: " << stream_status;
+        return false;
+      }
+      CFIndex bytes_read = CFReadStreamRead(stream, buf, 1024);
+      if (bytes_read < 0) {
+        // TODO(allen): CFReadStremGetError to get error detail
+        cerr << "Unable to read from stream";
+        return false;
+      } else if (bytes_read == 0) {
+        return true;
+      }
+      CFDataAppendBytes(data, buf, bytes_read);
     } while (true);
   }
 
-  bool GetResponse(int sock, string* response) {
-    ynet::Buffer buf;
-    if (!Read(sock, &buf)) {
-      cout << "Error reading" << endl;
-      return false;
-    }
-    // This could be more efficient, but i'd rather just re-use ynet code
-    // for now
-    char tmp[1024];
-    while (buf.Size() > 0) {
-      int nread = (buf.Size() > 1024) ? 1024 : buf.Size();
-      buf.Read(tmp, nread);
-      response->append(tmp, nread);
-    }
-    return true;
-  }
-  void BuildRequest(const map<string, string>& params, string* message) {
-    message->append("GET /");
-    message->append(path_);
-    message->append("?");
-    AppendParams(params, message);
-    message->append(" HTTP/1.1\n");
-    message->append("Host: ");
-    message->append(host_);
-    message->append("\n");
-    message->append("Connection: close\n");
-    message->append("User-Agent: libypeer\n");
-    message->append("\n");
-  }
-
-
   void StartInThread() {
-    hostent* hp = gethostbyname(host_.c_str());
-    if (hp == NULL) {
-      cerr << "Unable to resolve hostname " << host_ << endl;
-      return;
-    }
-    in_addr addr;
-    memcpy(&addr, hp->h_addr, sizeof(struct in_addr));
-
     map<string, string> params;
     params["info_hash"] = info_hash_;
     params["peer_id"] = GeneratePeerId();
@@ -215,30 +169,57 @@ class PeersImpl : public Peers {
     while (!shutdown_) {
       mu_.Unlock();
 
-      string message;
-      BuildRequest(params, &message);
+      CFHTTPMessageRef request = BuildRequest(params);
+      CFReadStreamRef stream =
+          CFReadStreamCreateForHTTPRequest(kCFAllocatorDefault, request);
+      CFRelease(request);
+      if (!CFReadStreamOpen(stream)) {
+        cerr << "Unable to open HTTP stream" << endl;
+        SetError("Unable to open HTTP stream");
+        return;
+      }
+      CFMutableDataRef body_data = CFDataCreateMutable(kCFAllocatorDefault, 0);
+      if (!ReadStream(stream, body_data)) {
+        cerr << "Error while reading stream" << endl;
+        SetError("Error while reading stream");
+        return;
+      }
 
-      int sock;
-      if ((sock = ConnectAndSendMessage(addr, message)) < 0) {
-        SetError("Unable to connect to host");
+      CFHTTPMessageRef response =
+          (CFHTTPMessageRef)CFReadStreamCopyProperty(
+              stream,
+              kCFStreamPropertyHTTPResponseHeader);
+      if (response == NULL) {
+        cerr << "Error obtaining HTTP response" << endl;
+        SetError("Error obtaining HTTP response");
         return;
       }
-      
-      string http_response;
-      if (!GetResponse(sock, &http_response)) {
-        close(sock);
-        cerr << "Failed to get HTTP response" << endl;
-        SetError("Failed to get HTTP response");
-        return;
-      }
-      close(sock);
 
-      string body;
-      if (!ParseHTTPResponse(http_response, &body)) {
-        cerr << "Parsing HTTP request failed" << endl;
-        SetError("HTTP Request parsing failed");
+      if (!CFHTTPMessageIsHeaderComplete(response)) {
+        cerr << "HTTP Header incomplete" << endl;
+        SetError("HTTP Header incomplete");
         return;
       }
+
+      CFIndex status = CFHTTPMessageGetResponseStatusCode(response);
+      if (status != 200) {
+        cerr << "Unexpected HTTP response status: " << status << endl;
+        SetError("Unexpected HTTP response status");
+        return;
+      }
+/*
+      CFDataRef body_data = CFHTTPMessageCopyBody(response);
+      if (body_data == NULL) {
+        cerr << "Error creating response body" << endl;
+        SetError("Error creating response body");
+        return;
+      }
+*/
+
+      string body((const char*)CFDataGetBytePtr(body_data), CFDataGetLength(body_data));
+
+      CFRelease(response);
+      CFRelease(body_data);
 
       ResponseMessage result;
       if (!ParseResponseMessage(body, &result)) {
@@ -276,6 +257,7 @@ class PeersImpl : public Peers {
       // Update parameters for next request
       params["trackerid"] = result.tracker_id;
       params.erase("event");
+
       sleep(result.interval);
     }
   }
@@ -290,36 +272,37 @@ class PeersImpl : public Peers {
     return id;
   }
 
-  void AppendParams(const map<string, string>& params,
-                    string* message) {
+  void BuildQuery(const map<string, string>& params, CFMutableDataRef message) {
     int i = 0;
+    CFDataAppendBytes(message, (const UInt8*)"?", 1);
     for (map<string, string>::const_iterator it = params.begin();
          it != params.end(); ++it) {
       if (i != 0) {
-        message->append("&");
+        CFDataAppendBytes(message, (const UInt8*)"&", 1);
       }
-      Escape(it->first, message);
-      message->append("=");
-      Escape(it->second, message);
+      EscapeAndAppend(it->first, message);
+      CFDataAppendBytes(message, (const UInt8*)"=", 1);
+      EscapeAndAppend(it->second, message);
       i++;
     }
   }
 
-  void Escape(const string& value, string* message) {
+  void EscapeAndAppend(const string& value, CFMutableDataRef message) {
     int len = value.size();
     for (int i = 0; i < len; ++i) {
       unsigned char c = value[i];
       if (isalpha(c) || (c >= '0' && c <= '9') || c == '-' || c == '_' ||
           c == '.' || c == '~') {
-        message->append(1, c);
+        CFDataAppendBytes(message, (const UInt8*)&c, 1);
       } else {
         char buf[4];
         snprintf(buf, 4, "%%%02x", c);
-        message->append(buf);
+        CFDataAppendBytes(message, (const UInt8*)buf, 3);
       }
     }
   }
 
+  CFURLRef base_url_;
   string host_;
   int16_t port_;
   string path_;
@@ -339,16 +322,14 @@ Peers* NewPeers(const std::string& tracker_url,
                 const std::string& info_hash,
                 int16_t local_port) {
   assert(info_hash.size() == 20);
-  yhttpserver::URL url(tracker_url);
-  if (!url.IsValid()) {
+  CFURLRef url = CFURLCreateWithBytes(kCFAllocatorDefault,
+                                      (const UInt8*)tracker_url.c_str(),
+                                      tracker_url.size(),
+                                      kCFStringEncodingUTF8, NULL);
+  if (url == NULL) {
     return NULL;
   }
-  assert(url.User().empty());
-  assert(url.Password().empty());
-  assert(url.Scheme() == "http");
-  assert(url.Query().empty());
-  return new PeersImpl(url.Host(), url.Port(), url.Path(), info_hash,
-                       local_port);
+  return new PeersImpl(url, info_hash, local_port);
 }
 
 }  // namespace ypeer
