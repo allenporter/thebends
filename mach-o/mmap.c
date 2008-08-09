@@ -1,8 +1,13 @@
-#include "mmap_info.h"
+/*
+ * mmap.c
+ */
+#include "mmap.h"
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <mach/vm_param.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -11,9 +16,9 @@
  * Open a file, memory map its contents, and populate mmap_info. Requires a
  * filename.
  */
-int mmap_file_read(struct mmap_info *file_info) {
+int mmap_file_open(struct mmap_info *file_info) {
   assert(file_info != NULL);
-  file_info->fd = open(file_info->name, O_RDONLY, DEFFILEMODE);
+  file_info->fd = open(file_info->name, O_RDWR, DEFFILEMODE);
   if (file_info->fd < 0) {
     perror("open");
     return -1;
@@ -24,9 +29,12 @@ int mmap_file_read(struct mmap_info *file_info) {
     return -1;
   }
   file_info->data_size = (size_t)sb.st_size;
-  if ((file_info->data = mmap(NULL, file_info->data_size,
-                              PROT_READ | PROT_WRITE, MAP_FILE,
-                              file_info->fd, /* offset */0)) < 0) {
+  size_t map_size = file_info->data_size;
+  file_info->data = mmap(0, map_size,
+                         PROT_READ | PROT_WRITE,
+                         MAP_FILE | MAP_SHARED,
+                         file_info->fd, /* offset */0);
+  if ((int)file_info->data < 0) {
     perror("mmap");
     return -1;
   }

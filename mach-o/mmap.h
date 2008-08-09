@@ -1,19 +1,24 @@
 /*
  * Simple utililty methods for mmaping files.
  */
-#ifndef __MMAP_INFO_H__
-#define __MMAP_INFO_H__
+#ifndef __MMAP_H__
+#define __MMAP_H__
 
-#include "stdio.h"
+#include "sys/types.h"
+
+#define MMAP_BUFSIZ 1024
 
 struct mmap_info {
-  char name[BUFSIZ];  /* filename */
-  int fd;             /* file descriptor */
-  size_t data_size;   /* size of file */
-  void *data;         /* mmap'd contents of file */
+  char name[MMAP_BUFSIZ];  /* filename */
+  int fd;                  /* file descriptor */
+  size_t data_size;        /* size of file */
+  void* data;              /* mmap'd writable contents of file */
 };
 
-int mmap_file_read(struct mmap_info *file_info);
+/*
+ * mmap (read/write) the specified file.
+ */
+int mmap_file_open(struct mmap_info *file_info);
 int munmap_file(struct mmap_info *file_info);
 
-#endif  /* __MMAP_INFO_H__ */
+#endif  /* __MMAP_H__ */
