@@ -5,6 +5,8 @@
  * Utility that modifies the instruction pointer to start at the specified
  * offset.  Assumes that the binary is properly formatted (ie, nobody is
  * trying to exploit this program).
+ *
+ * See the README for a tutorial.
  */
 #include <err.h>
 #include <stdio.h>

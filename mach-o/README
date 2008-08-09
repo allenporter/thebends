@@ -1,0 +1,39 @@
+modify_eip changes the starting instruction pointer.  This is a bad example
+since it causes a seg fault, but is probably more interesting with a binary
+with another full start routine injected into it.
+
+// example.c
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+void exit_if_password_incorrect(const char* const password) {
+  if (strcmp("seasame", password) != 0) {
+    puts("Password incorrect");
+    exit(1);
+  }
+}
+
+void success() {
+  puts("Success!");
+}
+
+int main(int argc, char* argv[]) {
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s <password>\n", argv[0]);
+    return 1;
+  }
+  exit_if_password_incorrect(argv[1]);
+  success();
+  return 0;
+}
+
+$ gcc -Wall -Werror -o example example.c
+$ ./example foo
+Password incorrect
+$ ../modify_eip ./example 00001fb0
+< eip: 00001e74
+> eip: 00001fb0
+$ ./example foo
+Success!
+Segmentation fault
