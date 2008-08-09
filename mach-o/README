@@ -1,6 +1,6 @@
-modify_eip changes the starting instruction pointer.  This is a bad example
-since it causes a seg fault, but is probably more interesting with a binary
-with another full start routine injected into it.
+modify_eip changes the starting instruction pointer. 
+
+---- 8< ---- 8< ----
 
 // example.c
 #include <stdio.h>
@@ -37,3 +37,10 @@ $ ../modify_eip ./example 00001fb0
 $ ./example foo
 Success!
 Segmentation fault
+
+---- 8< ---- 8< ----
+
+This example crashes with a seg fault in __dyld_misaligned_stack_error after
+the program exits because modifying the instruction pointer skips some
+initialization.  This will be more useful either by either modifying more
+registers to setup a sane environment, or do some other code motification.
