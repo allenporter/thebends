@@ -1,13 +1,15 @@
 /*
- * modify_eip.c
+ * modify_reg.cc
  * Author: Allen Porter <allen@thebends.org>
  *
- * Utility that modifies the instruction pointer to start at the specified
- * offset.  Assumes that the binary is properly formatted (ie, nobody is
- * trying to exploit this program).
+ * Utility that modifies the default values of registers of a binary.  Assumes
+ * that the binary is properly formatted (ie, nobody is trying to exploit this
+ * program).
  *
- * See the README for a tutorial.
+ * See the README for usage details.
  */
+#include <map>
+#include <string>
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,6 +22,8 @@
 #include <mach/i386/thread_status.h>
 #include "mmap.h"
 
+using namespace std;
+
 /*
  * Contents of LC_UNIXTHREAD section for x86.
  */
@@ -29,12 +33,30 @@ struct thread_state {
   i386_thread_state_t cpu;  
 };
 
+static map<string, unsigned int*> register_map;
+
+static void build_map(i386_thread_state_t* state) {
+  register_map["eax"] = &state->__eax;
+  register_map["ebx"] = &state->__ebx;
+  register_map["ecx"] = &state->__ecx;
+  register_map["edx"] = &state->__edx;
+  register_map["edi"] = &state->__edi;
+  register_map["esi"] = &state->__esi;
+  register_map["ebp"] = &state->__ebp;
+  register_map["esp"] = &state->__esp;
+  register_map["eip"] =  &state->__eip;
+  register_map["cs"] =  &state->__cs;
+  register_map["ds"] = &state->__ds;
+  register_map["es"] = &state->__es;
+  register_map["fs"] = &state->__fs;
+  register_map["gs"] = &state->__gs;
+}
 
 /*
  * Return a pointer to the mach_header part of the binary.  This is typically
  * at the start of the file, but may be embedded in some fat headers.
  */
-const struct mach_header* find_header(const void* data, size_t size) {
+struct mach_header* find_header(void* data, size_t size) {
   if (size < sizeof(struct mach_header) || size < sizeof(struct fat_header)) {
     warn("File not large enough to contain a mach header");
     return NULL;
@@ -50,7 +72,7 @@ const struct mach_header* find_header(const void* data, size_t size) {
     for (i = 0; i < nfat_arch; ++i) {
       struct fat_arch* fa = (struct fat_arch*)ptr;
       long offset = NXSwapLong(fa->offset);
-      struct mach_header* mh = (struct mach_header*)(data + offset);
+      struct mach_header* mh = (struct mach_header*)((u_char*)data + offset);
       if ((mh->magic == MH_MAGIC || mh->magic == MH_CIGAM) &&
           mh->cputype == CPU_TYPE_X86) {
         return mh;
@@ -66,7 +88,7 @@ const struct mach_header* find_header(const void* data, size_t size) {
 /*
  * Return a pointer to the LC_UNIXTHREAD command.
  */
-const struct thread_command* find_thread_command(const struct mach_header* mh) {
+struct thread_command* find_thread_command(struct mach_header* mh) {
   if (mh->magic != MH_MAGIC) {
     warnx("Incorrect MH_MAGIC in header: 0x%x", mh->magic);
     return NULL;
@@ -85,15 +107,19 @@ const struct thread_command* find_thread_command(const struct mach_header* mh) {
   return NULL;
 }
 
-int main(int argc, char* argv[]) {
-  if (argc != 3) {
-    errx(EX_USAGE, "Usage: %s <file> <hex offset>", argv[0]);
-  }
+void usage(const char* const argv0) {
+  errx(EX_USAGE, "Usage: %s <file> <register> <hex offset>", argv0);
+}
 
-  uint32_t new_eip;
-  sscanf(argv[2], "%x", &new_eip);
-  if (new_eip == 0) {
-    errx(EX_USAGE, "Usage: %s <file> <hex offset>", argv[0]);
+int main(int argc, char* argv[]) {
+  if (argc != 4) {
+    usage(argv[0]);
+  }
+  const string& register_name = argv[2];
+
+  unsigned int new_register_value;
+  if (sscanf(argv[3], "%x", &new_register_value) != 1) {
+    errx(1, "Invalid register value specified (should be in hex)");
   }
 
   struct mmap_info info;
@@ -102,7 +128,7 @@ int main(int argc, char* argv[]) {
     exit(EX_IOERR);
   }
 
-  const struct mach_header* mh = find_header(info.data, info.data_size);
+  struct mach_header* mh = find_header(info.data, info.data_size);
   if (mh == NULL) {
     errx(1, "No mach-o header found");
   }
@@ -110,7 +136,7 @@ int main(int argc, char* argv[]) {
     errx(1, "Only CPU_TYPE_I386 is supported: %d", mh->cputype);
   }
 
-  const struct thread_command* tc = find_thread_command(mh);
+  struct thread_command* tc = find_thread_command(mh);
   if (tc == NULL) {
     errx(1, "No LC_UNIXTHREAD command found");
   }
@@ -125,9 +151,16 @@ int main(int argc, char* argv[]) {
   if (state->count != i386_THREAD_STATE_COUNT) {
     warn("Incorrect thread state count: %x", state->count);
   }
-  printf("< eip: %08x\n", state->cpu.__eip);
-  state->cpu.__eip = new_eip;
-  printf("> eip: %08x\n", state->cpu.__eip);
+  build_map(&state->cpu);
+
+  if (register_map.count(register_name) != 1) {
+    errx(1, "Unknown register: %s", register_name.c_str());
+  }
+
+  unsigned int* register_value = register_map[register_name];
+  printf("< %s: %08x\n", register_name.c_str(), *register_value);
+  *register_value = new_register_value;
+  printf("> %s: %08x\n", register_name.c_str(), *register_value);
   munmap_file(&info);
   return 0;
 }

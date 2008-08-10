@@ -1,4 +1,4 @@
-CC = gcc
+CC = g++
 CCFLAGS = -Wall -Werror -g
 LDFLAGS =
 
@@ -7,9 +7,9 @@ LDFLAGS =
 .c.o:
 	$(CC) $(CCFLAGS) -c $<
 
-all: modify_eip
+all: modify_reg
 
-modify_eip: modify_eip.o mmap.o
+modify_reg: modify_reg.o mmap.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:

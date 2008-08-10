@@ -1,4 +1,4 @@
-modify_eip changes the starting instruction pointer. 
+modify_reg changes the default values of a particular register.
 
 ---- 8< ---- 8< ----
 
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 $ gcc -Wall -Werror -o example example.c
 $ ./example foo
 Password incorrect
-$ ../modify_eip ./example 00001fb0
+$ ../modify_reg ./example eip 00001fb0
 < eip: 00001e74
 > eip: 00001fb0
 $ ./example foo
