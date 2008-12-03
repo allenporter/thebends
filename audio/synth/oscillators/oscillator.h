@@ -29,7 +29,8 @@ class Oscillator {
   // TODO(allen): Move this elsewhere?
   void Generate(int num_output_samples, float* output_buffer);
 
-  // Returns the value at the specific sample (0 <= sample < sample_rate).
+  // Returns the value at the specific sample (0 <= sample < sample_rate).  The
+  // returned value is in the range [-1.0, 1.0].
   virtual float GetValue(int sample) = 0;
 
  private:

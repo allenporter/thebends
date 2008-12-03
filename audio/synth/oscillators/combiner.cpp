@@ -14,6 +14,11 @@ float Combiner::GetValue(int sample) {
   for (size_t i = 0; i < oscillators_.size(); ++i) {
     value += oscillators_[i]->GetValue(sample);
   }
+  if (value > 1.0) {
+    return 1.0;
+  } else if (value < -1.0) {
+    return -1.0;
+  } 
   return value;
 }
 
