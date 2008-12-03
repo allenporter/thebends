@@ -3,7 +3,7 @@
 CC = g++
 CFLAGS = -Wall -Werror -I../
 
-SRC = oscillator.cpp sine.cpp square.cpp
+SRC = oscillator.cpp sine.cpp square.cpp combiner.cpp
 
 OBJ = $(SRC:.cpp=.o)
 

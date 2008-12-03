@@ -1,4 +1,4 @@
-SUBDIRS = oscillators controller
+SUBDIRS = oscillators controller envelope
 ECHO = echo
 
 .PHONY: all clean $(SUBDIRS)
