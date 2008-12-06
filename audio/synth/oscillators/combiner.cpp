@@ -23,10 +23,11 @@ float Combiner::GetValue(float t) {
     value += oscillators_[i]->GetValue(t);
   }
   // Clip
-  if (value > 1.0) {
-    return 1.0;
-  } else if (value < -1.0) {
-    return -1.0;
+  float max = level();
+  if (value > max) {
+    return max;
+  } else if (value < (0 - max)) {
+    return (0 - max);
   } 
   return value;
 }
