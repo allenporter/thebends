@@ -57,12 +57,30 @@ static void TestCurve() {
   ASSERT_DOUBLE_EQ(0.0, env.GetValue());
 }
 
+static void TestRelease() {
+  envelope::Envelope env;
+  env.set_attack(0.25);
+  env.set_decay(0.20);
+  env.set_sustain(0.45);
+  env.set_release(0.10);
+  env.NoteOn();
+  ASSERT_DOUBLE_EQ(0.25, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.5, env.GetValue());
+  env.NoteOff();
+  ASSERT_DOUBLE_EQ(0.4, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.3, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.2, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.1, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.0, env.GetValue());
+}
+
 }  // namespace
 
 int main(int argc, char* argv[]) {
   TestFlat();
   TestZero();
   TestCurve();
+  TestRelease();
   std::cout << "PASS" << std::endl;
   return 0;
 }

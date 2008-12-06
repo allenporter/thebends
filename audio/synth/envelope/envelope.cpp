@@ -68,6 +68,7 @@ void Envelope::NoteOn() {
 void Envelope::NoteOff() {
   assert(state_ != DONE);
   state_ = RELEASE;
+  release_start_value_ = last_value_;
   release_start_time_ = current_; 
 }
 
@@ -100,7 +101,8 @@ float Envelope::GetValue() {
       assert(value > 0.0);  // Handled in DECAY
       break;
     case RELEASE:
-      value = sustain_ - (current_ - release_start_time_) * release_;
+      value = release_start_value_ -
+           (current_ - release_start_time_) * release_;
       if (value <= 0.0) {
         state_ = DONE;
         value = 0.0;
@@ -114,6 +116,7 @@ float Envelope::GetValue() {
       exit(1);
       break;
   }
+  last_value_ = value;
   return value;
 }
 

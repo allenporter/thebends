@@ -51,9 +51,11 @@ class Envelope {
   float sustain_;
   float release_;
   int current_;
+  float last_value_;
   State state_;
   int decay_start_time_;
   int release_start_time_;
+  float release_start_value_;
 };
 
 }  // namespace envelope
