@@ -20,7 +20,7 @@ void Combiner::Add(Oscillator* oscillator) {
 float Combiner::GetValue(float t) {
   float value = 0.0;
   for (size_t i = 0; i < oscillators_.size(); ++i) {
-    value += oscillators_[i]->GetValue(t);
+    value += level() * oscillators_[i]->GetValue(t);
   }
   // Clip
   float max = level();
