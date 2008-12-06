@@ -14,7 +14,6 @@ all: libenvelope.a envelope_test
 
 libenvelope.a: $(OBJ)
 	$(AR) rc $@ $(OBJ)
-	$(RM) $(OBJ)
 
 envelope_test: libenvelope.a envelope_test.o
 	$(CC) -o $@ $(CFLAGS) -lenvelope envelope_test.o

@@ -14,7 +14,6 @@ all: liboscillators.a
 
 liboscillators.a: $(OBJ)
 	$(AR) rc $@ $(OBJ)
-	$(RM) $(OBJ)
 
 clean:
 	-$(RM) *.o *.a

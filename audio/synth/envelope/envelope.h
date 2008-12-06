@@ -30,10 +30,10 @@ class Envelope {
 
 
   // Invoked when the note is pressed, resets all counters.
-  void Start();
+  void NoteOn();
   // Invoked when the note is released.  GetValue() may be called until Done()
   // returns true.
-  void Release();
+  void NoteOff();
 
   // Returns true when the note is done playing.
   bool Done();

@@ -15,12 +15,12 @@ static void TestFlat() {
   env.set_decay(0.0);
   env.set_sustain(1.0);
   env.set_release(1.0);
-  env.Start();
+  env.NoteOn();
   for (int i = 0; i < 10; ++i) {
     ASSERT_DOUBLE_EQ(1.0, env.GetValue());
   }
   assert(!env.Done());
-  env.Release();
+  env.NoteOff();
   assert(0.0 == env.GetValue());
   assert(env.Done());
 }
@@ -31,12 +31,12 @@ static void TestZero() {
   env.set_decay(0.0);
   env.set_sustain(0.0);
   env.set_release(0.0);
-  env.Start();
+  env.NoteOn();
   for (int i = 0; i < 10; ++i) {
     ASSERT_DOUBLE_EQ(0.0, env.GetValue());
   }
   assert(!env.Done());
-  env.Release();
+  env.NoteOff();
   ASSERT_DOUBLE_EQ(0.0, env.GetValue());
   assert(env.Done());
 }
@@ -47,7 +47,7 @@ static void TestCurve() {
   env.set_decay(0.20);
   env.set_sustain(0.45);
   env.set_release(0.10);
-  env.Start();
+  env.NoteOn();
   ASSERT_DOUBLE_EQ(0.25, env.GetValue());
   ASSERT_DOUBLE_EQ(0.5, env.GetValue());
   ASSERT_DOUBLE_EQ(0.75, env.GetValue());
@@ -57,7 +57,7 @@ static void TestCurve() {
   for (int i = 0; i < 10; ++i) {
     ASSERT_DOUBLE_EQ(0.45, env.GetValue());
   }
-  env.Release();
+  env.NoteOff();
   ASSERT_DOUBLE_EQ(0.35, env.GetValue());
   ASSERT_DOUBLE_EQ(0.25, env.GetValue());
   ASSERT_DOUBLE_EQ(0.15, env.GetValue());

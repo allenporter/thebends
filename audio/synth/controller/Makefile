@@ -14,7 +14,6 @@ all: libcontroller.a
 
 libcontroller.a: $(OBJ)
 	$(AR) rc $@ $(OBJ)
-	$(RM) $(OBJ)
 
 clean:
 	-$(RM) *.o *.a

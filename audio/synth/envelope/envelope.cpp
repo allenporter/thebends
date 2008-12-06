@@ -58,14 +58,14 @@ void Envelope::set_release(float release) {
   release_ = release;
 }
 
-void Envelope::Start() {
+void Envelope::NoteOn() {
   current_ = 0;
   decay_start_time_ = 0;
   release_start_time_ = 0;
   state_ = ATTACK;
 }
 
-void Envelope::Release() {
+void Envelope::NoteOff() {
   assert(state_ != DONE);
   state_ = RELEASE;
   release_start_time_ = current_; 
