@@ -11,7 +11,7 @@
 
 namespace oscillators {
 
-class Combiner {
+class Combiner : public Oscillator {
  public:
   Combiner();
   virtual ~Combiner();
@@ -19,8 +19,7 @@ class Combiner {
   void Clear();
   void Add(Oscillator* oscillator);
 
-  // Returns the value at the specific sample (0 <= sample < sample_rate).
-  virtual float GetValue(int sample) = 0;
+  virtual float GetValue(float t);
 
  private:
   std::vector<Oscillator*> oscillators_;

@@ -2,7 +2,6 @@
 // Author: Allen Porter <allen@thebends.org>
 //
 // An oscillator generates a signal with a particular frequency and amplitude.
-// TODO(aporter): Generate() seems like it needs its own abstraction
 
 #ifndef __OSCILLATOR_H__
 #define __OSCILLATOR_H__
@@ -22,22 +21,13 @@ class Oscillator {
   int frequency();
   void set_frequency(int frequency);
 
-  // Number of samples per second, in Hz.
-  int sample_rate();
-  void set_sample_rate(int sample_rate);
-
-  // TODO(allen): Move this elsewhere?
-  void Generate(int num_output_samples, float* output_buffer);
-
-  // Returns the value at the specific sample (0 <= sample < sample_rate).  The
+  // Returns the value at the specific time [0.0, 1.0].  The returned value
   // returned value is in the range [-1.0, 1.0].
-  virtual float GetValue(int sample) = 0;
+  virtual float GetValue(float t) = 0;
 
  private:
   float level_;
   int frequency_;
-  int sample_;
-  int sample_rate_;
 };
 
 }  // namespace oscillator

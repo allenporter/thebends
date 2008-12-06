@@ -12,8 +12,8 @@ Sine::Sine() { }
 
 Sine::~Sine() { } 
 
-float Sine::GetValue(int sample) {
-  return level() * sinf(2.0 * M_PI * frequency() * sample / sample_rate());
+float Sine::GetValue(float time) {
+  return level() * sinf(2.0 * M_PI * frequency() * time);
 }
 
 }  // namespace oscillators

@@ -13,7 +13,7 @@ class Sine : public Oscillator {
   Sine();
   virtual ~Sine();
 
-  virtual float GetValue(int sample);
+  virtual float GetValue(float t);
 };
 
 }  // namespace oscillators

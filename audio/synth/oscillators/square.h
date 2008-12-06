@@ -13,7 +13,7 @@ class Square : public Sine {
   Square();
   virtual ~Square();
 
-  virtual float GetValue(int sample);
+  virtual float GetValue(float t);
 };
 
 }  // namespace oscillators
