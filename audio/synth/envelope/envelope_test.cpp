@@ -11,10 +11,6 @@ namespace {
 
 static void TestFlat() {
   envelope::Envelope env;
-  env.set_attack(1.0);
-  env.set_decay(0.0);
-  env.set_sustain(1.0);
-  env.set_release(1.0);
   env.NoteOn();
   for (int i = 0; i < 10; ++i) {
     ASSERT_DOUBLE_EQ(1.0, env.GetValue());

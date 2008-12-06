@@ -8,10 +8,10 @@
 
 namespace envelope {
 
-Envelope::Envelope() : attack_(0),
-                       decay_(0),
-                       sustain_(0),
-                       release_(0),
+Envelope::Envelope() : attack_(1.0),
+                       decay_(1.0),
+                       sustain_(1.0),
+                       release_(1.0),
                        current_(0),
                        state_(DONE) {
 }
