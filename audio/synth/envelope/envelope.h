@@ -28,15 +28,10 @@ class Envelope {
   float release();
   void set_release(float release);
 
-
   // Invoked when the note is pressed, resets all counters.
   void NoteOn();
-  // Invoked when the note is released.  GetValue() may be called until Done()
-  // returns true.
+  // Invoked when the note is released.
   void NoteOff();
-
-  // Returns true when the note is done playing.
-  bool Done();
 
   // Advances the clock and returns the value for the current step.  Should not
   // be called when Done() returns false.

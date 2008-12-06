@@ -71,10 +71,6 @@ void Envelope::NoteOff() {
   release_start_time_ = current_; 
 }
 
-bool Envelope::Done() {
-  return state_ == DONE;
-}
-
 float Envelope::GetValue() {
   current_++;
   float value = 0;

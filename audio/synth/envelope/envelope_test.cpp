@@ -19,10 +19,8 @@ static void TestFlat() {
   for (int i = 0; i < 10; ++i) {
     ASSERT_DOUBLE_EQ(1.0, env.GetValue());
   }
-  assert(!env.Done());
   env.NoteOff();
   assert(0.0 == env.GetValue());
-  assert(env.Done());
 }
 
 static void TestZero() {
@@ -35,10 +33,8 @@ static void TestZero() {
   for (int i = 0; i < 10; ++i) {
     ASSERT_DOUBLE_EQ(0.0, env.GetValue());
   }
-  assert(!env.Done());
   env.NoteOff();
   ASSERT_DOUBLE_EQ(0.0, env.GetValue());
-  assert(env.Done());
 }
 
 static void TestCurve() {
@@ -62,9 +58,7 @@ static void TestCurve() {
   ASSERT_DOUBLE_EQ(0.25, env.GetValue());
   ASSERT_DOUBLE_EQ(0.15, env.GetValue());
   ASSERT_DOUBLE_EQ(0.05, env.GetValue());
-  assert(!env.Done());
   ASSERT_DOUBLE_EQ(0.0, env.GetValue());
-  assert(env.Done());
 }
 
 }  // namespace
