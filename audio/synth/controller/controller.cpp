@@ -21,12 +21,20 @@ static const float kNotesPerOctave = 12.0;
 //  return kMiddleAFrequency * powf(2, (note - kMiddleANote) / kNotesPerOctave);
 //}
 
-Controller::Controller(int sample_rate)
-    : sample_rate_(sample_rate),
+Controller::Controller()
+    : sample_rate_(0),
       sample_(0),
       volume_(1.0),
       oscillator_(NULL),
       volume_envelope_(NULL) { }
+
+int Controller::sample_rate() {
+  return sample_rate_;
+}
+
+void Controller::set_sample_rate(int sample_rate) {
+  sample_rate_ = sample_rate;
+}
 
 void Controller::set_volume(float volume) {
   assert(volume >= 0.0);
@@ -38,7 +46,16 @@ float Controller::volume() {
   return volume_;
 }
 
+void Controller::set_oscillator(oscillators::Oscillator* oscillator) {
+  oscillator_ = oscillator;
+}
+
+void Controller::set_volume_envelope(envelope::Envelope* envelope) {
+  volume_envelope_ = envelope;
+}
+
 void Controller::GetSamples(int num_output_samples, float* output_buffer) {
+  assert(sample_rate_ > 0);
   assert(oscillator_);
   assert(volume_envelope_);
 

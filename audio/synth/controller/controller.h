@@ -10,7 +10,10 @@ namespace controller {
 
 class Controller {
  public:
-  Controller(int sample_rate);
+  Controller();
+
+  int sample_rate();
+  void set_sample_rate(int sample_rate);
 
   // Volume [0.0, 1.0]
   float volume();
