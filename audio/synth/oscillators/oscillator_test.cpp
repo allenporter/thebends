@@ -2,6 +2,7 @@
 // Author: Allen Porter <allen@thebends.org>
 
 #include <assert.h>
+#include <math.h>
 #include <iostream>
 #include <vector>
 #include "oscillators/sawtooth.h"
@@ -9,7 +10,7 @@
 #include "oscillators/square.h"
 #include "oscillators/triangle.h"
 
-#define ASSERT_DOUBLE_EQ(x, y) (assert((x - y) < 0.0000001))
+#define ASSERT_DOUBLE_EQ(x, y) (assert(fabs(x - y) < 0.000001))
 
 namespace {
 
@@ -18,11 +19,11 @@ static void TestSine() {
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
-  ASSERT_DOUBLE_EQ(0, osc.GetValue(0));
-  ASSERT_DOUBLE_EQ(1, osc.GetValue(0.25));
-  ASSERT_DOUBLE_EQ(0, osc.GetValue(0.5));
-  ASSERT_DOUBLE_EQ(-1, osc.GetValue(0.75));
-  ASSERT_DOUBLE_EQ(0, osc.GetValue(1));
+  ASSERT_DOUBLE_EQ(0.0, osc.GetValue(0));
+  ASSERT_DOUBLE_EQ(1.0, osc.GetValue(0.25));
+  ASSERT_DOUBLE_EQ(0.0, osc.GetValue(0.5));
+  ASSERT_DOUBLE_EQ(-1.0, osc.GetValue(0.75));
+  ASSERT_DOUBLE_EQ(0.0, osc.GetValue(1));
 }
 
 static void TestSquare() {
@@ -34,7 +35,7 @@ static void TestSquare() {
   ASSERT_DOUBLE_EQ(1, osc.GetValue(0.25));
   ASSERT_DOUBLE_EQ(-1, osc.GetValue(0.5));
   ASSERT_DOUBLE_EQ(-1, osc.GetValue(0.75));
-  ASSERT_DOUBLE_EQ(-1, osc.GetValue(1));
+  ASSERT_DOUBLE_EQ(1, osc.GetValue(1));
 }
 
 static void TestSawtooth() {
@@ -43,10 +44,30 @@ static void TestSawtooth() {
   osc.set_frequency(1.0);  // one cycle per second
 
   ASSERT_DOUBLE_EQ(-1, osc.GetValue(0));
+  ASSERT_DOUBLE_EQ(-0.75, osc.GetValue(0.125));
   ASSERT_DOUBLE_EQ(-0.5, osc.GetValue(0.25));
+  ASSERT_DOUBLE_EQ(-0.25, osc.GetValue(0.375));
   ASSERT_DOUBLE_EQ(0, osc.GetValue(0.5));
+  ASSERT_DOUBLE_EQ(0.25, osc.GetValue(0.625));
   ASSERT_DOUBLE_EQ(0.5, osc.GetValue(0.75));
-  ASSERT_DOUBLE_EQ(1, osc.GetValue(1));
+  ASSERT_DOUBLE_EQ(0.75, osc.GetValue(0.875));
+  ASSERT_DOUBLE_EQ(-1, osc.GetValue(1));
+}
+
+static void TestSawtooth2() {
+  oscillators::Sawtooth osc;
+  osc.set_level(1.0);
+  osc.set_frequency(2.0);  // two cycles per second
+
+  ASSERT_DOUBLE_EQ(-1.0, osc.GetValue(0));
+  ASSERT_DOUBLE_EQ(-0.5, osc.GetValue(0.125));
+  ASSERT_DOUBLE_EQ(0, osc.GetValue(0.25));
+  ASSERT_DOUBLE_EQ(0.5, osc.GetValue(0.375));
+  ASSERT_DOUBLE_EQ(-1.0, osc.GetValue(0.5));
+  ASSERT_DOUBLE_EQ(-0.5, osc.GetValue(0.625));
+  ASSERT_DOUBLE_EQ(0, osc.GetValue(0.75));
+  ASSERT_DOUBLE_EQ(0.5, osc.GetValue(0.875));
+  ASSERT_DOUBLE_EQ(-1.0, osc.GetValue(1));
 }
 
 static void TestTriangle() {
@@ -94,6 +115,7 @@ int main(int argc, char* argv[]) {
   TestSine();
   TestSquare();
   TestSawtooth();
+  TestSawtooth2();
   TestTriangle();
   TestOff();
   std::cout << "PASS" << std::endl;

@@ -13,9 +13,8 @@ Sawtooth::Sawtooth() { }
 Sawtooth::~Sawtooth() { } 
 
 float Sawtooth::GetValue(float t) {
-  float x = 2.0 * M_PI * frequency() * t;
-//  float x = 2.0 * frequency() * t;
-  return (2 * x - floor(x));
+  float x = frequency() * t;
+  return level() * 2 * (x - floor(x) - 0.5);
 }
 
 }  // namespace oscillators
