@@ -24,12 +24,12 @@ Envelope::Envelope() : attack_(0),
 
 Envelope::~Envelope() { }
 
-void Envelope::set_attack(int attack) {
+void Envelope::set_attack(long attack) {
   assert(attack >= 0);
   attack_ = attack;
 }
 
-void Envelope::set_decay(int decay) {
+void Envelope::set_decay(long decay) {
   assert(decay >= 0);
   decay_ = decay;
 }
@@ -40,7 +40,7 @@ void Envelope::set_sustain(float sustain) {
   sustain_ = sustain;
 }
 
-void Envelope::set_release(int release) {
+void Envelope::set_release(long release) {
   assert(release >= 0);
   release_ = release;
 }
@@ -56,7 +56,7 @@ void Envelope::NoteOn() {
 void Envelope::NoteOff() {
   state_ = RELEASE;
   release_slope_ = sustain_ / release_;
-  release_start_value_ = last_value_;
+  release_start_value_ = std::min(sustain_, last_value_);
   release_start_ = current_; 
   release_end_ = current_ + release_;
 }
@@ -65,7 +65,7 @@ float Envelope::GetValue() {
   current_++;
   float value = 0;
 
-  // Check that we haven't transitioned into the next state
+  // Check that we haven't transitioned longo the next state
   if (state_ == ATTACK || state_ == DECAY) {
     if (current_ > decay_end_) {
       state_ = SUSTAIN;

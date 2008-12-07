@@ -1,7 +1,7 @@
 .PHONY: clean
 
 CC = g++
-CFLAGS = -Wall -Werror -I../ -L.
+CFLAGS = -Wall -Werror -I../ -L. -g
 
 SRC = envelope.cpp
 

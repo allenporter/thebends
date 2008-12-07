@@ -68,12 +68,31 @@ static void TestCurve() {
   }
 }
 
+static void TestAttackRelease() {
+  envelope::Envelope env;
+  env.set_attack(4);
+  env.set_decay(0);
+  env.set_sustain(0.0);
+  env.set_release(8);
+  env.NoteOn();
+  // Attack
+  ASSERT_DOUBLE_EQ(0.25, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.5, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.75, env.GetValue());
+  env.NoteOff();
+  // Released before we finished attacking.  No sustain so its always 0.
+  for (int i = 0; i < 10; ++i) {
+    ASSERT_DOUBLE_EQ(0.0, env.GetValue());
+  }
+}
+
 }  // namespace
 
 int main(int argc, char* argv[]) {
   TestFlat();
   TestZero();
   TestCurve();
+  TestAttackRelease();
   std::cout << "PASS" << std::endl;
   return 0;
 }

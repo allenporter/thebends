@@ -14,16 +14,16 @@ class Envelope {
   virtual ~Envelope();
 
   // samples
-  void set_attack(int attack);
+  void set_attack(long attack);
 
   // samples
-  void set_decay(int decay);
+  void set_decay(long decay);
 
   // Sustain Volumne [0.0, 1.0]
   void set_sustain(float sustain);
 
   // samples
-  void set_release(int release);
+  void set_release(long release);
 
   // Invoked when the note is pressed, resets all counters.
   void NoteOn();
@@ -42,18 +42,18 @@ class Envelope {
     RELEASE = 3,
     DONE = 4,
   };
-  int attack_;
+  long attack_;
   float attack_slope_;
-  int decay_;
-  int decay_end_;
+  long decay_;
+  long decay_end_;
   float decay_slope_;
   float sustain_;
-  int release_;
-  int release_start_;
-  int release_end_;
+  long release_;
+  long release_start_;
+  long release_end_;
   float release_slope_;
 
-  int current_;  // sample
+  long current_;  // sample
   float last_value_;
   State state_;
   float release_start_value_;
