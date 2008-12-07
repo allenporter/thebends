@@ -86,6 +86,26 @@ static void TestAttackRelease() {
   }
 }
 
+static void TestDecay() {
+  envelope::Envelope env;
+  env.set_attack(0);
+  env.set_decay(5);
+  env.set_sustain(0.0);
+  env.set_release(8);
+  env.NoteOn();
+  ASSERT_DOUBLE_EQ(0.8, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.6, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.4, env.GetValue());
+  ASSERT_DOUBLE_EQ(0.2, env.GetValue());
+  for (int i = 0; i < 10; ++i) {
+    ASSERT_DOUBLE_EQ(0.0, env.GetValue());
+  }
+  env.NoteOff();
+  for (int i = 0; i < 10; ++i) {
+    ASSERT_DOUBLE_EQ(0.0, env.GetValue());
+  }
+}
+
 }  // namespace
 
 int main(int argc, char* argv[]) {
@@ -93,6 +113,7 @@ int main(int argc, char* argv[]) {
   TestZero();
   TestCurve();
   TestAttackRelease();
+  TestDecay();
   std::cout << "PASS" << std::endl;
   return 0;
 }

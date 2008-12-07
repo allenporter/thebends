@@ -7,6 +7,7 @@
 #include <assert.h>
 #include "envelope/envelope.h"
 #include "oscillators/oscillator.h"
+#include "modulation/modulation.h"
 
 namespace controller {
 
@@ -26,7 +27,8 @@ Controller::Controller()
       sample_(0),
       volume_(1.0),
       oscillator_(NULL),
-      volume_envelope_(NULL) { }
+      volume_envelope_(NULL),
+      lfo_(NULL) { }
 
 int Controller::sample_rate() {
   return sample_rate_;
@@ -54,6 +56,10 @@ void Controller::set_volume_envelope(envelope::Envelope* envelope) {
   volume_envelope_ = envelope;
 }
 
+void Controller::set_lfo(modulation::LFO* lfo) {
+  lfo_ = lfo;
+}
+
 void Controller::GetSamples(int num_output_samples, float* output_buffer) {
   assert(sample_rate_ > 0);
   assert(oscillator_);
@@ -63,7 +69,8 @@ void Controller::GetSamples(int num_output_samples, float* output_buffer) {
     sample_ = (sample_ + 1) % sample_rate_;
     float t = sample_ / (float)sample_rate_;
     float amplitude =
-        volume_ * volume_envelope_->GetValue() * oscillator_->GetValue(t);
+        volume_ * volume_envelope_->GetValue() * oscillator_->GetValue(t) *
+        lfo_->GetValue(t);
     output_buffer[i] = amplitude;
   }
 }

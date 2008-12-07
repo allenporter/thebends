@@ -1,4 +1,4 @@
-SUBDIRS = oscillators controller envelope
+SUBDIRS = oscillators modulation envelope controller
 ECHO = echo
 INSTALL_DIR = /usr/local
 

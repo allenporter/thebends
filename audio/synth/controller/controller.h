@@ -3,8 +3,9 @@
 //
 // The controller module returns samples and drives the oscillator and envelope.
 
-namespace oscillators { class Oscillator; }
 namespace envelope { class Envelope; }
+namespace modulation { class LFO; }
+namespace oscillators { class Oscillator; }
 
 namespace controller {
 
@@ -22,6 +23,9 @@ class Controller {
   // The envelope and oscillator must be set before generating samples.
   void set_oscillator(oscillators::Oscillator* oscillator);
   void set_volume_envelope(envelope::Envelope* envelope);
+  // TODO(allen): Filter envelope
+  void set_lfo(modulation::LFO* lfo);
+
 
   void GetSamples(int num_output_samples, float* output_buffer);
 
@@ -31,6 +35,7 @@ class Controller {
   float volume_;
   oscillators::Oscillator* oscillator_;
   envelope::Envelope* volume_envelope_;
+  modulation::LFO* lfo_;
 };
 
 }  // namespace controller

@@ -69,8 +69,6 @@ float Envelope::GetValue() {
   if (state_ == ATTACK || state_ == DECAY) {
     if (current_ > decay_end_) {
       state_ = SUSTAIN;
-//      release_start_ = decay_end_;
-//      release_end_ = decay_end_ + release_;
     } else if (current_ > attack_) {
       state_ = DECAY;
     }
@@ -93,6 +91,7 @@ float Envelope::GetValue() {
     case DECAY:
       assert(current_ >= attack_);
       value = 1.0 - (current_ - attack_) * decay_slope_;
+      value = std::max(value, sustain_);
       break;
     case SUSTAIN:
       value = sustain_;
