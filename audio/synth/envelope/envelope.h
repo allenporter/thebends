@@ -13,18 +13,23 @@ class Envelope {
   Envelope();
   virtual ~Envelope();
 
-  // State?
-  // Events that mark time?
+  // TODO(allen): These rates are all slopes and not time durations (which
+  // requires knowing the sample rate).  That should be fixed.
+  
 
+  // [0.0, 1.0]
   float attack();
   void set_attack(float attack);
 
+  // [0.0, 1.0]
   float decay();
   void set_decay(float decay);
 
+  // Sustain Volumne [0.0, 1.0]
   float sustain();
   void set_sustain(float sustain);
 
+  // [0.0, 1.0]
   float release();
   void set_release(float release);
 
