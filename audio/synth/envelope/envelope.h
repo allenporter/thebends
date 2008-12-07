@@ -13,25 +13,17 @@ class Envelope {
   Envelope();
   virtual ~Envelope();
 
-  // TODO(allen): These rates are all slopes and not time durations (which
-  // requires knowing the sample rate).  That should be fixed.
-  
+  // samples
+  void set_attack(int attack);
 
-  // [0.0, 1.0]
-  float attack();
-  void set_attack(float attack);
-
-  // [0.0, 1.0]
-  float decay();
-  void set_decay(float decay);
+  // samples
+  void set_decay(int decay);
 
   // Sustain Volumne [0.0, 1.0]
-  float sustain();
   void set_sustain(float sustain);
 
-  // [0.0, 1.0]
-  float release();
-  void set_release(float release);
+  // samples
+  void set_release(int release);
 
   // Invoked when the note is pressed, resets all counters.
   void NoteOn();
@@ -50,16 +42,20 @@ class Envelope {
     RELEASE = 3,
     DONE = 4,
   };
-
-  float attack_;
-  float decay_;
+  int attack_;
+  float attack_slope_;
+  int decay_;
+  int decay_end_;
+  float decay_slope_;
   float sustain_;
-  float release_;
-  int current_;
+  int release_;
+  int release_start_;
+  int release_end_;
+  float release_slope_;
+
+  int current_;  // sample
   float last_value_;
   State state_;
-  int decay_start_time_;
-  int release_start_time_;
   float release_start_value_;
 };
 
