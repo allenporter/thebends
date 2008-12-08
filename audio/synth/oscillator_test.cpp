@@ -5,17 +5,15 @@
 #include <math.h>
 #include <iostream>
 #include <vector>
-#include "synth/sawtooth.h"
-#include "synth/sine.h"
-#include "synth/square.h"
-#include "synth/triangle.h"
+#include "synth/oscillator.h"
 
 #define ASSERT_DOUBLE_EQ(x, y) (assert(fabs(x - y) < 0.000001))
 
 namespace {
 
 static void TestSine() {
-  synth::Sine osc;
+  synth::Oscillator osc;
+  osc.set_wave_type(synth::Oscillator::SINE);
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -27,7 +25,8 @@ static void TestSine() {
 }
 
 static void TestSquare() {
-  synth::Square osc;
+  synth::Oscillator osc;
+  osc.set_wave_type(synth::Oscillator::SQUARE);
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -39,7 +38,8 @@ static void TestSquare() {
 }
 
 static void TestSawtooth() {
-  synth::Sawtooth osc;
+  synth::Oscillator osc;
+  osc.set_wave_type(synth::Oscillator::SAWTOOTH);
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -55,7 +55,8 @@ static void TestSawtooth() {
 }
 
 static void TestSawtooth2() {
-  synth::Sawtooth osc;
+  synth::Oscillator osc;
+  osc.set_wave_type(synth::Oscillator::SAWTOOTH);
   osc.set_level(1.0);
   osc.set_frequency(2.0);  // two cycles per second
 
@@ -71,7 +72,8 @@ static void TestSawtooth2() {
 }
 
 static void TestTriangle() {
-  synth::Triangle osc;
+  synth::Oscillator osc;
+  osc.set_wave_type(synth::Oscillator::TRIANGLE);
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -87,10 +89,14 @@ static void TestTriangle() {
 }
 
 static void TestOff() {
-  synth::Sine osc1;
-  synth::Square osc2;
-  synth::Sawtooth osc3;
-  synth::Triangle osc4;
+  synth::Oscillator osc1;
+  osc1.set_wave_type(synth::Oscillator::SINE);
+  synth::Oscillator osc2;
+  osc2.set_wave_type(synth::Oscillator::SQUARE);
+  synth::Oscillator osc3;
+  osc3.set_wave_type(synth::Oscillator::TRIANGLE);
+  synth::Oscillator osc4;
+  osc4.set_wave_type(synth::Oscillator::SAWTOOTH);
 
   std::vector<synth::Oscillator*> oscs;
   oscs.push_back(&osc1);

@@ -4,8 +4,7 @@ CC = g++
 CFLAGS = -Wall -Werror -I../ -L.
 .PHONY: all clean test
 
-SRC = oscillator.cpp sine.cpp square.cpp triangle.cpp sawtooth.cpp \
-      combiner.cpp envelope.cpp controller.cpp modulation.cpp
+SRC = oscillator.cpp combiner.cpp envelope.cpp controller.cpp modulation.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(SUBDIRS) libsynth.a
