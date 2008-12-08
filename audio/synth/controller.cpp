@@ -1,15 +1,15 @@
 // controller.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "controller/controller.h"
+#include "synth/controller.h"
 
 #include <math.h>
 #include <assert.h>
-#include "envelope/envelope.h"
-#include "oscillators/oscillator.h"
-#include "modulation/modulation.h"
+#include "synth/envelope.h"
+#include "synth/oscillator.h"
+#include "synth/modulation.h"
 
-namespace controller {
+namespace synth {
 
 // Use A above Middle C as the reference frequency
 static const float kMiddleAFrequency = 440.0;
@@ -48,15 +48,15 @@ float Controller::volume() {
   return volume_;
 }
 
-void Controller::set_oscillator(oscillators::Oscillator* oscillator) {
+void Controller::set_oscillator(Oscillator* oscillator) {
   oscillator_ = oscillator;
 }
 
-void Controller::set_volume_envelope(envelope::Envelope* envelope) {
+void Controller::set_volume_envelope(Envelope* envelope) {
   volume_envelope_ = envelope;
 }
 
-void Controller::set_lfo(modulation::LFO* lfo) {
+void Controller::set_lfo(LFO* lfo) {
   lfo_ = lfo;
 }
 
@@ -75,4 +75,4 @@ void Controller::GetSamples(int num_output_samples, float* output_buffer) {
   }
 }
 
-}  // namespace controller
+}  // namespace synth

@@ -4,24 +4,24 @@
 #ifndef __MODULATION_H__
 #define __MODULATION_H__
 
-namespace oscillators { class Oscillator; }
+namespace synth {
 
-namespace modulation {
+class Oscillator;
 
 class LFO {
  public:
   LFO();
 
-  void set_oscillator(oscillators::Oscillator* oscillator);
+  void set_oscillator(Oscillator* oscillator);
   void set_amount(float amount);
 
   float GetValue(float t);
 
  private:
   float amount_;
-  oscillators::Oscillator* oscillator_;
+  Oscillator* oscillator_;
 };
 
-}  // namespace modulation
+}  // namespace synth
 
 #endif  // __MODULATION_H__

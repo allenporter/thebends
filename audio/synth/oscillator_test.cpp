@@ -5,17 +5,17 @@
 #include <math.h>
 #include <iostream>
 #include <vector>
-#include "oscillators/sawtooth.h"
-#include "oscillators/sine.h"
-#include "oscillators/square.h"
-#include "oscillators/triangle.h"
+#include "synth/sawtooth.h"
+#include "synth/sine.h"
+#include "synth/square.h"
+#include "synth/triangle.h"
 
 #define ASSERT_DOUBLE_EQ(x, y) (assert(fabs(x - y) < 0.000001))
 
 namespace {
 
 static void TestSine() {
-  oscillators::Sine osc;
+  synth::Sine osc;
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -27,7 +27,7 @@ static void TestSine() {
 }
 
 static void TestSquare() {
-  oscillators::Square osc;
+  synth::Square osc;
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -39,7 +39,7 @@ static void TestSquare() {
 }
 
 static void TestSawtooth() {
-  oscillators::Sawtooth osc;
+  synth::Sawtooth osc;
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -55,7 +55,7 @@ static void TestSawtooth() {
 }
 
 static void TestSawtooth2() {
-  oscillators::Sawtooth osc;
+  synth::Sawtooth osc;
   osc.set_level(1.0);
   osc.set_frequency(2.0);  // two cycles per second
 
@@ -71,7 +71,7 @@ static void TestSawtooth2() {
 }
 
 static void TestTriangle() {
-  oscillators::Triangle osc;
+  synth::Triangle osc;
   osc.set_level(1.0);
   osc.set_frequency(1.0);  // one cycle per second
 
@@ -87,19 +87,19 @@ static void TestTriangle() {
 }
 
 static void TestOff() {
-  oscillators::Sine osc1;
-  oscillators::Square osc2;
-  oscillators::Sawtooth osc3;
-  oscillators::Triangle osc4;
+  synth::Sine osc1;
+  synth::Square osc2;
+  synth::Sawtooth osc3;
+  synth::Triangle osc4;
 
-  std::vector<oscillators::Oscillator*> oscs;
+  std::vector<synth::Oscillator*> oscs;
   oscs.push_back(&osc1);
   oscs.push_back(&osc2);
   oscs.push_back(&osc3);
   oscs.push_back(&osc4);
 
   for (unsigned int i = 0; i < oscs.size(); ++i) {
-    oscillators::Oscillator* osc = oscs[i];
+    synth::Oscillator* osc = oscs[i];
     osc->set_level(0.0);
     osc->set_frequency(1.0);
     for (int i = 0; i < 10; ++i) {

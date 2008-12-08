@@ -1,10 +1,10 @@
 // oscillator.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "oscillators/oscillator.h"
+#include "synth/oscillator.h"
 #include <assert.h>
 
-namespace oscillators {
+namespace synth {
 
 Oscillator::Oscillator()
     : level_(1.0),
@@ -30,4 +30,4 @@ void Oscillator::set_frequency(int frequency) {
   frequency_ = frequency;
 }
 
-}  // namespace oscillators
+}  // namespace synth

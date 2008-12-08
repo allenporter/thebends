@@ -6,7 +6,7 @@
 #ifndef __OSCILLATOR_H__
 #define __OSCILLATOR_H__
 
-namespace oscillators {
+namespace synth {
 
 class Oscillator {
  public:
@@ -30,6 +30,6 @@ class Oscillator {
   int frequency_;
 };
 
-}  // namespace oscillator
+}  // namespace synth
 
 #endif  // __OSCILLATOR_H__

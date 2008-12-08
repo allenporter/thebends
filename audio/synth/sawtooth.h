@@ -4,9 +4,9 @@
 #ifndef __SAWTOOTH_H__
 #define __SAWTOOTH_H__
 
-#include "oscillators/oscillator.h"
+#include "synth/oscillator.h"
 
-namespace oscillators {
+namespace synth {
 
 class Sawtooth : public Oscillator {
  public:
@@ -16,6 +16,6 @@ class Sawtooth : public Oscillator {
   virtual float GetValue(float t);
 };
 
-}  // namespace oscillators
+}  // namespace synth
 
 #endif  // __SAWTOOTH_H__

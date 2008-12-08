@@ -1,12 +1,12 @@
-// envelope.cpp
+// synth.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "envelope/envelope.h"
+#include "synth/envelope.h"
 
 #include <assert.h>
 #include <iostream>
 
-namespace envelope {
+namespace synth {
 
 Envelope::Envelope() : attack_(0),
                        attack_slope_(0.0),
@@ -114,4 +114,4 @@ float Envelope::GetValue() {
   return value;
 }
 
-}  // namespace envelope
+}  // namespace synth

@@ -1,11 +1,11 @@
 // modualtion.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "modulation/modulation.h"
+#include "synth/modulation.h"
 #include <sys/param.h>
-#include "oscillators/oscillator.h"
+#include "synth/oscillator.h"
 
-namespace modulation {
+namespace synth {
 
 LFO::LFO()
     : amount_(0.0),
@@ -16,7 +16,7 @@ void LFO::set_amount(float amount) {
   amount_ = amount;
 }
 
-void LFO::set_oscillator(oscillators::Oscillator* oscillator) {
+void LFO::set_oscillator(Oscillator* oscillator) {
   oscillator_ = oscillator;
 }
 
@@ -24,4 +24,4 @@ float LFO::GetValue(float t) {
   return 1.0 - amount_ * oscillator_->GetValue(t);
 }
 
-}  // namespace modulation
+}  // namespace synth

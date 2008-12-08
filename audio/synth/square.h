@@ -4,9 +4,9 @@
 #ifndef __SQUARE_H__
 #define __SQUARE_H__
 
-#include "oscillators/sine.h"
+#include "synth/sine.h"
 
-namespace oscillators {
+namespace synth {
 
 class Square : public Sine {
  public:
@@ -16,6 +16,6 @@ class Square : public Sine {
   virtual float GetValue(float t);
 };
 
-}  // namespace oscillators
+}  // namespace synth
 
 #endif  // __SQUARE_H__

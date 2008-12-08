@@ -7,9 +7,9 @@
 #define __COMBINER_H__
 
 #include <vector>
-#include "oscillators/oscillator.h"
+#include "synth/oscillator.h"
 
-namespace oscillators {
+namespace synth {
 
 class Combiner : public Oscillator {
  public:
@@ -25,6 +25,6 @@ class Combiner : public Oscillator {
   std::vector<Oscillator*> oscillators_;
 };
 
-}  // namespace oscillator
+}  // namespace synth
 
 #endif  // __COMBINER_H__

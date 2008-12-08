@@ -4,9 +4,9 @@
 #ifndef __TRIANGLE_H__
 #define __TRIANGLE_H__
 
-#include "oscillators/oscillator.h"
+#include "synth/oscillator.h"
 
-namespace oscillators {
+namespace synth {
 
 class Triangle : public Oscillator {
  public:
@@ -16,6 +16,6 @@ class Triangle : public Oscillator {
   virtual float GetValue(float t);
 };
 
-}  // namespace oscillators
+}  // namespace synth
 
 #endif  // __TRIANGLE_H__

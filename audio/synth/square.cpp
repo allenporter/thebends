@@ -1,9 +1,9 @@
 // square.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "oscillators/square.h"
+#include "synth/square.h"
 
-namespace oscillators {
+namespace synth {
 
 Square::Square() { }
 
@@ -14,4 +14,4 @@ float Square::GetValue(float t) {
   return (value > 0) ? level() : (0 - level());
 }
 
-}  // namespace oscillators
+}  // namespace synth

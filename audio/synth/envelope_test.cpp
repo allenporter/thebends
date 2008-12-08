@@ -1,17 +1,17 @@
-// envelope_test.cpp
+// synth_test.cpp
 // Author: Allen Porter <allen@thebends.org>
 
 #include <assert.h>
 #include <math.h>
 #include <iostream>
-#include "envelope/envelope.h"
+#include "synth/envelope.h"
 
 #define ASSERT_DOUBLE_EQ(x, y) (assert(fabs(x - y) < 0.0000001))
 
 namespace {
 
 static void TestFlat() {
-  envelope::Envelope env;
+  synth::Envelope env;
   env.NoteOn();
   for (int i = 0; i < 10; ++i) {
     ASSERT_DOUBLE_EQ(1.0, env.GetValue());
@@ -21,7 +21,7 @@ static void TestFlat() {
 }
 
 static void TestZero() {
-  envelope::Envelope env;
+  synth::Envelope env;
   env.set_attack(0);
   env.set_decay(0);
   env.set_sustain(0);
@@ -35,7 +35,7 @@ static void TestZero() {
 }
 
 static void TestCurve() {
-  envelope::Envelope env;
+  synth::Envelope env;
   env.set_attack(4);
   env.set_decay(4);
   env.set_sustain(0.45);
@@ -69,7 +69,7 @@ static void TestCurve() {
 }
 
 static void TestAttackRelease() {
-  envelope::Envelope env;
+  synth::Envelope env;
   env.set_attack(4);
   env.set_decay(0);
   env.set_sustain(0.0);
@@ -87,7 +87,7 @@ static void TestAttackRelease() {
 }
 
 static void TestDecay() {
-  envelope::Envelope env;
+  synth::Envelope env;
   env.set_attack(0);
   env.set_decay(5);
   env.set_sustain(0.0);

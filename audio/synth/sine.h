@@ -4,9 +4,9 @@
 #ifndef __SINE_H__
 #define __SINE_H__
 
-#include "oscillators/oscillator.h"
+#include "synth/oscillator.h"
 
-namespace oscillators {
+namespace synth {
 
 class Sine : public Oscillator {
  public:
@@ -16,6 +16,6 @@ class Sine : public Oscillator {
   virtual float GetValue(float t);
 };
 
-}  // namespace oscillators
+}  // namespace synth
 
 #endif // __SINE_H__

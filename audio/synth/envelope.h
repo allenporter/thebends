@@ -6,7 +6,7 @@
 #ifndef __ENVELOPE_H__
 #define __ENVELOPE_H__
 
-namespace envelope {
+namespace synth {
 
 class Envelope {
  public:
@@ -59,6 +59,6 @@ class Envelope {
   float release_start_value_;
 };
 
-}  // namespace envelope
+}  // namespace synth
 
 #endif  // __ENVELOPE_H__

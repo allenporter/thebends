@@ -1,9 +1,9 @@
 // combiner.cpp
 // Author: Allen Porter <allen@thebends.org>
 
-#include "oscillators/combiner.h"
+#include "synth/combiner.h"
 
-namespace oscillators {
+namespace synth {
 
 Combiner::Combiner() { }
 
@@ -32,4 +32,4 @@ float Combiner::GetValue(float t) {
   return value;
 }
 
-}  // namespace oscillators
+}  // namespace synth
