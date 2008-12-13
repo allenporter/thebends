@@ -14,10 +14,11 @@ class Oscillator {
   virtual ~Oscillator();
 
   enum WaveType {
-    SINE = 0,
-    SQUARE = 1,
-    TRIANGLE = 2,
-    SAWTOOTH = 3,
+    SINE,
+    SQUARE,
+    TRIANGLE,
+    SAWTOOTH,
+    REVERSE_SAWTOOTH,
   };
   void set_wave_type(WaveType wave_type);
 

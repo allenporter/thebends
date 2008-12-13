@@ -71,6 +71,23 @@ static void TestSawtooth2() {
   ASSERT_DOUBLE_EQ(-1.0, osc.GetValue(1));
 }
 
+static void TestReverseSawtooth() {
+  synth::Oscillator osc;
+  osc.set_wave_type(synth::Oscillator::REVERSE_SAWTOOTH);
+  osc.set_level(1.0);
+  osc.set_frequency(1.0);  // one cycle per second
+
+  ASSERT_DOUBLE_EQ(1, osc.GetValue(0));
+  ASSERT_DOUBLE_EQ(0.75, osc.GetValue(0.125));
+  ASSERT_DOUBLE_EQ(0.5, osc.GetValue(0.25));
+  ASSERT_DOUBLE_EQ(0.25, osc.GetValue(0.375));
+  ASSERT_DOUBLE_EQ(0, osc.GetValue(0.5));
+  ASSERT_DOUBLE_EQ(-0.25, osc.GetValue(0.625));
+  ASSERT_DOUBLE_EQ(-0.5, osc.GetValue(0.75));
+  ASSERT_DOUBLE_EQ(-0.75, osc.GetValue(0.875));
+  ASSERT_DOUBLE_EQ(1, osc.GetValue(1));
+}
+
 static void TestTriangle() {
   synth::Oscillator osc;
   osc.set_wave_type(synth::Oscillator::TRIANGLE);
@@ -122,6 +139,7 @@ int main(int argc, char* argv[]) {
   TestSquare();
   TestSawtooth();
   TestSawtooth2();
+  TestReverseSawtooth();
   TestTriangle();
   TestOff();
   std::cout << "PASS" << std::endl;

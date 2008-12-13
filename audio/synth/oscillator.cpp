@@ -47,6 +47,9 @@ float Oscillator::GetValue(float t) {
     case SAWTOOTH:
       value = 2 * (x - floor(x) - 0.5);
       break;
+    case REVERSE_SAWTOOTH:
+      value = 2 * (floor(x) - x + 0.5);
+      break;
     default:
       assert(false);
       break;
