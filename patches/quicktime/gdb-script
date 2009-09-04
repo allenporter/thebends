@@ -1,0 +1,11 @@
+break ptrace
+commands 1
+  return
+  continue
+end
+
+break ValidateQuickTimeVersionRegistration_priv
+commands 2
+  return
+  continue
+end

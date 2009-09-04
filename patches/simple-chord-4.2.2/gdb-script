@@ -1,0 +1,7 @@
+# wwSerial2.validateSerial
+break *0x0027c058
+commands 1
+  set $eax=1
+  return
+  continue
+end

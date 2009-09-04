@@ -1,0 +1,6 @@
+break -[RegistrationController registered]
+commands 1
+  set $al=1
+  return
+  continue
+end
