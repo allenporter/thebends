@@ -1,0 +1,2 @@
+Make a packet capture with:
+$ sudo tcpdump -i en0 -s 1500 -n -w cap.1 udp 

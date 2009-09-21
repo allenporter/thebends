@@ -1,0 +1,1 @@
+plot 'cap.2-pps.dat' using 1 title '> 187.149.1.219' w linespoints, 'cap.2-pps.dat' using 2 title '> 65.55.42.180' w linespoints, 'cap.2-pps.dat' using 3 title '< 65.55.42.180' w linespoints, 'cap.2-pps.dat' using 4 title '< 187.149.1.219' w linespoints
