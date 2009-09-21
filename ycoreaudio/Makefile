@@ -1,8 +1,8 @@
 AR = ar
 CC = g++
 RANLIB = ranlib
-CCFLAGS = -Wall -Werror
-LDFLAGS = -framework CoreFoundation -framework CoreAudio
+CCFLAGS = -Wall # -Werror
+LDFLAGS = -framework CoreFoundation -framework CoreAudio -framework AudioToolbox
 
 SRC = util.cpp
 OBJ = $(SRC:.cpp=.o)
@@ -12,7 +12,7 @@ OBJ = $(SRC:.cpp=.o)
 .cpp.o:
 	$(CC) $(CCFLAGS) -c $<
 
-all: libyaudio.a devices sample
+all: libyaudio.a devices sample queue
 
 libyaudio.a: $(OBJ)
 	$(AR) rc $@ $(OBJ)
@@ -23,6 +23,9 @@ devices: devices.o
 
 sample: sample.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -L. -lyaudio
+
+queue: queue.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 dist: clean
 	REVISION=`svn info | grep "^Revision:" | cut -f 2 -d ' '` && \
