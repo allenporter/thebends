@@ -1,8 +1,8 @@
 /*
  * Allen Porter <allen@thebends.org>
  * Quick mig example, based on example from Mac OSX Internals by Amit Singh.
- * $ mig -v zoo.h
- * $ gcc -o client client.c zooUser.c
+ * $ mig -v zoo.defs
+ * $ gcc -Wall -Werror -o client client.c zooUser.c
  */
 
 #include <stdio.h>

@@ -1,8 +1,8 @@
 /*
  * Allen Porter <allen@thebends.org>
  * Quick mig example, based on example from Mac OSX Internals by Amit Singh.
- * $ mig -v zoo.h
- * $ gcc -o server server.c zooServer.c
+ * $ mig -v zoo.defs
+ * $ gcc -Wall -Werror -o server server.c zooServer.c
  */
 
 #include <stdio.h>
@@ -22,12 +22,6 @@ extern boolean_t zoo_server(
 
 void server_setup() {
   kern_return_t kr;
-  if ((kr = bootstrap_create_service(bootstrap_port, MIG_ZOO_SERVICE,
-                                     &server_port)) != BOOTSTRAP_SUCCESS) {
-    mach_error("bootstrap_create_service:", kr);
-    exit(1);
-  }
-
   if ((kr = bootstrap_check_in(bootstrap_port, MIG_ZOO_SERVICE,
                                &server_port)) != BOOTSTRAP_SUCCESS) {
     mach_port_deallocate(mach_task_self(), server_port);
