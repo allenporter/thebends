@@ -1,0 +1,33 @@
+pymachrpc
+---------
+
+pymachrpc is a python mach RPC client library, implemented as a thing SWIG
+wrapper around the mach_rpc libraries.
+
+To compile the python library, run:
+
+$ make
+
+Given a simple mach RPC service listening on the name "MIG-zooservice":
+---
+#include <mach/std_types.defs>
+
+subsystem zoo 1000;
+
+routine add_two_numbers(
+  server_port : mach_port_t;
+  in a : int32_t;
+  in b : int32_t;
+  out c : int32_t);
+---
+
+You can invoke the library:
+---
+$ python
+>>> import client
+>>> c = client.NewClient("MIG-zooservice")
+>>> x = c.SendMessage(1000, struct.pack('i', 2) + struct.pack('i', 3),
+... struct.calcsize('i'))
+>>> print struct.unpack('i', x)[0]
+5
+---
