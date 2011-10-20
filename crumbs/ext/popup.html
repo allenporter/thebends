@@ -1,0 +1,73 @@
+<!doctype html>
+<style>
+body { font-size: 0.8em; }
+</style>
+<script>
+var bg = chrome.extension.getBackgroundPage();
+
+function display(resource, cookies) {
+  bg.console.log('display');
+  var label = document.getElementById('label');
+  label.innerHTML = resource;
+  var cookieHTML = '';
+  if (cookies.length > 0) {
+    cookieHTML += '<table>';
+    cookieHTML += '<tr><th>Name</th><th>Path</th><th>Domain</th></tr>';
+    for (var i = 0; cookie = cookies[i]; ++i) {
+      cookieHTML += '<tr><td>' + cookie.name + '</td>';
+      cookieHTML += '<td>' + cookie.path + '</td>';
+      cookieHTML += '<td>' + cookie.domain + '</td></tr>';
+    }
+    cookieHTML += '</table>';
+  } else {
+    cookieHTML += 'None!';
+  }
+  var cookieSpan = document.getElementById('cookies');
+  cookieSpan.innerHTML = cookieHTML;
+  var loading = document.getElementById('loading');
+  loading.style.display = 'none';
+  var content = document.getElementById('content');
+  content.style.display = 'block';
+}
+
+function load() {
+  bg.console.log('load popup');
+  chrome.tabs.getSelected(null, function(tab) {
+    var tabId = tab.id;
+    bg.console.log('Obtaining stats for tab ' + tabId);
+    var stats = bg.cache[tabId];
+    if (stats == null) {
+      bg.console.log('no stats');
+      var loading = document.getElementById('loading');
+      display(tab.url, []);
+      return;
+    }
+    bg.console.log('Tab has ' + stats.cookies.length + ' cookies');
+    display(stats.resource, stats.cookies);
+  });
+}
+
+function refresh() {
+  chrome.tabs.getSelected(null, function(tab) {
+    bg.refreshCookieStats(tab.id);
+  });  
+}
+
+window.onload = function() {
+  load();
+}
+
+</script>
+
+  <div id='loading' style="display:block; width:300px;">
+  Loading...
+  </div>
+  <div id='content' style="display:none;">
+    <span id="label"></span><br>
+    <span id="cookies">x</span>
+    <p>
+    </p>
+  </div>
+  <div style="width:400px;">
+    <a href="#" onclick="chrome.tabs.create({url:'chrome://settings/cookies'});">View All Cookies</a>
+  </div>

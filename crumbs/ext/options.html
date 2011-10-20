@@ -1,0 +1,77 @@
+<html>
+<head><title>Crumbs Options</title></head>
+<script type="text/javascript">
+
+function save_options() {
+  var select = document.getElementById("strategy");
+  var strategy = select.children[select.selectedIndex].value;
+
+  var selectedStrategy = select.options[select.selectedIndex].value;
+  var domainText = document.getElementById("domain");
+  if (selectedStrategy == "domain-wide") {
+    localStorage["domain"] = domainText.value;
+  } else {
+    localStorage["domain"] = "";
+  }
+  localStorage["strategy"] = strategy;
+}
+
+function restore_options() {
+  var strategy = localStorage["strategy"];
+  if (!strategy) {
+    return;
+  }
+  var select = document.getElementById("strategy");
+  for (var i = 0; i < select.options.length; i++) {
+    var child = select.options[i];
+    if (child.value == strategy) {
+      child.selected = "true";
+      break;
+    }
+  }
+  if (strategy == "domain-wide") {
+    var domainText = document.getElementById("domain");
+    domainText.value = localStorage["domain"];
+    var domainDiv = document.getElementById("domain-wide");
+    domainDiv.style.display = "block";
+  }
+}
+
+function strategy_changed() {
+  var select = document.getElementById("strategy");
+  var selectedStrategy = select.options[select.selectedIndex].value;
+  var domainDiv = document.getElementById("domain-wide");
+  if (selectedStrategy == "domain-wide") {
+    domainDiv.style.display = "block";
+  } else {
+    domainDiv.style.display = "none";
+  }
+}
+
+</script>
+<body onload="restore_options();">
+
+Crumbs can count cookies with using the following strategies:
+<ul>
+  <li><b>Request URL</b>: Cookies sent on the request in the current URL.
+  <li><b>Request Domain</b>: Cookies scoped to the domain of the current URL.
+  <li><b>Domain Wide</b>: Cookies scoped for any path for any subdomain of the specified domain.
+</ul>
+
+Counting strategy:
+<select id="strategy" onchange="strategy_changed();">
+<option value="request">Request URL</option>
+<option value="domain">Request Domain</option>
+<option value="domain-wide">Domain wide</option>
+</select>
+
+<div id="domain-wide" style="display:none;">
+Domain: <input type="text" name="domain" id="domain" placeholder="Ex: google.com">
+</div>
+
+<br>
+<button onclick="save_options()">Save</button>
+
+</body>
+</html>
+

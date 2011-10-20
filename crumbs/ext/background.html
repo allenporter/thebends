@@ -1,0 +1,74 @@
+<script>
+// TODO(aporter): Come up with a strategy for purging the cache
+var cache = {};
+
+var hostPattern = /http[s]?:\/\/([^:\/]+)/;
+function getHost(url) {
+  var match = hostPattern.exec(url);
+  if (match) {
+    return match[1];
+  }
+  return null;
+}
+
+function refreshBadgeText(total) {
+  chrome.browserAction.setBadgeText({text:''+total});
+}
+
+function refreshCookieStatsInternal(tabId, url) {
+  var query;
+  var stats = new Object();
+  var strategy = localStorage["strategy"];
+  console.log('Strategy: ' + strategy);
+  if (strategy == 'domain') {
+    var host = getHost(url);
+    if (!host) {
+      console.log('Unable to determine host for ' + url);
+      return;
+    }
+    query = {domain: host};
+    console.log('Query by {domain: ' + host + '}');
+    stats.resource = host;
+  } else {
+    if (strategy == 'domain-wide') {
+      var domain = localStorage["domain"];
+      if (!domain) {
+        console.log('Unable to get domain for domain-wide counting');
+        return;
+      }
+      query = {domain: domain};
+      console.log('zzQuery by {domain: ' + domain + '}');
+      stats.resource = domain;
+    } else {
+      query = {url: url};
+      console.log('Query by {url: ' + url + '}');
+      stats.resource = url;
+    }
+  }
+  chrome.cookies.getAll(query, function(cookies) {
+    stats.cookies = cookies;
+    cache[tabId] = stats;
+    refreshBadgeText(cookies.length);
+  });
+}
+
+function refreshCookieStats(tabId) {
+  console.log('Updating stats for tab ' + tabId);
+  chrome.tabs.get(tabId, function(tab) {
+    refreshCookieStatsInternal(tabId, tab.url);
+  });
+}
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, selectInfo) {
+  if (changeInfo.status != 'complete') {
+    cache[tabId] = null;
+    return;
+  }
+  refreshCookieStats(tabId);
+});
+
+chrome.tabs.onSelectionChanged.addListener(function(tabId) {
+  refreshCookieStats(tabId);
+});
+
+</script>

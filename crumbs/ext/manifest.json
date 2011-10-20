@@ -1,0 +1,24 @@
+{
+  "name": "Crumbs",
+  "version": "0.1",
+
+  "description": "Displays a counter of cookies scoped to the request or a particular domain.",
+  "icons": {
+    "128": "icon128.png"
+  },
+
+  "browser_action": {
+    "default_icon": "icon128.png",
+    "default_title": "Crumbs",
+    "default_popup": "popup.html"
+  },
+
+  "background_page": "background.html",
+  "options_page": "options.html",
+  "permissions": [
+    "tabs",
+    "cookies",
+    "*://*/"
+  ]
+}
+
