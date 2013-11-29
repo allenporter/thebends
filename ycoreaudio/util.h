@@ -1,7 +1,7 @@
 // util.h
 // Author: Allen Porter <allen@thebends.org>
 
-#ifndef __YCOREAUDIO_UTIL_H__
+#ifndef __COREAUDIO_UTIL_H__
 #define __COREAUDIO_UTIL_H__
 
 #include <CoreAudio/CoreAudio.h>
