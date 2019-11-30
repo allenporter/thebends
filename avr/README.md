@@ -27,13 +27,13 @@ Overall this is a great board because it comes with LEDs and Switches built in
 which are very helpful for writing simple programs or debugging.
 
 ### Easy Ethernet AVR
-<p>
+
 The Easy Ethernet AVR is a board that combines a Realtek RTL8019AS ethernet
 controller and an ATmega32.  Also comes with onboard serial port and AVR ISP
 programming port.  I don't have a standalone ISP programmer, but it can be
 connected to the 10 pin ISP slot on the STK500.
 
-### Keyspan USB High Speed Serial Adapter<
+### Keyspan USB High Speed Serial Adapter
 
 The above boards come with serial programming interfaces, so in order to
 program them from a mac I use USA-19HS usb to serial adapter.
@@ -77,7 +77,7 @@ bytes, or NULL terminated strings.
 
 ### rtl8019as/ - Realtek RTL8019AS Driver
 
-The Easy Ethernet/AVR comes with a pretty good example driver written by Fred Eady (of <a href="http://www.edtp.com">EDTP Electornics</a>).
+The Easy Ethernet/AVR comes with a pretty good example driver written by Fred Eady (of [EDTP Electronics](http://www.edtp.com").
 I've written a stripped down library based on his examples that will invoke
 your callback when a packet is received.
 
