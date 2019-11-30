@@ -1,7 +1,5 @@
 # utunnel - A UDP Tunnel
 
-2004 - Allen Porter <allen@thebends.org>
-
 # Intro
 
 utunnel allows you to tunnel ip traffic (tcp, icmp, etc) over udp.
