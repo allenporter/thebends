@@ -38,7 +38,7 @@ connected to the 10 pin ISP slot on the STK500.
 The above boards come with serial programming interfaces, so in order to
 program them from a mac I use USA-19HS usb to serial adapter.
 
-## Software<
+## Software
 
 The essential software needed is avr-gcc, [avr-libc](http://www.nongnu.org/avr-libc),
 and [avrdude](http://www.bsdhome.com/avrdude/).  You may also find it useful to
